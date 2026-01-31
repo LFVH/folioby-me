@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id           String   @id @default(uuid())
+  idHistorico  Int      @unique @default(autoincrement())
+  name         String
+  email        String   @unique
+  password     String
+  refreshToken RefreshToken?
+  isBlocked    Boolean  @default(false) //block manual
+  isPremium    Boolean  @default(false) 
+  dtIniPremium DateTime?
+  dtFimPremium DateTime?
+  stripeCliId  String?  @unique
+  stripeSubId  String?  @unique
+  statusAss    Int      @default(1) // status stripe "inativo","ativo", "cancelado", "pendente"
+  plano        Int      @default(0)  // status stripe "mensal", "anual", "semestral"
+  refreshPasswordToken        String?   //TODO esqueci senha 
+  refreshPasswordTokenExpires DateTime? //TODO esqueci senha
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  @@index([stripeCliId])
+}
+
+model HistoricoUsuario {
+  id             Int  @id @default(autoincrement())
+  idHistUsuario  Int
+  valorPago      Decimal?
+  isBlocked      Boolean  @default(false) 
+  isPremium      Boolean  @default(false)
+  dtIniPremium   DateTime?
+  dtFimPremium   DateTime?
+  statusAss      Int      @default(1) 
+  plano          Int      @default(0) 
+  createdAt      DateTime @default(now())
+}
+
+model RefreshToken {
+  id            Int      @id @default(autoincrement())
+  expiresIn     Int
+  user          Usuario  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate:   Cascade)
+  userId        String   @unique
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
+}
+
+model Conteudo {
+  id             Int      @id @default(autoincrement())
+  nome           String?  @unique
+  name           String?  @unique
+  link           String?  //link do gif
+  fonte          String? 
+  linkext        String?  //video para redirecionar
+  filename       String
+  mimetype       String
+  data           Bytes
+  isFree         Boolean  @default(false)
+  isTrend        Boolean  @default(false)
+  updatedAt      DateTime @updatedAt
+  createdAt      DateTime @default(now())
+  categorias     Categoria[]
+}
+ // @@index([nome])
+
+model Categoria {
+  id             Int      @id @default(autoincrement())
+  nome           String?  @unique
+  name           String?  @unique
+  descricao      String?
+  isFree         Boolean  @default(false)
+  isTrend        Boolean  @default(false)
+  updatedAt      DateTime @updatedAt
+  createdAt      DateTime @default(now())
+  conteudos      Conteudo[]
+}
