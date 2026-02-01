@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/database/prisma";
+import prisma from "../../../../../prisma";
 import { isActuallyChief, verifyUser } from "@/utils/verifyUserAuth";
 
 export async function GET(

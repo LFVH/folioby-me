@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import authHandler from "@/app/api/nxtHandle/nextAuthHandler";
-import prisma from "@/database/prisma";
-import { Usuario } from "@prisma/client";
+import prisma from "../prisma";
+import { Usuario } from "../../generated/prisma/client";
 import { logNow } from "./Logging";
 
 export async function verifyUser() {

@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import stripe from "@/lib/stripe";
 import { verifyUser } from '@/utils/verifyUserAuth';
-import prisma from '@/database/prisma';
+import prisma from '../../../../prisma';
 
 export async function POST(request: NextRequest) {
   try {

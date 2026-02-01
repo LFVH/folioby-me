@@ -5,7 +5,7 @@ import {
   SignupFormSchema,
 } from '@/app/api/auth/auth/definitions';
 import bcrypt from 'bcryptjs';
-import Prisma from '@/database/prisma';
+import Prisma from '../../../../prisma';
 
 export async function signup(
   state: FormState,

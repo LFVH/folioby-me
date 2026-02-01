@@ -1,5 +1,5 @@
 import { AuthOptions } from "next-auth"
-import prisma from "@/database/prisma"
+import prisma from "../../../prisma"
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from 'bcryptjs';
 import dayjs from "dayjs"
