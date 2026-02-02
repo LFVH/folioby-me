@@ -10,7 +10,7 @@ export default function Header() {
     <header className="absolute top-0 left-0 right-0 z-20 p-6">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
         <div className="text-2xl font-bold text-red-700">
-          DIRECTOR'S FLIX
+          FolioBy
         </div>
         
         <div className="flex gap-4">

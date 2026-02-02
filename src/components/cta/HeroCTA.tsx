@@ -43,7 +43,7 @@ export default function HeroCTA() {
     {/* Logo principal */}
     <div className="">
       <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent mb-4">
-        DIRECTOR'S FLIX
+        FolioBy
       </h1>
       
     </div>

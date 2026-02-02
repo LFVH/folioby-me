@@ -19,7 +19,7 @@ export default function Layout({
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <div className="text-red-600 font-bold text-2xl tracking-tight">
-              Director's Flix
+              FolioBy
             </div>
           </Link>
 
@@ -74,7 +74,7 @@ export default function Layout({
         <div className="container mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <div className="text-red-600 font-bold text-xl tracking-tight mb-2">
-              Director's Flix
+              FolioBy
             </div>
             <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
               <Link href="#" className="hover:text-white transition-colors">Privacy</Link>

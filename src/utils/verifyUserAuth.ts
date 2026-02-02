@@ -4,7 +4,7 @@ import authHandler from "@/app/api/nxtHandle/nextAuthHandler";
 import prisma from "../prisma";
 import { Usuario } from "../../generated/prisma/client";
 import { logNow } from "./Logging";
-
+''
 export async function verifyUser() {
   try {
     const userDB = await userExists();

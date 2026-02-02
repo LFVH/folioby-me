@@ -12,7 +12,7 @@ export default function Layout({
       <header className="fixed top-0 w-full z-50 bg-gradient-to-b from-black to-transparent p-4">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4 min-w-0 flex-1">
-          <h1 className="text-red-600 text-xl sm:text-2xl font-bold truncate">Director's Flix</h1>
+          <h1 className="text-red-600 text-xl sm:text-2xl font-bold truncate">FolioBy</h1>
           <Link href="/letsgo" className="">
             <div className="text-gray-300 hover:text-white
               transition-colors whitespace-nowrap text-sm px-2 py-1">
@@ -41,7 +41,7 @@ export default function Layout({
       <footer className="border-t border-gray-800 bg-black py-8 mt-8">
         <div className="max-w-6xl mx-auto">
           <p className="text-gray-400 text-center">
-            © {new Date().getFullYear()} Director's Flix. Todos os direitos reservados.
+            © {new Date().getFullYear()} FolioBy. Todos os direitos reservados.
           </p>
         </div>
       </footer>

@@ -19,7 +19,7 @@ export default function Layout({
           {/* Logo */}
           <Link href="/letsgo" className="flex items-center space-x-2">
             <div className="text-red-600 font-bold text-2xl tracking-tight">
-              Director's Flix (/letsgo)
+              FolioBy (/letsgo)
             </div>
           </Link>
 

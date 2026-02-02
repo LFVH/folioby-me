@@ -10,7 +10,7 @@ model Usuario {
   id           String   @id @default(uuid())
   idHistorico  Int      @unique @default(0)
   name         String
-  slug         String   @unique @default("zebct")
+  slug         String   @unique
   email        String   @unique
   password     String
   refreshToken RefreshToken?
@@ -25,13 +25,13 @@ model Usuario {
   refreshPasswordToken        String?   //TODO esqueci senha 
   refreshPasswordTokenExpires DateTime? //TODO esqueci senha
   conteudos    Conteudo[]
+  categorias   Categoria[]
   updatedAt    DateTime @updatedAt
   createdAt    DateTime @default(now())
-  @@index([stripeCliId])
+  @@index([email, statusAss, isPremium])
 }
 model Conteudo {
   id             Int      @id @default(autoincrement())
-  nome           String?  @unique
   name           String?  @unique
   link           String?  //link do gif
   fonte          String? 
@@ -39,26 +39,26 @@ model Conteudo {
   filename       String
   mimetype       String
   data           Bytes
-  isFree         Boolean  @default(false)
   isTrend        Boolean  @default(false)
   categorias     Categoria[]
-  userId         String?
-  user           Usuario?  @relation(fields: [userId], references: [id])
+  userId         String
+  user           Usuario  @relation(fields: [userId], references: [id], onDelete: Cascade)
   updatedAt      DateTime @updatedAt
   createdAt      DateTime @default(now())
+  @@index([userId, createdAt])
 }
- // @@index([nome])
 
 model Categoria {
   id             Int      @id @default(autoincrement())
   nome           String?  @unique
   name           String?  @unique
   descricao      String?
-  isFree         Boolean  @default(false)
   isTrend        Boolean  @default(false)
+  conteudos      Conteudo[]
+  userId         String
+  user           Usuario  @relation(fields: [userId], references: [id])
   updatedAt      DateTime @updatedAt
   createdAt      DateTime @default(now())
-  conteudos      Conteudo[]
 }
 
 model HistoricoUsuario {
@@ -71,7 +71,6 @@ model HistoricoUsuario {
   dtFimPremium   DateTime?
   statusAss      Int?
   plano          Int?
-  @@index([idHistUsuario])
   createdAt      DateTime @default(now())
 }
 

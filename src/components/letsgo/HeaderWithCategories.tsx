@@ -76,7 +76,7 @@ export default function HeaderWithCategories() {
       <header className="fixed top-0 w-full z-50 bg-gradient-to-b from-black to-transparent p-4">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4 min-w-0 flex-1">
-            <h1 className="text-red-600 text-xl sm:text-2xl font-bold truncate">Director's Flix</h1>
+            <h1 className="text-red-600 text-xl sm:text-2xl font-bold truncate">FolioBy</h1>
             <nav className="hidden md:flex gap-4">
               <span className="text-gray-400">Carregando...</span>
             </nav>
@@ -91,7 +91,7 @@ export default function HeaderWithCategories() {
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         
         <div className="flex items-center gap-4 min-w-0 flex-1">
-          <h1 className="text-red-600 text-xl sm:text-2xl font-bold truncate">Director's Flix</h1>
+          <h1 className="text-red-600 text-xl sm:text-2xl font-bold truncate">FolioBy</h1>
           
           <nav className="hidden md:flex items-center gap-4 flex-wrap min-w-0">
             <button
