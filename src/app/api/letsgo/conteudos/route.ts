@@ -13,7 +13,6 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || ''
     const skip = (page - 1) * limit
 
-    // 🔥 CONSTRUIR WHERE COM BUSCA
     const where: any = {}
 
     if (search) {

@@ -29,6 +29,52 @@ export async function isActuallyChief(userId: string) {
   return adminUserIds.includes(userId);
 }
 
+export async function isHis(userId: string, conteudoId: number): Promise<boolean> {
+  try {
+    // Validação dos parâmetros de entrada
+    if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+      console.warn('isHis: userId inválido ou vazio');
+      return false;
+    }
+
+    if (!conteudoId || typeof conteudoId !== 'number' || conteudoId <= 0) {
+      console.warn('isHis: conteudoId inválido');
+      return false;
+    }
+
+    // Usando template tag para evitar SQL injection (Prisma já sanitiza)
+    const result = await prisma.$queryRaw<Array<{ exists: boolean }>>`
+      SELECT EXISTS(
+        SELECT 1 FROM "Conteudo" 
+        WHERE "id" = ${conteudoId}::integer 
+          AND "userId" = ${userId}::uuid
+        LIMIT 1
+      ) as "exists"
+    `;
+
+    // Verifica se temos um resultado válido
+    if (!result || !Array.isArray(result) || result.length === 0) {
+      console.error('isHis: Resultado inesperado da query', result);
+      return false;
+    }
+
+    return result[0].exists;
+    
+  } catch (error) {
+    // Log detalhado do erro
+    console.error('Erro em isHis:', {
+      error: error instanceof Error ? error.message : 'Erro desconhecido',
+      stack: error instanceof Error ? error.stack : undefined,
+      userId,
+      conteudoId,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Retorna false seguro em caso de erro
+    return false;
+  }
+}
+
 
 export async function userExists(): Promise<Usuario | NextResponse>  {
   const session = await getServerSession(authHandler);

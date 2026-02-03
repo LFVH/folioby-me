@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from "../../../../prisma"
-import { isActuallyChief, verifyUser } from "@/utils/verifyUserAuth"
+import {verifyUser } from "@/utils/verifyUserAuth"
 
 export async function GET(request: NextRequest) {
   try {
     const authResult = await verifyUser();
     if (authResult instanceof NextResponse) return authResult;
     const { userId, isPremium } = authResult;
-    if(!isActuallyChief(userId)) return NextResponse.json(
+    if(!isPremium) return NextResponse.json(
         { success: false, error: '404 Not Found' },
         { status: 403 }
     ) 
@@ -67,13 +67,12 @@ export async function POST(request: NextRequest) {
     const authResult = await verifyUser();
     if (authResult instanceof NextResponse) return authResult;
     const { userId, isPremium } = authResult;
-    if(!isActuallyChief(userId)) return NextResponse.json(
+    if(!isPremium) return NextResponse.json(
         { success: false, error: '404 Not Found' },
         { status: 403 }
       )
     const formData = await request.formData()
     
-    const nome = formData.get('nome') as string
     const name = formData.get('name') as string
     const fonte = formData.get('fonte') as string
     const link = formData.get('link') as string
@@ -107,7 +106,6 @@ export async function POST(request: NextRequest) {
 
     const conteudo = await prisma.conteudo.create({
       data: {
-        nome,
         name,
         fonte,
         link,
@@ -117,6 +115,11 @@ export async function POST(request: NextRequest) {
         data: buffer,
         categorias: {
           connect: categoriasConnect
+        },
+        user: {
+          connect: {
+            id: userId 
+          }
         }
       },
       include: {

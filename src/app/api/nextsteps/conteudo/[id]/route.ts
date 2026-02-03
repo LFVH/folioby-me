@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../prisma";
-import { isActuallyChief, verifyUser } from "@/utils/verifyUserAuth";
+import { isHis, verifyUser } from "@/utils/verifyUserAuth";
 
 export async function DELETE(
   request: NextRequest,
@@ -12,7 +12,7 @@ export async function DELETE(
     const { userId, isPremium } = authResult;
     const id = parseInt((await params).id, 10);
     if (isNaN(id)) return NextResponse.json({ message: "id inválido" }, { status: 400 });
-    if(!isActuallyChief(userId)) return NextResponse.json(
+    if((!isPremium && await isHis(userId, id))) return NextResponse.json(
         { success: false, error: '404 Not Found' },
         { status: 403 }
       )
@@ -41,8 +41,13 @@ export async function GET(
     const authResult = await verifyUser();
     if (authResult instanceof NextResponse) return authResult;
     const { userId, isPremium } = authResult;
+    
     const id = parseInt((await params).id, 10);
     if (isNaN(id)) return NextResponse.json({ message: "id inválido" }, { status: 400 });
+    if(!isPremium && await isHis(userId, id)) return NextResponse.json(
+      { success: false, error: '404 Not Found' },
+      { status: 403 }
+    )
     const conteudo = await prisma.conteudo.findUnique({
       where: { id: id }
     })
@@ -82,6 +87,10 @@ export async function PUT(
     const { userId, isPremium } = authResult;
     const id = parseInt((await params).id, 10);
     if (isNaN(id)) return NextResponse.json({ message: "id inválido" }, { status: 400 });
+    if(!isPremium && await isHis(userId, id)) return NextResponse.json(
+      { success: false, error: '404 Not Found' },
+      { status: 403 }
+    )
     const formData = await request.formData()
     const conteudoExistente = await prisma.conteudo.findUnique({
       where: { id: id }
@@ -93,7 +102,6 @@ export async function PUT(
         { status: 404 }
       )
     }
-    const nome = formData.get('nome') as string
     const name = formData.get('name') as string
     const fonte = formData.get('fonte') as string
     const link = formData.get('link') as string
@@ -102,7 +110,6 @@ export async function PUT(
     const file = formData.get('file') as File
 
     const updateData: any = {
-      nome,
       name,
       fonte,
       link,
@@ -166,7 +173,7 @@ export async function PATCH(
     const { userId, isPremium } = authResult;
     const id = parseInt((await params).id, 10);
     if (isNaN(id)) return NextResponse.json({ message: "id inválido" }, { status: 400 });
-    if(!isActuallyChief(userId)) return NextResponse.json(
+    if(!isPremium && await isHis(userId, id)) return NextResponse.json(
         { success: false, error: '404 Not Found' },
         { status: 403 }
       ) 
