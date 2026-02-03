@@ -197,14 +197,7 @@ export async function PATCH(
       )
     }
     let categoria;
-    if(toggle ==='isfree'){
-      categoria = await prisma.categoria.update({
-      where: { id: id },
-      data: {
-        isFree: !categoriaExistente.isFree
-      },
-    })
-  } else if (toggle ==='istrend'){
+    if (toggle ==='istrend'){
       categoria = await prisma.categoria.update({
       where: { id: id },
       data: {

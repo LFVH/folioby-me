@@ -13,7 +13,6 @@ interface Categoria {
   descricao: string | null
   createdAt: string
   updatedAt: string
-  isFree: boolean
   _count: {
     conteudos: number
   }
@@ -110,7 +109,6 @@ export default function CategoriasPage() {
         categoria.id === categoriaId 
           ? { 
               ...categoria, 
-              ...(toggle === 'isfree' && { isFree: newBool }),
               ...(toggle === 'istrend' && { isTrend: newBool })
             }
           : categoria
@@ -198,21 +196,6 @@ export default function CategoriasPage() {
                 {!categoria.nome && categoria.name && (
                   <div>EN: {categoria.name}</div>
                 )}
-              </div>
-              <div className="flex flex-col items-end gap-1 ml-3 flex-shrink-0">
-                <span className={`text-xs font-medium ${
-                  categoria.isFree ? 'text-green-400' : 'text-purple-400'
-                }`}>
-                  {categoria.isFree ? '🎁 Gratuito' : '💎 Pago'}
-                </span>
-                <ToggleStatus
-                  id={categoria.id}
-                  status={categoria.isFree}
-                  type="categorias"
-                  onStatusChange={(newStatus) => {
-                    handleStatusChange(categoria.id, newStatus, 'isfree');
-                  }}
-                  toggle={'isfree'}                />
               </div>
               <div className="flex flex-col items-end gap-1 ml-3 flex-shrink-0">
                 <span className={`text-xs font-medium ${

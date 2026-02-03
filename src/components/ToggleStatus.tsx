@@ -8,7 +8,7 @@ interface ToggleStatusProps {
   id: number;
   status: boolean;
   type: 'conteudo' | 'categorias';
-  toggle: 'isfree' | 'istrend'
+  toggle: 'istrend'
   onStatusChange?: (newStatus: boolean) => void;
 }
 

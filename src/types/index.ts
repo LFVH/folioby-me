@@ -39,7 +39,6 @@ export interface CategoriaWithUrls {
   nome: string | null
   name: string | null
   descricao?: string | null
-  isFree: boolean
   isTrend: boolean
   conteudos: ConteudoWithUrl[] 
   conteudosBloqueados?: number 

@@ -14,7 +14,6 @@ interface Conteudo {
   mimetype: string
   link?: string
   linkext?: string
-  isFree: boolean
   categorias: Array<{ id: number; nome: string; name: string }>
   createdAt: string
 }
@@ -95,7 +94,6 @@ export default function ConteudosPage() {
         conteudo.id === conteudoId 
           ? { 
               ...conteudo, 
-              ...(toggle === 'isfree' && { isFree: newBool }),
               ...(toggle === 'istrend' && { isTrend: newBool })
             }
           : conteudo
@@ -166,22 +164,7 @@ export default function ConteudosPage() {
                       {conteudo.nome || conteudo.name || 'Sem nome'}
                     </h3>
                   </div>
-                  
-                  <div className="flex flex-col items-end gap-1 ml-3 flex-shrink-0">
-                    <span className={`text-xs font-medium ${
-                      conteudo.isFree ? 'text-green-400' : 'text-purple-400'
-                    }`}>
-                      {conteudo.isFree ? '🎁 Gratuito' : '💎 Pago'}
-                    </span>
-                    <ToggleStatus
-                      id={conteudo.id}
-                      status={conteudo.isFree}
-                      type="conteudo"
-                      onStatusChange={(newStatus) => {
-                        handleStatusChange(conteudo.id, newStatus, 'isfree');
-                      }}
-                      toggle={'isfree'}                    />
-                  </div>
+
                   <div className="flex flex-col items-end gap-1 ml-3 flex-shrink-0">
                     <span className={`text-xs font-medium ${
                       conteudo.isTrend ? 'text-orange-400' : 'text-gray-400'

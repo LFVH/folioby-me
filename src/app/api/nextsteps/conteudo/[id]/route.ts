@@ -196,14 +196,7 @@ export async function PATCH(
       )
     }
     let conteudo;
-    if(toggle ==='isfree'){
-      conteudo = await prisma.conteudo.update({
-      where: { id: id },
-      data: {
-        isFree: !conteudoExistente.isFree
-      },
-    })
-  } else if (toggle ==='istrend'){
+    if (toggle ==='istrend'){
       conteudo = await prisma.conteudo.update({
       where: { id: id },
       data: {
