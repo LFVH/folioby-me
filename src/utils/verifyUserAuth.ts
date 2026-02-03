@@ -101,6 +101,22 @@ export async function userExists(): Promise<Usuario | NextResponse>  {
     );
 }
 
+export async function findBySlug(slug: string): Promise<Usuario | NextResponse>  {
+
+    const userExists = await prisma.usuario.findUnique({
+      where: { slug: slug },
+    });
+  
+    if (userExists && !userExists.isBlocked && !userExists.isPremium) {
+      return userExists;
+    }
+    console.error("SLUG: " + slug)
+    return NextResponse.json(
+      { success: false, body: { message: "Not Found" } },
+      { status: 400 }
+    );
+}
+
 function checkPremiumExpiration(user: Usuario ) {
   // Get current date (without time component)
   const currentDate = new Date();
