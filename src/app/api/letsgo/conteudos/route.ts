@@ -13,25 +13,30 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || ''
     const skip = (page - 1) * limit
 
-    const where: any = {}
+    const where: any = {
+      userId: userId // Filtro obrigatório sempre aplicado
+    }
 
     if (search) {
-      where.OR = [
-        { nome: { contains: search, mode: 'insensitive' } },
-        { name: { contains: search, mode: 'insensitive' } },
-        { filename: { contains: search, mode: 'insensitive' } },
-        {
-          categorias: {
-            some: {
-              OR: [
-                { nome: { contains: search, mode: 'insensitive' } },
-                { name: { contains: search, mode: 'insensitive' } }
-              ]
+      where.AND = {
+        OR: [
+          { nome: { contains: search, mode: 'insensitive' } },
+          { name: { contains: search, mode: 'insensitive' } },
+          { filename: { contains: search, mode: 'insensitive' } },
+          {
+            categorias: {
+              some: {
+                OR: [
+                  { nome: { contains: search, mode: 'insensitive' } },
+                  { name: { contains: search, mode: 'insensitive' } }
+                ]
+              }
             }
           }
-        }
-      ]
+        ]
+      }
     }
+
 
     const [conteudos, total] = await Promise.all([
       prisma.conteudo.findMany({
