@@ -10,7 +10,6 @@ folioby.me
 folioby-me
 folioby_db
 TODO
-- criar insert (create e update) slug normalizado por nome
 - revisar middleware - permissoes e redirects
 - exibir e alterar slug no front
 - alterar front página principal traz conteudos do usuario pelo LINK

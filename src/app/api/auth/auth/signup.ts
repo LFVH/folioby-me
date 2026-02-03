@@ -6,6 +6,7 @@ import {
 } from '@/app/api/auth/auth/definitions';
 import bcrypt from 'bcryptjs';
 import Prisma from '../../../../prisma';
+import { criarURL } from '@/lib/utils';
 
 export async function signup(
   state: FormState,
@@ -43,13 +44,14 @@ export async function signup(
 
   // Hash the user's password
   const hashedPassword = await bcrypt.hash(password, 10);
-
+  const slug = criarURL(name);
   // 3. Insert the user into the database or call an Auth Provider's API
   const userDB = await Prisma.usuario.create({
     data: {
       name,
       email,
       password: hashedPassword,
+      slug
     },
   })
 
