@@ -330,6 +330,7 @@ export type UsuarioWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
   refreshToken?: Prisma.XOR<Prisma.RefreshTokenNullableScalarRelationFilter, Prisma.RefreshTokenWhereInput> | null
   conteudos?: Prisma.ConteudoListRelationFilter
+  categorias?: Prisma.CategoriaListRelationFilter
 }
 
 export type UsuarioOrderByWithRelationInput = {
@@ -353,6 +354,7 @@ export type UsuarioOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   refreshToken?: Prisma.RefreshTokenOrderByWithRelationInput
   conteudos?: Prisma.ConteudoOrderByRelationAggregateInput
+  categorias?: Prisma.CategoriaOrderByRelationAggregateInput
 }
 
 export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
@@ -379,6 +381,7 @@ export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
   refreshToken?: Prisma.XOR<Prisma.RefreshTokenNullableScalarRelationFilter, Prisma.RefreshTokenWhereInput> | null
   conteudos?: Prisma.ConteudoListRelationFilter
+  categorias?: Prisma.CategoriaListRelationFilter
 }, "id" | "idHistorico" | "slug" | "email" | "stripeCliId" | "stripeSubId">
 
 export type UsuarioOrderByWithAggregationInput = {
@@ -435,7 +438,7 @@ export type UsuarioCreateInput = {
   id?: string
   idHistorico?: number
   name: string
-  slug?: string
+  slug: string
   email: string
   password: string
   isBlocked?: boolean
@@ -452,13 +455,14 @@ export type UsuarioCreateInput = {
   createdAt?: Date | string
   refreshToken?: Prisma.RefreshTokenCreateNestedOneWithoutUserInput
   conteudos?: Prisma.ConteudoCreateNestedManyWithoutUserInput
+  categorias?: Prisma.CategoriaCreateNestedManyWithoutUserInput
 }
 
 export type UsuarioUncheckedCreateInput = {
   id?: string
   idHistorico?: number
   name: string
-  slug?: string
+  slug: string
   email: string
   password: string
   isBlocked?: boolean
@@ -475,6 +479,7 @@ export type UsuarioUncheckedCreateInput = {
   createdAt?: Date | string
   refreshToken?: Prisma.RefreshTokenUncheckedCreateNestedOneWithoutUserInput
   conteudos?: Prisma.ConteudoUncheckedCreateNestedManyWithoutUserInput
+  categorias?: Prisma.CategoriaUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsuarioUpdateInput = {
@@ -498,6 +503,7 @@ export type UsuarioUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refreshToken?: Prisma.RefreshTokenUpdateOneWithoutUserNestedInput
   conteudos?: Prisma.ConteudoUpdateManyWithoutUserNestedInput
+  categorias?: Prisma.CategoriaUpdateManyWithoutUserNestedInput
 }
 
 export type UsuarioUncheckedUpdateInput = {
@@ -521,13 +527,14 @@ export type UsuarioUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refreshToken?: Prisma.RefreshTokenUncheckedUpdateOneWithoutUserNestedInput
   conteudos?: Prisma.ConteudoUncheckedUpdateManyWithoutUserNestedInput
+  categorias?: Prisma.CategoriaUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsuarioCreateManyInput = {
   id?: string
   idHistorico?: number
   name: string
-  slug?: string
+  slug: string
   email: string
   password: string
   isBlocked?: boolean
@@ -661,11 +668,6 @@ export type UsuarioSumOrderByAggregateInput = {
   plano?: Prisma.SortOrder
 }
 
-export type UsuarioNullableScalarRelationFilter = {
-  is?: Prisma.UsuarioWhereInput | null
-  isNot?: Prisma.UsuarioWhereInput | null
-}
-
 export type UsuarioScalarRelationFilter = {
   is?: Prisma.UsuarioWhereInput
   isNot?: Prisma.UsuarioWhereInput
@@ -705,14 +707,26 @@ export type UsuarioCreateNestedOneWithoutConteudosInput = {
   connect?: Prisma.UsuarioWhereUniqueInput
 }
 
-export type UsuarioUpdateOneWithoutConteudosNestedInput = {
+export type UsuarioUpdateOneRequiredWithoutConteudosNestedInput = {
   create?: Prisma.XOR<Prisma.UsuarioCreateWithoutConteudosInput, Prisma.UsuarioUncheckedCreateWithoutConteudosInput>
   connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutConteudosInput
   upsert?: Prisma.UsuarioUpsertWithoutConteudosInput
-  disconnect?: Prisma.UsuarioWhereInput | boolean
-  delete?: Prisma.UsuarioWhereInput | boolean
   connect?: Prisma.UsuarioWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UsuarioUpdateToOneWithWhereWithoutConteudosInput, Prisma.UsuarioUpdateWithoutConteudosInput>, Prisma.UsuarioUncheckedUpdateWithoutConteudosInput>
+}
+
+export type UsuarioCreateNestedOneWithoutCategoriasInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutCategoriasInput, Prisma.UsuarioUncheckedCreateWithoutCategoriasInput>
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutCategoriasInput
+  connect?: Prisma.UsuarioWhereUniqueInput
+}
+
+export type UsuarioUpdateOneRequiredWithoutCategoriasNestedInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutCategoriasInput, Prisma.UsuarioUncheckedCreateWithoutCategoriasInput>
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutCategoriasInput
+  upsert?: Prisma.UsuarioUpsertWithoutCategoriasInput
+  connect?: Prisma.UsuarioWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsuarioUpdateToOneWithWhereWithoutCategoriasInput, Prisma.UsuarioUpdateWithoutCategoriasInput>, Prisma.UsuarioUncheckedUpdateWithoutCategoriasInput>
 }
 
 export type UsuarioCreateNestedOneWithoutRefreshTokenInput = {
@@ -733,7 +747,7 @@ export type UsuarioCreateWithoutConteudosInput = {
   id?: string
   idHistorico?: number
   name: string
-  slug?: string
+  slug: string
   email: string
   password: string
   isBlocked?: boolean
@@ -749,13 +763,14 @@ export type UsuarioCreateWithoutConteudosInput = {
   updatedAt?: Date | string
   createdAt?: Date | string
   refreshToken?: Prisma.RefreshTokenCreateNestedOneWithoutUserInput
+  categorias?: Prisma.CategoriaCreateNestedManyWithoutUserInput
 }
 
 export type UsuarioUncheckedCreateWithoutConteudosInput = {
   id?: string
   idHistorico?: number
   name: string
-  slug?: string
+  slug: string
   email: string
   password: string
   isBlocked?: boolean
@@ -771,6 +786,7 @@ export type UsuarioUncheckedCreateWithoutConteudosInput = {
   updatedAt?: Date | string
   createdAt?: Date | string
   refreshToken?: Prisma.RefreshTokenUncheckedCreateNestedOneWithoutUserInput
+  categorias?: Prisma.CategoriaUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsuarioCreateOrConnectWithoutConteudosInput = {
@@ -809,6 +825,7 @@ export type UsuarioUpdateWithoutConteudosInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refreshToken?: Prisma.RefreshTokenUpdateOneWithoutUserNestedInput
+  categorias?: Prisma.CategoriaUpdateManyWithoutUserNestedInput
 }
 
 export type UsuarioUncheckedUpdateWithoutConteudosInput = {
@@ -831,13 +848,122 @@ export type UsuarioUncheckedUpdateWithoutConteudosInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refreshToken?: Prisma.RefreshTokenUncheckedUpdateOneWithoutUserNestedInput
+  categorias?: Prisma.CategoriaUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UsuarioCreateWithoutCategoriasInput = {
+  id?: string
+  idHistorico?: number
+  name: string
+  slug: string
+  email: string
+  password: string
+  isBlocked?: boolean
+  isPremium?: boolean
+  dtIniPremium?: Date | string | null
+  dtFimPremium?: Date | string | null
+  stripeCliId?: string | null
+  stripeSubId?: string | null
+  statusAss?: number
+  plano?: number
+  refreshPasswordToken?: string | null
+  refreshPasswordTokenExpires?: Date | string | null
+  updatedAt?: Date | string
+  createdAt?: Date | string
+  refreshToken?: Prisma.RefreshTokenCreateNestedOneWithoutUserInput
+  conteudos?: Prisma.ConteudoCreateNestedManyWithoutUserInput
+}
+
+export type UsuarioUncheckedCreateWithoutCategoriasInput = {
+  id?: string
+  idHistorico?: number
+  name: string
+  slug: string
+  email: string
+  password: string
+  isBlocked?: boolean
+  isPremium?: boolean
+  dtIniPremium?: Date | string | null
+  dtFimPremium?: Date | string | null
+  stripeCliId?: string | null
+  stripeSubId?: string | null
+  statusAss?: number
+  plano?: number
+  refreshPasswordToken?: string | null
+  refreshPasswordTokenExpires?: Date | string | null
+  updatedAt?: Date | string
+  createdAt?: Date | string
+  refreshToken?: Prisma.RefreshTokenUncheckedCreateNestedOneWithoutUserInput
+  conteudos?: Prisma.ConteudoUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UsuarioCreateOrConnectWithoutCategoriasInput = {
+  where: Prisma.UsuarioWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutCategoriasInput, Prisma.UsuarioUncheckedCreateWithoutCategoriasInput>
+}
+
+export type UsuarioUpsertWithoutCategoriasInput = {
+  update: Prisma.XOR<Prisma.UsuarioUpdateWithoutCategoriasInput, Prisma.UsuarioUncheckedUpdateWithoutCategoriasInput>
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutCategoriasInput, Prisma.UsuarioUncheckedCreateWithoutCategoriasInput>
+  where?: Prisma.UsuarioWhereInput
+}
+
+export type UsuarioUpdateToOneWithWhereWithoutCategoriasInput = {
+  where?: Prisma.UsuarioWhereInput
+  data: Prisma.XOR<Prisma.UsuarioUpdateWithoutCategoriasInput, Prisma.UsuarioUncheckedUpdateWithoutCategoriasInput>
+}
+
+export type UsuarioUpdateWithoutCategoriasInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  idHistorico?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripeCliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusAss?: Prisma.IntFieldUpdateOperationsInput | number
+  plano?: Prisma.IntFieldUpdateOperationsInput | number
+  refreshPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshPasswordTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshToken?: Prisma.RefreshTokenUpdateOneWithoutUserNestedInput
+  conteudos?: Prisma.ConteudoUpdateManyWithoutUserNestedInput
+}
+
+export type UsuarioUncheckedUpdateWithoutCategoriasInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  idHistorico?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripeCliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusAss?: Prisma.IntFieldUpdateOperationsInput | number
+  plano?: Prisma.IntFieldUpdateOperationsInput | number
+  refreshPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshPasswordTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refreshToken?: Prisma.RefreshTokenUncheckedUpdateOneWithoutUserNestedInput
+  conteudos?: Prisma.ConteudoUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsuarioCreateWithoutRefreshTokenInput = {
   id?: string
   idHistorico?: number
   name: string
-  slug?: string
+  slug: string
   email: string
   password: string
   isBlocked?: boolean
@@ -853,13 +979,14 @@ export type UsuarioCreateWithoutRefreshTokenInput = {
   updatedAt?: Date | string
   createdAt?: Date | string
   conteudos?: Prisma.ConteudoCreateNestedManyWithoutUserInput
+  categorias?: Prisma.CategoriaCreateNestedManyWithoutUserInput
 }
 
 export type UsuarioUncheckedCreateWithoutRefreshTokenInput = {
   id?: string
   idHistorico?: number
   name: string
-  slug?: string
+  slug: string
   email: string
   password: string
   isBlocked?: boolean
@@ -875,6 +1002,7 @@ export type UsuarioUncheckedCreateWithoutRefreshTokenInput = {
   updatedAt?: Date | string
   createdAt?: Date | string
   conteudos?: Prisma.ConteudoUncheckedCreateNestedManyWithoutUserInput
+  categorias?: Prisma.CategoriaUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsuarioCreateOrConnectWithoutRefreshTokenInput = {
@@ -913,6 +1041,7 @@ export type UsuarioUpdateWithoutRefreshTokenInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conteudos?: Prisma.ConteudoUpdateManyWithoutUserNestedInput
+  categorias?: Prisma.CategoriaUpdateManyWithoutUserNestedInput
 }
 
 export type UsuarioUncheckedUpdateWithoutRefreshTokenInput = {
@@ -935,6 +1064,7 @@ export type UsuarioUncheckedUpdateWithoutRefreshTokenInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conteudos?: Prisma.ConteudoUncheckedUpdateManyWithoutUserNestedInput
+  categorias?: Prisma.CategoriaUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -944,10 +1074,12 @@ export type UsuarioUncheckedUpdateWithoutRefreshTokenInput = {
 
 export type UsuarioCountOutputType = {
   conteudos: number
+  categorias: number
 }
 
 export type UsuarioCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   conteudos?: boolean | UsuarioCountOutputTypeCountConteudosArgs
+  categorias?: boolean | UsuarioCountOutputTypeCountCategoriasArgs
 }
 
 /**
@@ -965,6 +1097,13 @@ export type UsuarioCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
  */
 export type UsuarioCountOutputTypeCountConteudosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ConteudoWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountCategoriasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CategoriaWhereInput
 }
 
 
@@ -989,6 +1128,7 @@ export type UsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   refreshToken?: boolean | Prisma.Usuario$refreshTokenArgs<ExtArgs>
   conteudos?: boolean | Prisma.Usuario$conteudosArgs<ExtArgs>
+  categorias?: boolean | Prisma.Usuario$categoriasArgs<ExtArgs>
   _count?: boolean | Prisma.UsuarioCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["usuario"]>
 
@@ -1059,6 +1199,7 @@ export type UsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type UsuarioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   refreshToken?: boolean | Prisma.Usuario$refreshTokenArgs<ExtArgs>
   conteudos?: boolean | Prisma.Usuario$conteudosArgs<ExtArgs>
+  categorias?: boolean | Prisma.Usuario$categoriasArgs<ExtArgs>
   _count?: boolean | Prisma.UsuarioCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UsuarioIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1069,6 +1210,7 @@ export type $UsuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     refreshToken: Prisma.$RefreshTokenPayload<ExtArgs> | null
     conteudos: Prisma.$ConteudoPayload<ExtArgs>[]
+    categorias: Prisma.$CategoriaPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1485,6 +1627,7 @@ export interface Prisma__UsuarioClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   refreshToken<T extends Prisma.Usuario$refreshTokenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$refreshTokenArgs<ExtArgs>>): Prisma.Prisma__RefreshTokenClient<runtime.Types.Result.GetResult<Prisma.$RefreshTokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   conteudos<T extends Prisma.Usuario$conteudosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$conteudosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConteudoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  categorias<T extends Prisma.Usuario$categoriasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$categoriasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1960,6 +2103,30 @@ export type Usuario$conteudosArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.ConteudoScalarFieldEnum | Prisma.ConteudoScalarFieldEnum[]
+}
+
+/**
+ * Usuario.categorias
+ */
+export type Usuario$categoriasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Categoria
+   */
+  select?: Prisma.CategoriaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Categoria
+   */
+  omit?: Prisma.CategoriaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CategoriaInclude<ExtArgs> | null
+  where?: Prisma.CategoriaWhereInput
+  orderBy?: Prisma.CategoriaOrderByWithRelationInput | Prisma.CategoriaOrderByWithRelationInput[]
+  cursor?: Prisma.CategoriaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CategoriaScalarFieldEnum | Prisma.CategoriaScalarFieldEnum[]
 }
 
 /**

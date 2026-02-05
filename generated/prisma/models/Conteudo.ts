@@ -36,7 +36,6 @@ export type ConteudoSumAggregateOutputType = {
 
 export type ConteudoMinAggregateOutputType = {
   id: number | null
-  nome: string | null
   name: string | null
   link: string | null
   fonte: string | null
@@ -44,7 +43,6 @@ export type ConteudoMinAggregateOutputType = {
   filename: string | null
   mimetype: string | null
   data: runtime.Bytes | null
-  isFree: boolean | null
   isTrend: boolean | null
   userId: string | null
   updatedAt: Date | null
@@ -53,7 +51,6 @@ export type ConteudoMinAggregateOutputType = {
 
 export type ConteudoMaxAggregateOutputType = {
   id: number | null
-  nome: string | null
   name: string | null
   link: string | null
   fonte: string | null
@@ -61,7 +58,6 @@ export type ConteudoMaxAggregateOutputType = {
   filename: string | null
   mimetype: string | null
   data: runtime.Bytes | null
-  isFree: boolean | null
   isTrend: boolean | null
   userId: string | null
   updatedAt: Date | null
@@ -70,7 +66,6 @@ export type ConteudoMaxAggregateOutputType = {
 
 export type ConteudoCountAggregateOutputType = {
   id: number
-  nome: number
   name: number
   link: number
   fonte: number
@@ -78,7 +73,6 @@ export type ConteudoCountAggregateOutputType = {
   filename: number
   mimetype: number
   data: number
-  isFree: number
   isTrend: number
   userId: number
   updatedAt: number
@@ -97,7 +91,6 @@ export type ConteudoSumAggregateInputType = {
 
 export type ConteudoMinAggregateInputType = {
   id?: true
-  nome?: true
   name?: true
   link?: true
   fonte?: true
@@ -105,7 +98,6 @@ export type ConteudoMinAggregateInputType = {
   filename?: true
   mimetype?: true
   data?: true
-  isFree?: true
   isTrend?: true
   userId?: true
   updatedAt?: true
@@ -114,7 +106,6 @@ export type ConteudoMinAggregateInputType = {
 
 export type ConteudoMaxAggregateInputType = {
   id?: true
-  nome?: true
   name?: true
   link?: true
   fonte?: true
@@ -122,7 +113,6 @@ export type ConteudoMaxAggregateInputType = {
   filename?: true
   mimetype?: true
   data?: true
-  isFree?: true
   isTrend?: true
   userId?: true
   updatedAt?: true
@@ -131,7 +121,6 @@ export type ConteudoMaxAggregateInputType = {
 
 export type ConteudoCountAggregateInputType = {
   id?: true
-  nome?: true
   name?: true
   link?: true
   fonte?: true
@@ -139,7 +128,6 @@ export type ConteudoCountAggregateInputType = {
   filename?: true
   mimetype?: true
   data?: true
-  isFree?: true
   isTrend?: true
   userId?: true
   updatedAt?: true
@@ -235,7 +223,6 @@ export type ConteudoGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type ConteudoGroupByOutputType = {
   id: number
-  nome: string | null
   name: string | null
   link: string | null
   fonte: string | null
@@ -243,9 +230,8 @@ export type ConteudoGroupByOutputType = {
   filename: string
   mimetype: string
   data: runtime.Bytes
-  isFree: boolean
   isTrend: boolean
-  userId: string | null
+  userId: string
   updatedAt: Date
   createdAt: Date
   _count: ConteudoCountAggregateOutputType | null
@@ -275,7 +261,6 @@ export type ConteudoWhereInput = {
   OR?: Prisma.ConteudoWhereInput[]
   NOT?: Prisma.ConteudoWhereInput | Prisma.ConteudoWhereInput[]
   id?: Prisma.IntFilter<"Conteudo"> | number
-  nome?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   name?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   link?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   fonte?: Prisma.StringNullableFilter<"Conteudo"> | string | null
@@ -283,18 +268,16 @@ export type ConteudoWhereInput = {
   filename?: Prisma.StringFilter<"Conteudo"> | string
   mimetype?: Prisma.StringFilter<"Conteudo"> | string
   data?: Prisma.BytesFilter<"Conteudo"> | runtime.Bytes
-  isFree?: Prisma.BoolFilter<"Conteudo"> | boolean
   isTrend?: Prisma.BoolFilter<"Conteudo"> | boolean
-  userId?: Prisma.StringNullableFilter<"Conteudo"> | string | null
+  userId?: Prisma.StringFilter<"Conteudo"> | string
   updatedAt?: Prisma.DateTimeFilter<"Conteudo"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Conteudo"> | Date | string
   categorias?: Prisma.CategoriaListRelationFilter
-  user?: Prisma.XOR<Prisma.UsuarioNullableScalarRelationFilter, Prisma.UsuarioWhereInput> | null
+  user?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.UsuarioWhereInput>
 }
 
 export type ConteudoOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  nome?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   link?: Prisma.SortOrderInput | Prisma.SortOrder
   fonte?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -302,9 +285,8 @@ export type ConteudoOrderByWithRelationInput = {
   filename?: Prisma.SortOrder
   mimetype?: Prisma.SortOrder
   data?: Prisma.SortOrder
-  isFree?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
-  userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   categorias?: Prisma.CategoriaOrderByRelationAggregateInput
@@ -313,7 +295,6 @@ export type ConteudoOrderByWithRelationInput = {
 
 export type ConteudoWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  nome?: string
   name?: string
   AND?: Prisma.ConteudoWhereInput | Prisma.ConteudoWhereInput[]
   OR?: Prisma.ConteudoWhereInput[]
@@ -324,18 +305,16 @@ export type ConteudoWhereUniqueInput = Prisma.AtLeast<{
   filename?: Prisma.StringFilter<"Conteudo"> | string
   mimetype?: Prisma.StringFilter<"Conteudo"> | string
   data?: Prisma.BytesFilter<"Conteudo"> | runtime.Bytes
-  isFree?: Prisma.BoolFilter<"Conteudo"> | boolean
   isTrend?: Prisma.BoolFilter<"Conteudo"> | boolean
-  userId?: Prisma.StringNullableFilter<"Conteudo"> | string | null
+  userId?: Prisma.StringFilter<"Conteudo"> | string
   updatedAt?: Prisma.DateTimeFilter<"Conteudo"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Conteudo"> | Date | string
   categorias?: Prisma.CategoriaListRelationFilter
-  user?: Prisma.XOR<Prisma.UsuarioNullableScalarRelationFilter, Prisma.UsuarioWhereInput> | null
-}, "id" | "nome" | "name">
+  user?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.UsuarioWhereInput>
+}, "id" | "name">
 
 export type ConteudoOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  nome?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   link?: Prisma.SortOrderInput | Prisma.SortOrder
   fonte?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -343,9 +322,8 @@ export type ConteudoOrderByWithAggregationInput = {
   filename?: Prisma.SortOrder
   mimetype?: Prisma.SortOrder
   data?: Prisma.SortOrder
-  isFree?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
-  userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.ConteudoCountOrderByAggregateInput
@@ -360,7 +338,6 @@ export type ConteudoScalarWhereWithAggregatesInput = {
   OR?: Prisma.ConteudoScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ConteudoScalarWhereWithAggregatesInput | Prisma.ConteudoScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Conteudo"> | number
-  nome?: Prisma.StringNullableWithAggregatesFilter<"Conteudo"> | string | null
   name?: Prisma.StringNullableWithAggregatesFilter<"Conteudo"> | string | null
   link?: Prisma.StringNullableWithAggregatesFilter<"Conteudo"> | string | null
   fonte?: Prisma.StringNullableWithAggregatesFilter<"Conteudo"> | string | null
@@ -368,15 +345,13 @@ export type ConteudoScalarWhereWithAggregatesInput = {
   filename?: Prisma.StringWithAggregatesFilter<"Conteudo"> | string
   mimetype?: Prisma.StringWithAggregatesFilter<"Conteudo"> | string
   data?: Prisma.BytesWithAggregatesFilter<"Conteudo"> | runtime.Bytes
-  isFree?: Prisma.BoolWithAggregatesFilter<"Conteudo"> | boolean
   isTrend?: Prisma.BoolWithAggregatesFilter<"Conteudo"> | boolean
-  userId?: Prisma.StringNullableWithAggregatesFilter<"Conteudo"> | string | null
+  userId?: Prisma.StringWithAggregatesFilter<"Conteudo"> | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Conteudo"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Conteudo"> | Date | string
 }
 
 export type ConteudoCreateInput = {
-  nome?: string | null
   name?: string | null
   link?: string | null
   fonte?: string | null
@@ -384,17 +359,15 @@ export type ConteudoCreateInput = {
   filename: string
   mimetype: string
   data: runtime.Bytes
-  isFree?: boolean
   isTrend?: boolean
   updatedAt?: Date | string
   createdAt?: Date | string
   categorias?: Prisma.CategoriaCreateNestedManyWithoutConteudosInput
-  user?: Prisma.UsuarioCreateNestedOneWithoutConteudosInput
+  user: Prisma.UsuarioCreateNestedOneWithoutConteudosInput
 }
 
 export type ConteudoUncheckedCreateInput = {
   id?: number
-  nome?: string | null
   name?: string | null
   link?: string | null
   fonte?: string | null
@@ -402,16 +375,14 @@ export type ConteudoUncheckedCreateInput = {
   filename: string
   mimetype: string
   data: runtime.Bytes
-  isFree?: boolean
   isTrend?: boolean
-  userId?: string | null
+  userId: string
   updatedAt?: Date | string
   createdAt?: Date | string
   categorias?: Prisma.CategoriaUncheckedCreateNestedManyWithoutConteudosInput
 }
 
 export type ConteudoUpdateInput = {
-  nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -419,17 +390,15 @@ export type ConteudoUpdateInput = {
   filename?: Prisma.StringFieldUpdateOperationsInput | string
   mimetype?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   categorias?: Prisma.CategoriaUpdateManyWithoutConteudosNestedInput
-  user?: Prisma.UsuarioUpdateOneWithoutConteudosNestedInput
+  user?: Prisma.UsuarioUpdateOneRequiredWithoutConteudosNestedInput
 }
 
 export type ConteudoUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -437,9 +406,8 @@ export type ConteudoUncheckedUpdateInput = {
   filename?: Prisma.StringFieldUpdateOperationsInput | string
   mimetype?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   categorias?: Prisma.CategoriaUncheckedUpdateManyWithoutConteudosNestedInput
@@ -447,7 +415,6 @@ export type ConteudoUncheckedUpdateInput = {
 
 export type ConteudoCreateManyInput = {
   id?: number
-  nome?: string | null
   name?: string | null
   link?: string | null
   fonte?: string | null
@@ -455,15 +422,13 @@ export type ConteudoCreateManyInput = {
   filename: string
   mimetype: string
   data: runtime.Bytes
-  isFree?: boolean
   isTrend?: boolean
-  userId?: string | null
+  userId: string
   updatedAt?: Date | string
   createdAt?: Date | string
 }
 
 export type ConteudoUpdateManyMutationInput = {
-  nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -471,7 +436,6 @@ export type ConteudoUpdateManyMutationInput = {
   filename?: Prisma.StringFieldUpdateOperationsInput | string
   mimetype?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -479,7 +443,6 @@ export type ConteudoUpdateManyMutationInput = {
 
 export type ConteudoUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -487,9 +450,8 @@ export type ConteudoUncheckedUpdateManyInput = {
   filename?: Prisma.StringFieldUpdateOperationsInput | string
   mimetype?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -506,7 +468,6 @@ export type ConteudoOrderByRelationAggregateInput = {
 
 export type ConteudoCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  nome?: Prisma.SortOrder
   name?: Prisma.SortOrder
   link?: Prisma.SortOrder
   fonte?: Prisma.SortOrder
@@ -514,7 +475,6 @@ export type ConteudoCountOrderByAggregateInput = {
   filename?: Prisma.SortOrder
   mimetype?: Prisma.SortOrder
   data?: Prisma.SortOrder
-  isFree?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -527,7 +487,6 @@ export type ConteudoAvgOrderByAggregateInput = {
 
 export type ConteudoMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  nome?: Prisma.SortOrder
   name?: Prisma.SortOrder
   link?: Prisma.SortOrder
   fonte?: Prisma.SortOrder
@@ -535,7 +494,6 @@ export type ConteudoMaxOrderByAggregateInput = {
   filename?: Prisma.SortOrder
   mimetype?: Prisma.SortOrder
   data?: Prisma.SortOrder
-  isFree?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -544,7 +502,6 @@ export type ConteudoMaxOrderByAggregateInput = {
 
 export type ConteudoMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  nome?: Prisma.SortOrder
   name?: Prisma.SortOrder
   link?: Prisma.SortOrder
   fonte?: Prisma.SortOrder
@@ -552,7 +509,6 @@ export type ConteudoMinOrderByAggregateInput = {
   filename?: Prisma.SortOrder
   mimetype?: Prisma.SortOrder
   data?: Prisma.SortOrder
-  isFree?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -648,7 +604,6 @@ export type ConteudoUncheckedUpdateManyWithoutCategoriasNestedInput = {
 }
 
 export type ConteudoCreateWithoutUserInput = {
-  nome?: string | null
   name?: string | null
   link?: string | null
   fonte?: string | null
@@ -656,7 +611,6 @@ export type ConteudoCreateWithoutUserInput = {
   filename: string
   mimetype: string
   data: runtime.Bytes
-  isFree?: boolean
   isTrend?: boolean
   updatedAt?: Date | string
   createdAt?: Date | string
@@ -665,7 +619,6 @@ export type ConteudoCreateWithoutUserInput = {
 
 export type ConteudoUncheckedCreateWithoutUserInput = {
   id?: number
-  nome?: string | null
   name?: string | null
   link?: string | null
   fonte?: string | null
@@ -673,7 +626,6 @@ export type ConteudoUncheckedCreateWithoutUserInput = {
   filename: string
   mimetype: string
   data: runtime.Bytes
-  isFree?: boolean
   isTrend?: boolean
   updatedAt?: Date | string
   createdAt?: Date | string
@@ -711,7 +663,6 @@ export type ConteudoScalarWhereInput = {
   OR?: Prisma.ConteudoScalarWhereInput[]
   NOT?: Prisma.ConteudoScalarWhereInput | Prisma.ConteudoScalarWhereInput[]
   id?: Prisma.IntFilter<"Conteudo"> | number
-  nome?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   name?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   link?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   fonte?: Prisma.StringNullableFilter<"Conteudo"> | string | null
@@ -719,15 +670,13 @@ export type ConteudoScalarWhereInput = {
   filename?: Prisma.StringFilter<"Conteudo"> | string
   mimetype?: Prisma.StringFilter<"Conteudo"> | string
   data?: Prisma.BytesFilter<"Conteudo"> | runtime.Bytes
-  isFree?: Prisma.BoolFilter<"Conteudo"> | boolean
   isTrend?: Prisma.BoolFilter<"Conteudo"> | boolean
-  userId?: Prisma.StringNullableFilter<"Conteudo"> | string | null
+  userId?: Prisma.StringFilter<"Conteudo"> | string
   updatedAt?: Prisma.DateTimeFilter<"Conteudo"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Conteudo"> | Date | string
 }
 
 export type ConteudoCreateWithoutCategoriasInput = {
-  nome?: string | null
   name?: string | null
   link?: string | null
   fonte?: string | null
@@ -735,16 +684,14 @@ export type ConteudoCreateWithoutCategoriasInput = {
   filename: string
   mimetype: string
   data: runtime.Bytes
-  isFree?: boolean
   isTrend?: boolean
   updatedAt?: Date | string
   createdAt?: Date | string
-  user?: Prisma.UsuarioCreateNestedOneWithoutConteudosInput
+  user: Prisma.UsuarioCreateNestedOneWithoutConteudosInput
 }
 
 export type ConteudoUncheckedCreateWithoutCategoriasInput = {
   id?: number
-  nome?: string | null
   name?: string | null
   link?: string | null
   fonte?: string | null
@@ -752,9 +699,8 @@ export type ConteudoUncheckedCreateWithoutCategoriasInput = {
   filename: string
   mimetype: string
   data: runtime.Bytes
-  isFree?: boolean
   isTrend?: boolean
-  userId?: string | null
+  userId: string
   updatedAt?: Date | string
   createdAt?: Date | string
 }
@@ -782,7 +728,6 @@ export type ConteudoUpdateManyWithWhereWithoutCategoriasInput = {
 
 export type ConteudoCreateManyUserInput = {
   id?: number
-  nome?: string | null
   name?: string | null
   link?: string | null
   fonte?: string | null
@@ -790,14 +735,12 @@ export type ConteudoCreateManyUserInput = {
   filename: string
   mimetype: string
   data: runtime.Bytes
-  isFree?: boolean
   isTrend?: boolean
   updatedAt?: Date | string
   createdAt?: Date | string
 }
 
 export type ConteudoUpdateWithoutUserInput = {
-  nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -805,7 +748,6 @@ export type ConteudoUpdateWithoutUserInput = {
   filename?: Prisma.StringFieldUpdateOperationsInput | string
   mimetype?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -814,7 +756,6 @@ export type ConteudoUpdateWithoutUserInput = {
 
 export type ConteudoUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -822,7 +763,6 @@ export type ConteudoUncheckedUpdateWithoutUserInput = {
   filename?: Prisma.StringFieldUpdateOperationsInput | string
   mimetype?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -831,7 +771,6 @@ export type ConteudoUncheckedUpdateWithoutUserInput = {
 
 export type ConteudoUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -839,14 +778,12 @@ export type ConteudoUncheckedUpdateManyWithoutUserInput = {
   filename?: Prisma.StringFieldUpdateOperationsInput | string
   mimetype?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConteudoUpdateWithoutCategoriasInput = {
-  nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -854,16 +791,14 @@ export type ConteudoUpdateWithoutCategoriasInput = {
   filename?: Prisma.StringFieldUpdateOperationsInput | string
   mimetype?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UsuarioUpdateOneWithoutConteudosNestedInput
+  user?: Prisma.UsuarioUpdateOneRequiredWithoutConteudosNestedInput
 }
 
 export type ConteudoUncheckedUpdateWithoutCategoriasInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -871,16 +806,14 @@ export type ConteudoUncheckedUpdateWithoutCategoriasInput = {
   filename?: Prisma.StringFieldUpdateOperationsInput | string
   mimetype?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ConteudoUncheckedUpdateManyWithoutCategoriasInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -888,9 +821,8 @@ export type ConteudoUncheckedUpdateManyWithoutCategoriasInput = {
   filename?: Prisma.StringFieldUpdateOperationsInput | string
   mimetype?: Prisma.StringFieldUpdateOperationsInput | string
   data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -928,7 +860,6 @@ export type ConteudoCountOutputTypeCountCategoriasArgs<ExtArgs extends runtime.T
 
 export type ConteudoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  nome?: boolean
   name?: boolean
   link?: boolean
   fonte?: boolean
@@ -936,19 +867,17 @@ export type ConteudoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   filename?: boolean
   mimetype?: boolean
   data?: boolean
-  isFree?: boolean
   isTrend?: boolean
   userId?: boolean
   updatedAt?: boolean
   createdAt?: boolean
   categorias?: boolean | Prisma.Conteudo$categoriasArgs<ExtArgs>
-  user?: boolean | Prisma.Conteudo$userArgs<ExtArgs>
+  user?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ConteudoCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["conteudo"]>
 
 export type ConteudoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  nome?: boolean
   name?: boolean
   link?: boolean
   fonte?: boolean
@@ -956,17 +885,15 @@ export type ConteudoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   filename?: boolean
   mimetype?: boolean
   data?: boolean
-  isFree?: boolean
   isTrend?: boolean
   userId?: boolean
   updatedAt?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.Conteudo$userArgs<ExtArgs>
+  user?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["conteudo"]>
 
 export type ConteudoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  nome?: boolean
   name?: boolean
   link?: boolean
   fonte?: boolean
@@ -974,17 +901,15 @@ export type ConteudoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   filename?: boolean
   mimetype?: boolean
   data?: boolean
-  isFree?: boolean
   isTrend?: boolean
   userId?: boolean
   updatedAt?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.Conteudo$userArgs<ExtArgs>
+  user?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["conteudo"]>
 
 export type ConteudoSelectScalar = {
   id?: boolean
-  nome?: boolean
   name?: boolean
   link?: boolean
   fonte?: boolean
@@ -992,35 +917,33 @@ export type ConteudoSelectScalar = {
   filename?: boolean
   mimetype?: boolean
   data?: boolean
-  isFree?: boolean
   isTrend?: boolean
   userId?: boolean
   updatedAt?: boolean
   createdAt?: boolean
 }
 
-export type ConteudoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nome" | "name" | "link" | "fonte" | "linkext" | "filename" | "mimetype" | "data" | "isFree" | "isTrend" | "userId" | "updatedAt" | "createdAt", ExtArgs["result"]["conteudo"]>
+export type ConteudoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "link" | "fonte" | "linkext" | "filename" | "mimetype" | "data" | "isTrend" | "userId" | "updatedAt" | "createdAt", ExtArgs["result"]["conteudo"]>
 export type ConteudoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   categorias?: boolean | Prisma.Conteudo$categoriasArgs<ExtArgs>
-  user?: boolean | Prisma.Conteudo$userArgs<ExtArgs>
+  user?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ConteudoCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ConteudoIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.Conteudo$userArgs<ExtArgs>
+  user?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
 }
 export type ConteudoIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.Conteudo$userArgs<ExtArgs>
+  user?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
 }
 
 export type $ConteudoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Conteudo"
   objects: {
     categorias: Prisma.$CategoriaPayload<ExtArgs>[]
-    user: Prisma.$UsuarioPayload<ExtArgs> | null
+    user: Prisma.$UsuarioPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    nome: string | null
     name: string | null
     link: string | null
     fonte: string | null
@@ -1028,9 +951,8 @@ export type $ConteudoPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     filename: string
     mimetype: string
     data: runtime.Bytes
-    isFree: boolean
     isTrend: boolean
-    userId: string | null
+    userId: string
     updatedAt: Date
     createdAt: Date
   }, ExtArgs["result"]["conteudo"]>
@@ -1428,7 +1350,7 @@ readonly fields: ConteudoFieldRefs;
 export interface Prisma__ConteudoClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   categorias<T extends Prisma.Conteudo$categoriasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Conteudo$categoriasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  user<T extends Prisma.Conteudo$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Conteudo$userArgs<ExtArgs>>): Prisma.Prisma__UsuarioClient<runtime.Types.Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UsuarioDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UsuarioDefaultArgs<ExtArgs>>): Prisma.Prisma__UsuarioClient<runtime.Types.Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1459,7 +1381,6 @@ export interface Prisma__ConteudoClient<T, Null = never, ExtArgs extends runtime
  */
 export interface ConteudoFieldRefs {
   readonly id: Prisma.FieldRef<"Conteudo", 'Int'>
-  readonly nome: Prisma.FieldRef<"Conteudo", 'String'>
   readonly name: Prisma.FieldRef<"Conteudo", 'String'>
   readonly link: Prisma.FieldRef<"Conteudo", 'String'>
   readonly fonte: Prisma.FieldRef<"Conteudo", 'String'>
@@ -1467,7 +1388,6 @@ export interface ConteudoFieldRefs {
   readonly filename: Prisma.FieldRef<"Conteudo", 'String'>
   readonly mimetype: Prisma.FieldRef<"Conteudo", 'String'>
   readonly data: Prisma.FieldRef<"Conteudo", 'Bytes'>
-  readonly isFree: Prisma.FieldRef<"Conteudo", 'Boolean'>
   readonly isTrend: Prisma.FieldRef<"Conteudo", 'Boolean'>
   readonly userId: Prisma.FieldRef<"Conteudo", 'String'>
   readonly updatedAt: Prisma.FieldRef<"Conteudo", 'DateTime'>
@@ -1889,25 +1809,6 @@ export type Conteudo$categoriasArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.CategoriaScalarFieldEnum | Prisma.CategoriaScalarFieldEnum[]
-}
-
-/**
- * Conteudo.user
- */
-export type Conteudo$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Usuario
-   */
-  select?: Prisma.UsuarioSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Usuario
-   */
-  omit?: Prisma.UsuarioOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UsuarioInclude<ExtArgs> | null
-  where?: Prisma.UsuarioWhereInput
 }
 
 /**

@@ -39,8 +39,8 @@ export type CategoriaMinAggregateOutputType = {
   nome: string | null
   name: string | null
   descricao: string | null
-  isFree: boolean | null
   isTrend: boolean | null
+  userId: string | null
   updatedAt: Date | null
   createdAt: Date | null
 }
@@ -50,8 +50,8 @@ export type CategoriaMaxAggregateOutputType = {
   nome: string | null
   name: string | null
   descricao: string | null
-  isFree: boolean | null
   isTrend: boolean | null
+  userId: string | null
   updatedAt: Date | null
   createdAt: Date | null
 }
@@ -61,8 +61,8 @@ export type CategoriaCountAggregateOutputType = {
   nome: number
   name: number
   descricao: number
-  isFree: number
   isTrend: number
+  userId: number
   updatedAt: number
   createdAt: number
   _all: number
@@ -82,8 +82,8 @@ export type CategoriaMinAggregateInputType = {
   nome?: true
   name?: true
   descricao?: true
-  isFree?: true
   isTrend?: true
+  userId?: true
   updatedAt?: true
   createdAt?: true
 }
@@ -93,8 +93,8 @@ export type CategoriaMaxAggregateInputType = {
   nome?: true
   name?: true
   descricao?: true
-  isFree?: true
   isTrend?: true
+  userId?: true
   updatedAt?: true
   createdAt?: true
 }
@@ -104,8 +104,8 @@ export type CategoriaCountAggregateInputType = {
   nome?: true
   name?: true
   descricao?: true
-  isFree?: true
   isTrend?: true
+  userId?: true
   updatedAt?: true
   createdAt?: true
   _all?: true
@@ -202,8 +202,8 @@ export type CategoriaGroupByOutputType = {
   nome: string | null
   name: string | null
   descricao: string | null
-  isFree: boolean
   isTrend: boolean
+  userId: string
   updatedAt: Date
   createdAt: Date
   _count: CategoriaCountAggregateOutputType | null
@@ -236,11 +236,12 @@ export type CategoriaWhereInput = {
   nome?: Prisma.StringNullableFilter<"Categoria"> | string | null
   name?: Prisma.StringNullableFilter<"Categoria"> | string | null
   descricao?: Prisma.StringNullableFilter<"Categoria"> | string | null
-  isFree?: Prisma.BoolFilter<"Categoria"> | boolean
   isTrend?: Prisma.BoolFilter<"Categoria"> | boolean
+  userId?: Prisma.StringFilter<"Categoria"> | string
   updatedAt?: Prisma.DateTimeFilter<"Categoria"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Categoria"> | Date | string
   conteudos?: Prisma.ConteudoListRelationFilter
+  user?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.UsuarioWhereInput>
 }
 
 export type CategoriaOrderByWithRelationInput = {
@@ -248,11 +249,12 @@ export type CategoriaOrderByWithRelationInput = {
   nome?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   descricao?: Prisma.SortOrderInput | Prisma.SortOrder
-  isFree?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   conteudos?: Prisma.ConteudoOrderByRelationAggregateInput
+  user?: Prisma.UsuarioOrderByWithRelationInput
 }
 
 export type CategoriaWhereUniqueInput = Prisma.AtLeast<{
@@ -263,11 +265,12 @@ export type CategoriaWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.CategoriaWhereInput[]
   NOT?: Prisma.CategoriaWhereInput | Prisma.CategoriaWhereInput[]
   descricao?: Prisma.StringNullableFilter<"Categoria"> | string | null
-  isFree?: Prisma.BoolFilter<"Categoria"> | boolean
   isTrend?: Prisma.BoolFilter<"Categoria"> | boolean
+  userId?: Prisma.StringFilter<"Categoria"> | string
   updatedAt?: Prisma.DateTimeFilter<"Categoria"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Categoria"> | Date | string
   conteudos?: Prisma.ConteudoListRelationFilter
+  user?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.UsuarioWhereInput>
 }, "id" | "nome" | "name">
 
 export type CategoriaOrderByWithAggregationInput = {
@@ -275,8 +278,8 @@ export type CategoriaOrderByWithAggregationInput = {
   nome?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   descricao?: Prisma.SortOrderInput | Prisma.SortOrder
-  isFree?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.CategoriaCountOrderByAggregateInput
@@ -294,8 +297,8 @@ export type CategoriaScalarWhereWithAggregatesInput = {
   nome?: Prisma.StringNullableWithAggregatesFilter<"Categoria"> | string | null
   name?: Prisma.StringNullableWithAggregatesFilter<"Categoria"> | string | null
   descricao?: Prisma.StringNullableWithAggregatesFilter<"Categoria"> | string | null
-  isFree?: Prisma.BoolWithAggregatesFilter<"Categoria"> | boolean
   isTrend?: Prisma.BoolWithAggregatesFilter<"Categoria"> | boolean
+  userId?: Prisma.StringWithAggregatesFilter<"Categoria"> | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Categoria"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Categoria"> | Date | string
 }
@@ -304,11 +307,11 @@ export type CategoriaCreateInput = {
   nome?: string | null
   name?: string | null
   descricao?: string | null
-  isFree?: boolean
   isTrend?: boolean
   updatedAt?: Date | string
   createdAt?: Date | string
   conteudos?: Prisma.ConteudoCreateNestedManyWithoutCategoriasInput
+  user: Prisma.UsuarioCreateNestedOneWithoutCategoriasInput
 }
 
 export type CategoriaUncheckedCreateInput = {
@@ -316,8 +319,8 @@ export type CategoriaUncheckedCreateInput = {
   nome?: string | null
   name?: string | null
   descricao?: string | null
-  isFree?: boolean
   isTrend?: boolean
+  userId: string
   updatedAt?: Date | string
   createdAt?: Date | string
   conteudos?: Prisma.ConteudoUncheckedCreateNestedManyWithoutCategoriasInput
@@ -327,11 +330,11 @@ export type CategoriaUpdateInput = {
   nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descricao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conteudos?: Prisma.ConteudoUpdateManyWithoutCategoriasNestedInput
+  user?: Prisma.UsuarioUpdateOneRequiredWithoutCategoriasNestedInput
 }
 
 export type CategoriaUncheckedUpdateInput = {
@@ -339,8 +342,8 @@ export type CategoriaUncheckedUpdateInput = {
   nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descricao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conteudos?: Prisma.ConteudoUncheckedUpdateManyWithoutCategoriasNestedInput
@@ -351,8 +354,8 @@ export type CategoriaCreateManyInput = {
   nome?: string | null
   name?: string | null
   descricao?: string | null
-  isFree?: boolean
   isTrend?: boolean
+  userId: string
   updatedAt?: Date | string
   createdAt?: Date | string
 }
@@ -361,7 +364,6 @@ export type CategoriaUpdateManyMutationInput = {
   nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descricao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -372,8 +374,8 @@ export type CategoriaUncheckedUpdateManyInput = {
   nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descricao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -393,8 +395,8 @@ export type CategoriaCountOrderByAggregateInput = {
   nome?: Prisma.SortOrder
   name?: Prisma.SortOrder
   descricao?: Prisma.SortOrder
-  isFree?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -408,8 +410,8 @@ export type CategoriaMaxOrderByAggregateInput = {
   nome?: Prisma.SortOrder
   name?: Prisma.SortOrder
   descricao?: Prisma.SortOrder
-  isFree?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -419,14 +421,56 @@ export type CategoriaMinOrderByAggregateInput = {
   nome?: Prisma.SortOrder
   name?: Prisma.SortOrder
   descricao?: Prisma.SortOrder
-  isFree?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type CategoriaSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+}
+
+export type CategoriaCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.CategoriaCreateWithoutUserInput, Prisma.CategoriaUncheckedCreateWithoutUserInput> | Prisma.CategoriaCreateWithoutUserInput[] | Prisma.CategoriaUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CategoriaCreateOrConnectWithoutUserInput | Prisma.CategoriaCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.CategoriaCreateManyUserInputEnvelope
+  connect?: Prisma.CategoriaWhereUniqueInput | Prisma.CategoriaWhereUniqueInput[]
+}
+
+export type CategoriaUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.CategoriaCreateWithoutUserInput, Prisma.CategoriaUncheckedCreateWithoutUserInput> | Prisma.CategoriaCreateWithoutUserInput[] | Prisma.CategoriaUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CategoriaCreateOrConnectWithoutUserInput | Prisma.CategoriaCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.CategoriaCreateManyUserInputEnvelope
+  connect?: Prisma.CategoriaWhereUniqueInput | Prisma.CategoriaWhereUniqueInput[]
+}
+
+export type CategoriaUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.CategoriaCreateWithoutUserInput, Prisma.CategoriaUncheckedCreateWithoutUserInput> | Prisma.CategoriaCreateWithoutUserInput[] | Prisma.CategoriaUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CategoriaCreateOrConnectWithoutUserInput | Prisma.CategoriaCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.CategoriaUpsertWithWhereUniqueWithoutUserInput | Prisma.CategoriaUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.CategoriaCreateManyUserInputEnvelope
+  set?: Prisma.CategoriaWhereUniqueInput | Prisma.CategoriaWhereUniqueInput[]
+  disconnect?: Prisma.CategoriaWhereUniqueInput | Prisma.CategoriaWhereUniqueInput[]
+  delete?: Prisma.CategoriaWhereUniqueInput | Prisma.CategoriaWhereUniqueInput[]
+  connect?: Prisma.CategoriaWhereUniqueInput | Prisma.CategoriaWhereUniqueInput[]
+  update?: Prisma.CategoriaUpdateWithWhereUniqueWithoutUserInput | Prisma.CategoriaUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.CategoriaUpdateManyWithWhereWithoutUserInput | Prisma.CategoriaUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.CategoriaScalarWhereInput | Prisma.CategoriaScalarWhereInput[]
+}
+
+export type CategoriaUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.CategoriaCreateWithoutUserInput, Prisma.CategoriaUncheckedCreateWithoutUserInput> | Prisma.CategoriaCreateWithoutUserInput[] | Prisma.CategoriaUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CategoriaCreateOrConnectWithoutUserInput | Prisma.CategoriaCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.CategoriaUpsertWithWhereUniqueWithoutUserInput | Prisma.CategoriaUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.CategoriaCreateManyUserInputEnvelope
+  set?: Prisma.CategoriaWhereUniqueInput | Prisma.CategoriaWhereUniqueInput[]
+  disconnect?: Prisma.CategoriaWhereUniqueInput | Prisma.CategoriaWhereUniqueInput[]
+  delete?: Prisma.CategoriaWhereUniqueInput | Prisma.CategoriaWhereUniqueInput[]
+  connect?: Prisma.CategoriaWhereUniqueInput | Prisma.CategoriaWhereUniqueInput[]
+  update?: Prisma.CategoriaUpdateWithWhereUniqueWithoutUserInput | Prisma.CategoriaUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.CategoriaUpdateManyWithWhereWithoutUserInput | Prisma.CategoriaUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.CategoriaScalarWhereInput | Prisma.CategoriaScalarWhereInput[]
 }
 
 export type CategoriaCreateNestedManyWithoutConteudosInput = {
@@ -467,14 +511,75 @@ export type CategoriaUncheckedUpdateManyWithoutConteudosNestedInput = {
   deleteMany?: Prisma.CategoriaScalarWhereInput | Prisma.CategoriaScalarWhereInput[]
 }
 
+export type CategoriaCreateWithoutUserInput = {
+  nome?: string | null
+  name?: string | null
+  descricao?: string | null
+  isTrend?: boolean
+  updatedAt?: Date | string
+  createdAt?: Date | string
+  conteudos?: Prisma.ConteudoCreateNestedManyWithoutCategoriasInput
+}
+
+export type CategoriaUncheckedCreateWithoutUserInput = {
+  id?: number
+  nome?: string | null
+  name?: string | null
+  descricao?: string | null
+  isTrend?: boolean
+  updatedAt?: Date | string
+  createdAt?: Date | string
+  conteudos?: Prisma.ConteudoUncheckedCreateNestedManyWithoutCategoriasInput
+}
+
+export type CategoriaCreateOrConnectWithoutUserInput = {
+  where: Prisma.CategoriaWhereUniqueInput
+  create: Prisma.XOR<Prisma.CategoriaCreateWithoutUserInput, Prisma.CategoriaUncheckedCreateWithoutUserInput>
+}
+
+export type CategoriaCreateManyUserInputEnvelope = {
+  data: Prisma.CategoriaCreateManyUserInput | Prisma.CategoriaCreateManyUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type CategoriaUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.CategoriaWhereUniqueInput
+  update: Prisma.XOR<Prisma.CategoriaUpdateWithoutUserInput, Prisma.CategoriaUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.CategoriaCreateWithoutUserInput, Prisma.CategoriaUncheckedCreateWithoutUserInput>
+}
+
+export type CategoriaUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.CategoriaWhereUniqueInput
+  data: Prisma.XOR<Prisma.CategoriaUpdateWithoutUserInput, Prisma.CategoriaUncheckedUpdateWithoutUserInput>
+}
+
+export type CategoriaUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.CategoriaScalarWhereInput
+  data: Prisma.XOR<Prisma.CategoriaUpdateManyMutationInput, Prisma.CategoriaUncheckedUpdateManyWithoutUserInput>
+}
+
+export type CategoriaScalarWhereInput = {
+  AND?: Prisma.CategoriaScalarWhereInput | Prisma.CategoriaScalarWhereInput[]
+  OR?: Prisma.CategoriaScalarWhereInput[]
+  NOT?: Prisma.CategoriaScalarWhereInput | Prisma.CategoriaScalarWhereInput[]
+  id?: Prisma.IntFilter<"Categoria"> | number
+  nome?: Prisma.StringNullableFilter<"Categoria"> | string | null
+  name?: Prisma.StringNullableFilter<"Categoria"> | string | null
+  descricao?: Prisma.StringNullableFilter<"Categoria"> | string | null
+  isTrend?: Prisma.BoolFilter<"Categoria"> | boolean
+  userId?: Prisma.StringFilter<"Categoria"> | string
+  updatedAt?: Prisma.DateTimeFilter<"Categoria"> | Date | string
+  createdAt?: Prisma.DateTimeFilter<"Categoria"> | Date | string
+}
+
 export type CategoriaCreateWithoutConteudosInput = {
   nome?: string | null
   name?: string | null
   descricao?: string | null
-  isFree?: boolean
   isTrend?: boolean
   updatedAt?: Date | string
   createdAt?: Date | string
+  user: Prisma.UsuarioCreateNestedOneWithoutCategoriasInput
 }
 
 export type CategoriaUncheckedCreateWithoutConteudosInput = {
@@ -482,8 +587,8 @@ export type CategoriaUncheckedCreateWithoutConteudosInput = {
   nome?: string | null
   name?: string | null
   descricao?: string | null
-  isFree?: boolean
   isTrend?: boolean
+  userId: string
   updatedAt?: Date | string
   createdAt?: Date | string
 }
@@ -509,28 +614,55 @@ export type CategoriaUpdateManyWithWhereWithoutConteudosInput = {
   data: Prisma.XOR<Prisma.CategoriaUpdateManyMutationInput, Prisma.CategoriaUncheckedUpdateManyWithoutConteudosInput>
 }
 
-export type CategoriaScalarWhereInput = {
-  AND?: Prisma.CategoriaScalarWhereInput | Prisma.CategoriaScalarWhereInput[]
-  OR?: Prisma.CategoriaScalarWhereInput[]
-  NOT?: Prisma.CategoriaScalarWhereInput | Prisma.CategoriaScalarWhereInput[]
-  id?: Prisma.IntFilter<"Categoria"> | number
-  nome?: Prisma.StringNullableFilter<"Categoria"> | string | null
-  name?: Prisma.StringNullableFilter<"Categoria"> | string | null
-  descricao?: Prisma.StringNullableFilter<"Categoria"> | string | null
-  isFree?: Prisma.BoolFilter<"Categoria"> | boolean
-  isTrend?: Prisma.BoolFilter<"Categoria"> | boolean
-  updatedAt?: Prisma.DateTimeFilter<"Categoria"> | Date | string
-  createdAt?: Prisma.DateTimeFilter<"Categoria"> | Date | string
+export type CategoriaCreateManyUserInput = {
+  id?: number
+  nome?: string | null
+  name?: string | null
+  descricao?: string | null
+  isTrend?: boolean
+  updatedAt?: Date | string
+  createdAt?: Date | string
+}
+
+export type CategoriaUpdateWithoutUserInput = {
+  nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descricao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  conteudos?: Prisma.ConteudoUpdateManyWithoutCategoriasNestedInput
+}
+
+export type CategoriaUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descricao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  conteudos?: Prisma.ConteudoUncheckedUpdateManyWithoutCategoriasNestedInput
+}
+
+export type CategoriaUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descricao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CategoriaUpdateWithoutConteudosInput = {
   nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descricao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UsuarioUpdateOneRequiredWithoutCategoriasNestedInput
 }
 
 export type CategoriaUncheckedUpdateWithoutConteudosInput = {
@@ -538,8 +670,8 @@ export type CategoriaUncheckedUpdateWithoutConteudosInput = {
   nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descricao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -549,8 +681,8 @@ export type CategoriaUncheckedUpdateManyWithoutConteudosInput = {
   nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descricao?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isFree?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -591,11 +723,12 @@ export type CategoriaSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   nome?: boolean
   name?: boolean
   descricao?: boolean
-  isFree?: boolean
   isTrend?: boolean
+  userId?: boolean
   updatedAt?: boolean
   createdAt?: boolean
   conteudos?: boolean | Prisma.Categoria$conteudosArgs<ExtArgs>
+  user?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.CategoriaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["categoria"]>
 
@@ -604,10 +737,11 @@ export type CategoriaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   nome?: boolean
   name?: boolean
   descricao?: boolean
-  isFree?: boolean
   isTrend?: boolean
+  userId?: boolean
   updatedAt?: boolean
   createdAt?: boolean
+  user?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["categoria"]>
 
 export type CategoriaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -615,10 +749,11 @@ export type CategoriaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   nome?: boolean
   name?: boolean
   descricao?: boolean
-  isFree?: boolean
   isTrend?: boolean
+  userId?: boolean
   updatedAt?: boolean
   createdAt?: boolean
+  user?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["categoria"]>
 
 export type CategoriaSelectScalar = {
@@ -626,32 +761,38 @@ export type CategoriaSelectScalar = {
   nome?: boolean
   name?: boolean
   descricao?: boolean
-  isFree?: boolean
   isTrend?: boolean
+  userId?: boolean
   updatedAt?: boolean
   createdAt?: boolean
 }
 
-export type CategoriaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nome" | "name" | "descricao" | "isFree" | "isTrend" | "updatedAt" | "createdAt", ExtArgs["result"]["categoria"]>
+export type CategoriaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nome" | "name" | "descricao" | "isTrend" | "userId" | "updatedAt" | "createdAt", ExtArgs["result"]["categoria"]>
 export type CategoriaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   conteudos?: boolean | Prisma.Categoria$conteudosArgs<ExtArgs>
+  user?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.CategoriaCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type CategoriaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type CategoriaIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type CategoriaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
+}
+export type CategoriaIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
+}
 
 export type $CategoriaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Categoria"
   objects: {
     conteudos: Prisma.$ConteudoPayload<ExtArgs>[]
+    user: Prisma.$UsuarioPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     nome: string | null
     name: string | null
     descricao: string | null
-    isFree: boolean
     isTrend: boolean
+    userId: string
     updatedAt: Date
     createdAt: Date
   }, ExtArgs["result"]["categoria"]>
@@ -1049,6 +1190,7 @@ readonly fields: CategoriaFieldRefs;
 export interface Prisma__CategoriaClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   conteudos<T extends Prisma.Categoria$conteudosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Categoria$conteudosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConteudoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  user<T extends Prisma.UsuarioDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UsuarioDefaultArgs<ExtArgs>>): Prisma.Prisma__UsuarioClient<runtime.Types.Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1082,8 +1224,8 @@ export interface CategoriaFieldRefs {
   readonly nome: Prisma.FieldRef<"Categoria", 'String'>
   readonly name: Prisma.FieldRef<"Categoria", 'String'>
   readonly descricao: Prisma.FieldRef<"Categoria", 'String'>
-  readonly isFree: Prisma.FieldRef<"Categoria", 'Boolean'>
   readonly isTrend: Prisma.FieldRef<"Categoria", 'Boolean'>
+  readonly userId: Prisma.FieldRef<"Categoria", 'String'>
   readonly updatedAt: Prisma.FieldRef<"Categoria", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Categoria", 'DateTime'>
 }
@@ -1335,6 +1477,10 @@ export type CategoriaCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    */
   data: Prisma.CategoriaCreateManyInput | Prisma.CategoriaCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CategoriaIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1405,6 +1551,10 @@ export type CategoriaUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * Limit how many Categorias to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CategoriaIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

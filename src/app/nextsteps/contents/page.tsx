@@ -8,7 +8,6 @@ import { ToggleStatus } from '@/components/ToggleStatus'
 interface Conteudo {
   isTrend: boolean
   id: number
-  nome: string
   name: string
   filename: string
   mimetype: string
@@ -152,7 +151,7 @@ export default function ConteudosPage() {
               <div className="h-48 bg-gray-900 flex items-center justify-center">
                 <img
                   src={conteudo.link || `/api/nextsteps/conteudo/${conteudo.id}`}
-                  alt={conteudo.nome}
+                  alt={conteudo.name}
                   className="max-h-full max-w-full object-contain"
                 />
               </div>
@@ -161,7 +160,7 @@ export default function ConteudosPage() {
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1 min-w-0">
                     <h3 className="text-white font-semibold text-lg truncate">
-                      {conteudo.nome || conteudo.name || 'Sem nome'}
+                      {conteudo.name || 'No name'}
                     </h3>
                   </div>
 

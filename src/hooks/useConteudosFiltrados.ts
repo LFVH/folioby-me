@@ -52,7 +52,6 @@ const getCategoriasPaginadas = (categoriasParaFiltrar: CategoriaWithUrls[], page
       const categoriasComBusca = categoriasParaFiltrar.map(categoria => ({
         ...categoria,
         conteudos: categoria.conteudos.filter(conteudo => 
-          conteudo.nome?.toLowerCase().includes(termoLower) ||
           conteudo.name?.toLowerCase().includes(termoLower) ||
           conteudo.filename.toLowerCase().includes(termoLower) ||
           categoria.nome?.toLowerCase().includes(termoLower) ||

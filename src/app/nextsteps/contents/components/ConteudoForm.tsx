@@ -21,7 +21,6 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
   const [selectedCategorias, setSelectedCategorias] = useState<number[]>([])
 
   const [formData, setFormData] = useState({
-    nome: conteudo?.nome || '',
     name: conteudo?.name || '',
     fonte: conteudo?.fonte || '',
     link: conteudo?.link || '',
@@ -66,7 +65,6 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
 
     try {
       const submitData = new FormData()
-      submitData.append('nome', formData.nome)
       submitData.append('name', formData.name)
       submitData.append('fonte', formData.fonte)
       submitData.append('link', formData.link)
@@ -136,18 +134,6 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
           <p className="text-gray-400 text-sm mt-1">
             {conteudo ? 'Deixe em branco para manter o arquivo atual' : 'Selecione um arquivo GIF'}
           </p>
-        </div>
-
-        {/* Nome */}
-        <div>
-          <label className="block text-white font-semibold mb-2">Nome (PT-BR)</label>
-          <input
-            type="text"
-            value={formData.nome}
-            onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))}
-            className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
-            placeholder="Nome em português"
-          />
         </div>
 
         {/* Name */}

@@ -97,7 +97,12 @@ export async function POST(request: NextRequest) {
       data: {
         nome: nome || null,
         name: name || null,
-        descricao: descricao || null
+        descricao: descricao || null,
+        user: {
+          connect: {
+            id: userId 
+          }
+        }
       },
     })
 

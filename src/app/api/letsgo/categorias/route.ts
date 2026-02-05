@@ -27,7 +27,6 @@ export async function GET(request: NextRequest) {
           },
           select: {
             id: true,
-            nome: true,
             name: true,
             filename: true,
             mimetype: true,

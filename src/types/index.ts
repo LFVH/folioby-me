@@ -5,7 +5,6 @@ export interface Conteudo {
   mimetype: string
   data: Buffer
   createdAt: Date
-  nome: string
   name: string
   isTrend: boolean
 }
@@ -13,7 +12,6 @@ export interface Conteudo {
 export interface ConteudoWithUrl {
   isTrend: boolean
   id: string 
-  nome: string | null
   name: string | null
   filename: string
   mimetype: string

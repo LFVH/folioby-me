@@ -97,7 +97,7 @@ export default function ConteudoItem({ conteudo, layout = 'carrossel' }: Conteud
             {conteudo.filename.replace('.gif', '')}
           </p>
           <p className="text-gray-300 text-xs truncate transform translate-y-2 group-hover/item:translate-y-0 transition-transform duration-400">
-            {conteudo.nome || conteudo.name}
+            { conteudo.name}
           </p>
           
           {/* Indicador de link externo */}

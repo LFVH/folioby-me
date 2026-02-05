@@ -843,7 +843,6 @@ export type UsuarioScalarFieldEnum = (typeof UsuarioScalarFieldEnum)[keyof typeo
 
 export const ConteudoScalarFieldEnum = {
   id: 'id',
-  nome: 'nome',
   name: 'name',
   link: 'link',
   fonte: 'fonte',
@@ -851,7 +850,6 @@ export const ConteudoScalarFieldEnum = {
   filename: 'filename',
   mimetype: 'mimetype',
   data: 'data',
-  isFree: 'isFree',
   isTrend: 'isTrend',
   userId: 'userId',
   updatedAt: 'updatedAt',
@@ -866,8 +864,8 @@ export const CategoriaScalarFieldEnum = {
   nome: 'nome',
   name: 'name',
   descricao: 'descricao',
-  isFree: 'isFree',
   isTrend: 'isTrend',
+  userId: 'userId',
   updatedAt: 'updatedAt',
   createdAt: 'createdAt'
 } as const
