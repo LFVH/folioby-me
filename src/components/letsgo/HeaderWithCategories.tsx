@@ -7,8 +7,12 @@ import { signOut } from 'next-auth/react'
 import SearchBar from './SearchBar'
 import { UserButton } from './UserButton'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
+
 export default function HeaderWithCategories() {
-  const { data, isLoading } = useCategorias()
+  const params = useParams()
+  const slug = params.slug as string
+  const { data, isLoading } = useCategorias(slug)
   const { 
     filtroAtivo, 
     tipoFiltro, 

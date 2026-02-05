@@ -4,10 +4,9 @@ import { CategoriaWithUrls } from '@/types'
 interface CategoriasData {
   categorias: CategoriaWithUrls[]
   estatisticas?: number
-  userType: 'free' | 'premium'
 }
 
-export const useCategorias = () => {
+export const useCategorias = (slug: string) => {
   return useQuery({
     queryKey: ['categorias'],
     queryFn: async (): Promise<CategoriasData> => {
@@ -16,6 +15,7 @@ export const useCategorias = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({slug: slug})
       })
       
       if (!response.ok) {
@@ -37,7 +37,6 @@ export const useCategorias = () => {
       return {
         categorias: categoriasProcessadas,
         estatisticas: result.estatisticas,
-        userType: result.userType
       }
     },
     staleTime: 5 * 60 * 1000,

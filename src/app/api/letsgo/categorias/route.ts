@@ -5,8 +5,8 @@ import { findBySlug } from '@/utils/verifyUserAuth';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const slug = searchParams.get('pro') || ''
+    const body = await request.json()
+    const { slug } = body
     const userDB = await findBySlug(slug)
     if(userDB instanceof NextResponse) return userDB;
     const [categorias, total] = await Promise.all([

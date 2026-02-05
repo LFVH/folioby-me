@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from "../../../../../prisma"
 import { isActuallyChief, verifyUser } from "@/utils/verifyUserAuth"
 import { criarURL } from '@/lib/utils';
+import { refreshSlugCache } from '@/lib/db/slug-service';
 
 export async function PUT(
   request: NextRequest,
@@ -46,7 +47,7 @@ export async function PUT(
         slug: slugNormalizada
       }
     })
-
+     await refreshSlugCache()
     return NextResponse.json({
       success: true,
       data: userUpdt,

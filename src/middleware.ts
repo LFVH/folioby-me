@@ -4,6 +4,7 @@ import type { NextFetchEvent, NextRequest } from "next/server"
 import { logNow } from "./utils/Logging"
 import { getToken } from "next-auth/jwt"
 import { isActuallyChief as isActuallyChief } from "./utils/verifyUserAuth"
+import { getValidUserSlugs } from './lib/db/slug-service'
 
 export const runtime = 'nodejs'
 
@@ -30,11 +31,24 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
   const appRoutes = process.env.APP_ROUTES?.split(',') || [
     '/', '/login'
   ];
+  const publicRoutes = ['/login', '/signup', '/auth', '/']
+
   const currentPath = request.nextUrl.pathname;
   if (currentPath.startsWith('/_next') || 
       currentPath.startsWith('/static') ||
       currentPath.includes('.') && !currentPath.includes('/api/')) {
     return NextResponse.next();
+  }
+    // Remover a barra inicial para comparar
+  const potentialSlug = currentPath.slice(1)
+  
+  // Obter a lista válida de slugs
+  const validSlugs = await getValidUserSlugs()
+  
+  // Verificar se o slug existe na lista
+  if (validSlugs.includes(potentialSlug)) {
+    // Slug válido: permitir acesso à página /[slug]
+    return NextResponse.next()
   }
   const isAppRoute = appRoutes.some(route => 
     currentPath === route || currentPath.startsWith(route + '/')
@@ -43,16 +57,15 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
     console.log(`🚫 Rota ignorada: ${currentPath}`);
     return NextResponse.next();
   }
+  const isPublic = publicRoutes.some(route => 
+    currentPath === route || currentPath.startsWith(route + '/')
+  )
   const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
-  if(!token && (
-    request.nextUrl.pathname.startsWith('/login')  || 
-    request.nextUrl.pathname.startsWith('/signup') || 
-    request.nextUrl.pathname.startsWith('/auth')   ||
-    request.nextUrl.pathname === '/') ){
-    return NextResponse.next();
+  if (!token && !isPublic) {
+    return NextResponse.redirect(new URL('/login', request.url))
   }
-  if (!token) {
-    return NextResponse.redirect(new URL('/login', request.url));
+  if (token && isPublic && currentPath !== '/') {
+    return NextResponse.redirect(new URL('/nextsteps', request.url))
   }
   const authResult = await authMiddleware(request as NextRequestWithAuth, event)
   if (authResult) return authResult
@@ -64,21 +77,11 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
     console.log(origin)
     return new NextResponse('404', { status: 403 })
   }
-  if (request.nextUrl.pathname.startsWith('/api/letsgo') || request.nextUrl.pathname.startsWith('/letsgo')) {
-    try {
-      const response  = await fetch(`${request.nextUrl.origin}/api/auth-v`, { 
-        method: "GET",
-        headers: { Cookie: request.headers.get("Cookie") || "" }
-      });
-      const data = await response.json()
-      if (!data.userId) {
-        return NextResponse.redirect(new URL('/login', request.url))
-      }
-      return NextResponse.next()
-    } catch(error){
-      console.log(error);
-      return NextResponse.redirect(new URL('/', request.url))
+  if (request.nextUrl.pathname.startsWith('/api/nextsteps') || request.nextUrl.pathname.startsWith('/nextsteps')) {
+    if (!token) {
+      return NextResponse.redirect(new URL('/login', request.url))
     }
+    return NextResponse.next()
   }
 
   const chiefRoutes = process.env.CHIEF_ROUTES?.split(',') || ['/admin'];

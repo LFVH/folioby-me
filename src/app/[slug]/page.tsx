@@ -4,11 +4,13 @@ import { useGlobalFilter } from '@/hooks/useGlobalFilter'
 import HeroBanner from '@/components/HeroBanner'
 import ConteudosFiltradosComScroll from '@/components/letsgo/ConteudosFiltrados'
 import LoadingSpinner from '@/components/LoadingSpinner'
-import HeaderWithCategories from '@/components/letsgo/HeaderWithCategories'
 import { useCategorias } from '@/hooks/useCategorias'
+import { useParams } from 'next/navigation'
 
-export default function DirectorPage() {
-  const { data, isLoading: bannerLoading } = useCategorias()
+export default function FlixPage() {
+  const params = useParams()
+  const slug = params.slug as string
+  const { data, isLoading: bannerLoading } = useCategorias(slug)
   const { filtroAtivo, tipoFiltro, termoPesquisa } = useGlobalFilter()
   const categorias = data?.categorias || []
   const nrCategoriasBloq = data?.estatisticas
