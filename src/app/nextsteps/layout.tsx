@@ -3,7 +3,7 @@ import { MenuIcon } from '@/components/signinsignup/icons';
 
 const links = [
   { href: '/nextsteps/categorias', title: 'Categorias' },
-  { href: '/nextsteps/conteudos', title: 'Conteudos' },
+  { href: '/nextsteps/contents', title: 'Conteudos' },
 ];
 
 export default function Layout({

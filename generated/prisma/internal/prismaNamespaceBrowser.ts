@@ -76,7 +76,6 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UsuarioScalarFieldEnum = {
   id: 'id',
-  idHistorico: 'idHistorico',
   name: 'name',
   slug: 'slug',
   email: 'email',
@@ -89,6 +88,7 @@ export const UsuarioScalarFieldEnum = {
   stripeSubId: 'stripeSubId',
   statusAss: 'statusAss',
   plano: 'plano',
+  valorPago: 'valorPago',
   refreshPasswordToken: 'refreshPasswordToken',
   refreshPasswordTokenExpires: 'refreshPasswordTokenExpires',
   updatedAt: 'updatedAt',
@@ -132,7 +132,7 @@ export type CategoriaScalarFieldEnum = (typeof CategoriaScalarFieldEnum)[keyof t
 
 export const HistoricoUsuarioScalarFieldEnum = {
   id: 'id',
-  idHistUsuario: 'idHistUsuario',
+  userId: 'userId',
   valorPago: 'valorPago',
   isBlocked: 'isBlocked',
   isPremium: 'isPremium',
@@ -140,7 +140,8 @@ export const HistoricoUsuarioScalarFieldEnum = {
   dtFimPremium: 'dtFimPremium',
   statusAss: 'statusAss',
   plano: 'plano',
-  createdAt: 'createdAt'
+  operationType: 'operationType',
+  changedAt: 'changedAt'
 } as const
 
 export type HistoricoUsuarioScalarFieldEnum = (typeof HistoricoUsuarioScalarFieldEnum)[keyof typeof HistoricoUsuarioScalarFieldEnum]

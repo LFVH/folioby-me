@@ -819,7 +819,6 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UsuarioScalarFieldEnum = {
   id: 'id',
-  idHistorico: 'idHistorico',
   name: 'name',
   slug: 'slug',
   email: 'email',
@@ -832,6 +831,7 @@ export const UsuarioScalarFieldEnum = {
   stripeSubId: 'stripeSubId',
   statusAss: 'statusAss',
   plano: 'plano',
+  valorPago: 'valorPago',
   refreshPasswordToken: 'refreshPasswordToken',
   refreshPasswordTokenExpires: 'refreshPasswordTokenExpires',
   updatedAt: 'updatedAt',
@@ -875,7 +875,7 @@ export type CategoriaScalarFieldEnum = (typeof CategoriaScalarFieldEnum)[keyof t
 
 export const HistoricoUsuarioScalarFieldEnum = {
   id: 'id',
-  idHistUsuario: 'idHistUsuario',
+  userId: 'userId',
   valorPago: 'valorPago',
   isBlocked: 'isBlocked',
   isPremium: 'isPremium',
@@ -883,7 +883,8 @@ export const HistoricoUsuarioScalarFieldEnum = {
   dtFimPremium: 'dtFimPremium',
   statusAss: 'statusAss',
   plano: 'plano',
-  createdAt: 'createdAt'
+  operationType: 'operationType',
+  changedAt: 'changedAt'
 } as const
 
 export type HistoricoUsuarioScalarFieldEnum = (typeof HistoricoUsuarioScalarFieldEnum)[keyof typeof HistoricoUsuarioScalarFieldEnum]
@@ -945,20 +946,6 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -980,16 +967,16 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'Bytes'
+ * Reference to a field of type 'Int'
  */
-export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
 /**
- * Reference to a field of type 'Bytes[]'
+ * Reference to a field of type 'Int[]'
  */
-export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes[]'>
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1004,6 +991,20 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Bytes'
+ */
+export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
+    
+
+
+/**
+ * Reference to a field of type 'Bytes[]'
+ */
+export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes[]'>
     
 
 

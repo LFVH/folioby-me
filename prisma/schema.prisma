@@ -8,7 +8,6 @@ datasource db {
 }
 model Usuario {
   id           String   @id @default(uuid())
-  idHistorico  Int      @unique @default(0)
   name         String
   slug         String   @unique
   email        String   @unique
@@ -22,6 +21,7 @@ model Usuario {
   stripeSubId  String?  @unique
   statusAss    Int      @default(1) // status stripe "inativo","ativo", "cancelado", "pendente"
   plano        Int      @default(0)  // status stripe "mensal", "anual", "semestral"
+  valorPago      Decimal? @db.Decimal(10, 2)
   refreshPasswordToken        String?   //TODO esqueci senha 
   refreshPasswordTokenExpires DateTime? //TODO esqueci senha
   conteudos    Conteudo[]
@@ -63,15 +63,17 @@ model Categoria {
 
 model HistoricoUsuario {
   id             Int  @id @default(autoincrement())
-  idHistUsuario  Int
-  valorPago      Decimal @db.Decimal(10, 2)
+  userId         String
+  valorPago      Decimal? @db.Decimal(10, 2)
   isBlocked      Boolean?
   isPremium      Boolean?
   dtIniPremium   DateTime?
   dtFimPremium   DateTime?
   statusAss      Int?
   plano          Int?
-  createdAt      DateTime @default(now())
+  operationType  String   @default("UPDATE") // 'UPDATE', 'DELETE', etc
+  changedAt      DateTime @default(now())
+  @@index([userId, changedAt])
 }
 
 model RefreshToken {

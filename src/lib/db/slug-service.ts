@@ -10,11 +10,8 @@ const slugCache = {
   isRefreshing: false // Evita chamadas duplicadas
 }
 
-// Busca slugs do banco (sem cache)
 async function fetchSlugsFromDB(): Promise<string[]> {
-  console.log('🔄 Buscando slugs FRESCOS do banco...')
   
-  // SUA CONEXÃO REAL COM O BANCO:
   const users = await prisma.usuario.findMany({
     where: { isPremium: true },
     select: { slug: true }
@@ -30,13 +27,11 @@ export async function getValidUserSlugs(): Promise<string[]> {
                       (now - slugCache.timestamp) < slugCache.ttl
 
   if (isCacheValid) {
-    console.log('📦 Cache HIT - usando slugs em cache')
     return slugCache.data
   }
 
   // Evita múltiplas chamadas simultâneas
   if (slugCache.isRefreshing) {
-    console.log('⏳ Cache está sendo atualizado, aguarde...')
     return slugCache.data.length > 0 ? slugCache.data : []
   }
 
@@ -48,7 +43,7 @@ export async function getValidUserSlugs(): Promise<string[]> {
     slugCache.timestamp = now
     slugCache.isRefreshing = false
     
-    console.log(`✅ Cache atualizado com ${freshSlugs.length} slugs`)
+    console.log(`Cache atualizado com ${freshSlugs.length} slugs`)
     return freshSlugs
   } catch (error) {
     slugCache.isRefreshing = false
@@ -57,7 +52,6 @@ export async function getValidUserSlugs(): Promise<string[]> {
   }
 }
 
-// 🔥 ATUALIZAÇÃO IMEDIATA DO CACHE
 export async function refreshSlugCache(): Promise<void> {
   console.log('🚀 Forçando atualização do cache...')
   
@@ -66,9 +60,7 @@ export async function refreshSlugCache(): Promise<void> {
     
     slugCache.data = freshSlugs
     slugCache.timestamp = Date.now()
-    
-    console.log(`✅ Cache refrescado com ${freshSlugs.length} slugs`)
-  } catch (error) {
+      } catch (error) {
     console.error('❌ Falha ao refresh cache:', error)
     // Invalida o cache para forçar nova busca
     slugCache.timestamp = 0

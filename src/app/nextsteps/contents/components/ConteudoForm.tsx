@@ -89,7 +89,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
       const result = await response.json()
 
       if (result.success) {
-        router.push('/nextsteps/conteudos')
+        router.push('/nextsteps/contents')
         router.refresh()
       } else {
         alert(result.error || 'Erro ao salvar conteúdo')

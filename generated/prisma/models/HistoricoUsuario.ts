@@ -28,7 +28,6 @@ export type AggregateHistoricoUsuario = {
 
 export type HistoricoUsuarioAvgAggregateOutputType = {
   id: number | null
-  idHistUsuario: number | null
   valorPago: runtime.Decimal | null
   statusAss: number | null
   plano: number | null
@@ -36,7 +35,6 @@ export type HistoricoUsuarioAvgAggregateOutputType = {
 
 export type HistoricoUsuarioSumAggregateOutputType = {
   id: number | null
-  idHistUsuario: number | null
   valorPago: runtime.Decimal | null
   statusAss: number | null
   plano: number | null
@@ -44,7 +42,7 @@ export type HistoricoUsuarioSumAggregateOutputType = {
 
 export type HistoricoUsuarioMinAggregateOutputType = {
   id: number | null
-  idHistUsuario: number | null
+  userId: string | null
   valorPago: runtime.Decimal | null
   isBlocked: boolean | null
   isPremium: boolean | null
@@ -52,12 +50,13 @@ export type HistoricoUsuarioMinAggregateOutputType = {
   dtFimPremium: Date | null
   statusAss: number | null
   plano: number | null
-  createdAt: Date | null
+  operationType: string | null
+  changedAt: Date | null
 }
 
 export type HistoricoUsuarioMaxAggregateOutputType = {
   id: number | null
-  idHistUsuario: number | null
+  userId: string | null
   valorPago: runtime.Decimal | null
   isBlocked: boolean | null
   isPremium: boolean | null
@@ -65,12 +64,13 @@ export type HistoricoUsuarioMaxAggregateOutputType = {
   dtFimPremium: Date | null
   statusAss: number | null
   plano: number | null
-  createdAt: Date | null
+  operationType: string | null
+  changedAt: Date | null
 }
 
 export type HistoricoUsuarioCountAggregateOutputType = {
   id: number
-  idHistUsuario: number
+  userId: number
   valorPago: number
   isBlocked: number
   isPremium: number
@@ -78,14 +78,14 @@ export type HistoricoUsuarioCountAggregateOutputType = {
   dtFimPremium: number
   statusAss: number
   plano: number
-  createdAt: number
+  operationType: number
+  changedAt: number
   _all: number
 }
 
 
 export type HistoricoUsuarioAvgAggregateInputType = {
   id?: true
-  idHistUsuario?: true
   valorPago?: true
   statusAss?: true
   plano?: true
@@ -93,7 +93,6 @@ export type HistoricoUsuarioAvgAggregateInputType = {
 
 export type HistoricoUsuarioSumAggregateInputType = {
   id?: true
-  idHistUsuario?: true
   valorPago?: true
   statusAss?: true
   plano?: true
@@ -101,7 +100,7 @@ export type HistoricoUsuarioSumAggregateInputType = {
 
 export type HistoricoUsuarioMinAggregateInputType = {
   id?: true
-  idHistUsuario?: true
+  userId?: true
   valorPago?: true
   isBlocked?: true
   isPremium?: true
@@ -109,12 +108,13 @@ export type HistoricoUsuarioMinAggregateInputType = {
   dtFimPremium?: true
   statusAss?: true
   plano?: true
-  createdAt?: true
+  operationType?: true
+  changedAt?: true
 }
 
 export type HistoricoUsuarioMaxAggregateInputType = {
   id?: true
-  idHistUsuario?: true
+  userId?: true
   valorPago?: true
   isBlocked?: true
   isPremium?: true
@@ -122,12 +122,13 @@ export type HistoricoUsuarioMaxAggregateInputType = {
   dtFimPremium?: true
   statusAss?: true
   plano?: true
-  createdAt?: true
+  operationType?: true
+  changedAt?: true
 }
 
 export type HistoricoUsuarioCountAggregateInputType = {
   id?: true
-  idHistUsuario?: true
+  userId?: true
   valorPago?: true
   isBlocked?: true
   isPremium?: true
@@ -135,7 +136,8 @@ export type HistoricoUsuarioCountAggregateInputType = {
   dtFimPremium?: true
   statusAss?: true
   plano?: true
-  createdAt?: true
+  operationType?: true
+  changedAt?: true
   _all?: true
 }
 
@@ -227,15 +229,16 @@ export type HistoricoUsuarioGroupByArgs<ExtArgs extends runtime.Types.Extensions
 
 export type HistoricoUsuarioGroupByOutputType = {
   id: number
-  idHistUsuario: number
-  valorPago: runtime.Decimal
+  userId: string
+  valorPago: runtime.Decimal | null
   isBlocked: boolean | null
   isPremium: boolean | null
   dtIniPremium: Date | null
   dtFimPremium: Date | null
   statusAss: number | null
   plano: number | null
-  createdAt: Date
+  operationType: string
+  changedAt: Date
   _count: HistoricoUsuarioCountAggregateOutputType | null
   _avg: HistoricoUsuarioAvgAggregateOutputType | null
   _sum: HistoricoUsuarioSumAggregateOutputType | null
@@ -263,28 +266,30 @@ export type HistoricoUsuarioWhereInput = {
   OR?: Prisma.HistoricoUsuarioWhereInput[]
   NOT?: Prisma.HistoricoUsuarioWhereInput | Prisma.HistoricoUsuarioWhereInput[]
   id?: Prisma.IntFilter<"HistoricoUsuario"> | number
-  idHistUsuario?: Prisma.IntFilter<"HistoricoUsuario"> | number
-  valorPago?: Prisma.DecimalFilter<"HistoricoUsuario"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  userId?: Prisma.StringFilter<"HistoricoUsuario"> | string
+  valorPago?: Prisma.DecimalNullableFilter<"HistoricoUsuario"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isBlocked?: Prisma.BoolNullableFilter<"HistoricoUsuario"> | boolean | null
   isPremium?: Prisma.BoolNullableFilter<"HistoricoUsuario"> | boolean | null
   dtIniPremium?: Prisma.DateTimeNullableFilter<"HistoricoUsuario"> | Date | string | null
   dtFimPremium?: Prisma.DateTimeNullableFilter<"HistoricoUsuario"> | Date | string | null
   statusAss?: Prisma.IntNullableFilter<"HistoricoUsuario"> | number | null
   plano?: Prisma.IntNullableFilter<"HistoricoUsuario"> | number | null
-  createdAt?: Prisma.DateTimeFilter<"HistoricoUsuario"> | Date | string
+  operationType?: Prisma.StringFilter<"HistoricoUsuario"> | string
+  changedAt?: Prisma.DateTimeFilter<"HistoricoUsuario"> | Date | string
 }
 
 export type HistoricoUsuarioOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  idHistUsuario?: Prisma.SortOrder
-  valorPago?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  valorPago?: Prisma.SortOrderInput | Prisma.SortOrder
   isBlocked?: Prisma.SortOrderInput | Prisma.SortOrder
   isPremium?: Prisma.SortOrderInput | Prisma.SortOrder
   dtIniPremium?: Prisma.SortOrderInput | Prisma.SortOrder
   dtFimPremium?: Prisma.SortOrderInput | Prisma.SortOrder
   statusAss?: Prisma.SortOrderInput | Prisma.SortOrder
   plano?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
+  operationType?: Prisma.SortOrder
+  changedAt?: Prisma.SortOrder
 }
 
 export type HistoricoUsuarioWhereUniqueInput = Prisma.AtLeast<{
@@ -292,28 +297,30 @@ export type HistoricoUsuarioWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.HistoricoUsuarioWhereInput | Prisma.HistoricoUsuarioWhereInput[]
   OR?: Prisma.HistoricoUsuarioWhereInput[]
   NOT?: Prisma.HistoricoUsuarioWhereInput | Prisma.HistoricoUsuarioWhereInput[]
-  idHistUsuario?: Prisma.IntFilter<"HistoricoUsuario"> | number
-  valorPago?: Prisma.DecimalFilter<"HistoricoUsuario"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  userId?: Prisma.StringFilter<"HistoricoUsuario"> | string
+  valorPago?: Prisma.DecimalNullableFilter<"HistoricoUsuario"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isBlocked?: Prisma.BoolNullableFilter<"HistoricoUsuario"> | boolean | null
   isPremium?: Prisma.BoolNullableFilter<"HistoricoUsuario"> | boolean | null
   dtIniPremium?: Prisma.DateTimeNullableFilter<"HistoricoUsuario"> | Date | string | null
   dtFimPremium?: Prisma.DateTimeNullableFilter<"HistoricoUsuario"> | Date | string | null
   statusAss?: Prisma.IntNullableFilter<"HistoricoUsuario"> | number | null
   plano?: Prisma.IntNullableFilter<"HistoricoUsuario"> | number | null
-  createdAt?: Prisma.DateTimeFilter<"HistoricoUsuario"> | Date | string
+  operationType?: Prisma.StringFilter<"HistoricoUsuario"> | string
+  changedAt?: Prisma.DateTimeFilter<"HistoricoUsuario"> | Date | string
 }, "id">
 
 export type HistoricoUsuarioOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  idHistUsuario?: Prisma.SortOrder
-  valorPago?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  valorPago?: Prisma.SortOrderInput | Prisma.SortOrder
   isBlocked?: Prisma.SortOrderInput | Prisma.SortOrder
   isPremium?: Prisma.SortOrderInput | Prisma.SortOrder
   dtIniPremium?: Prisma.SortOrderInput | Prisma.SortOrder
   dtFimPremium?: Prisma.SortOrderInput | Prisma.SortOrder
   statusAss?: Prisma.SortOrderInput | Prisma.SortOrder
   plano?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
+  operationType?: Prisma.SortOrder
+  changedAt?: Prisma.SortOrder
   _count?: Prisma.HistoricoUsuarioCountOrderByAggregateInput
   _avg?: Prisma.HistoricoUsuarioAvgOrderByAggregateInput
   _max?: Prisma.HistoricoUsuarioMaxOrderByAggregateInput
@@ -326,108 +333,116 @@ export type HistoricoUsuarioScalarWhereWithAggregatesInput = {
   OR?: Prisma.HistoricoUsuarioScalarWhereWithAggregatesInput[]
   NOT?: Prisma.HistoricoUsuarioScalarWhereWithAggregatesInput | Prisma.HistoricoUsuarioScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"HistoricoUsuario"> | number
-  idHistUsuario?: Prisma.IntWithAggregatesFilter<"HistoricoUsuario"> | number
-  valorPago?: Prisma.DecimalWithAggregatesFilter<"HistoricoUsuario"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  userId?: Prisma.StringWithAggregatesFilter<"HistoricoUsuario"> | string
+  valorPago?: Prisma.DecimalNullableWithAggregatesFilter<"HistoricoUsuario"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isBlocked?: Prisma.BoolNullableWithAggregatesFilter<"HistoricoUsuario"> | boolean | null
   isPremium?: Prisma.BoolNullableWithAggregatesFilter<"HistoricoUsuario"> | boolean | null
   dtIniPremium?: Prisma.DateTimeNullableWithAggregatesFilter<"HistoricoUsuario"> | Date | string | null
   dtFimPremium?: Prisma.DateTimeNullableWithAggregatesFilter<"HistoricoUsuario"> | Date | string | null
   statusAss?: Prisma.IntNullableWithAggregatesFilter<"HistoricoUsuario"> | number | null
   plano?: Prisma.IntNullableWithAggregatesFilter<"HistoricoUsuario"> | number | null
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"HistoricoUsuario"> | Date | string
+  operationType?: Prisma.StringWithAggregatesFilter<"HistoricoUsuario"> | string
+  changedAt?: Prisma.DateTimeWithAggregatesFilter<"HistoricoUsuario"> | Date | string
 }
 
 export type HistoricoUsuarioCreateInput = {
-  idHistUsuario: number
-  valorPago: runtime.Decimal | runtime.DecimalJsLike | number | string
+  userId: string
+  valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isBlocked?: boolean | null
   isPremium?: boolean | null
   dtIniPremium?: Date | string | null
   dtFimPremium?: Date | string | null
   statusAss?: number | null
   plano?: number | null
-  createdAt?: Date | string
+  operationType?: string
+  changedAt?: Date | string
 }
 
 export type HistoricoUsuarioUncheckedCreateInput = {
   id?: number
-  idHistUsuario: number
-  valorPago: runtime.Decimal | runtime.DecimalJsLike | number | string
+  userId: string
+  valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isBlocked?: boolean | null
   isPremium?: boolean | null
   dtIniPremium?: Date | string | null
   dtFimPremium?: Date | string | null
   statusAss?: number | null
   plano?: number | null
-  createdAt?: Date | string
+  operationType?: string
+  changedAt?: Date | string
 }
 
 export type HistoricoUsuarioUpdateInput = {
-  idHistUsuario?: Prisma.IntFieldUpdateOperationsInput | number
-  valorPago?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isBlocked?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPremium?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   statusAss?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   plano?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  operationType?: Prisma.StringFieldUpdateOperationsInput | string
+  changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HistoricoUsuarioUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  idHistUsuario?: Prisma.IntFieldUpdateOperationsInput | number
-  valorPago?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isBlocked?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPremium?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   statusAss?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   plano?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  operationType?: Prisma.StringFieldUpdateOperationsInput | string
+  changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HistoricoUsuarioCreateManyInput = {
   id?: number
-  idHistUsuario: number
-  valorPago: runtime.Decimal | runtime.DecimalJsLike | number | string
+  userId: string
+  valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isBlocked?: boolean | null
   isPremium?: boolean | null
   dtIniPremium?: Date | string | null
   dtFimPremium?: Date | string | null
   statusAss?: number | null
   plano?: number | null
-  createdAt?: Date | string
+  operationType?: string
+  changedAt?: Date | string
 }
 
 export type HistoricoUsuarioUpdateManyMutationInput = {
-  idHistUsuario?: Prisma.IntFieldUpdateOperationsInput | number
-  valorPago?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isBlocked?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPremium?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   statusAss?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   plano?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  operationType?: Prisma.StringFieldUpdateOperationsInput | string
+  changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HistoricoUsuarioUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  idHistUsuario?: Prisma.IntFieldUpdateOperationsInput | number
-  valorPago?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   isBlocked?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPremium?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   statusAss?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   plano?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  operationType?: Prisma.StringFieldUpdateOperationsInput | string
+  changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HistoricoUsuarioCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  idHistUsuario?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   valorPago?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
@@ -435,12 +450,12 @@ export type HistoricoUsuarioCountOrderByAggregateInput = {
   dtFimPremium?: Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
+  operationType?: Prisma.SortOrder
+  changedAt?: Prisma.SortOrder
 }
 
 export type HistoricoUsuarioAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  idHistUsuario?: Prisma.SortOrder
   valorPago?: Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
@@ -448,7 +463,7 @@ export type HistoricoUsuarioAvgOrderByAggregateInput = {
 
 export type HistoricoUsuarioMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  idHistUsuario?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   valorPago?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
@@ -456,12 +471,13 @@ export type HistoricoUsuarioMaxOrderByAggregateInput = {
   dtFimPremium?: Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
+  operationType?: Prisma.SortOrder
+  changedAt?: Prisma.SortOrder
 }
 
 export type HistoricoUsuarioMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  idHistUsuario?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   valorPago?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
@@ -469,23 +485,15 @@ export type HistoricoUsuarioMinOrderByAggregateInput = {
   dtFimPremium?: Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
+  operationType?: Prisma.SortOrder
+  changedAt?: Prisma.SortOrder
 }
 
 export type HistoricoUsuarioSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  idHistUsuario?: Prisma.SortOrder
   valorPago?: Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
-}
-
-export type DecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type NullableBoolFieldUpdateOperationsInput = {
@@ -504,7 +512,7 @@ export type NullableIntFieldUpdateOperationsInput = {
 
 export type HistoricoUsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  idHistUsuario?: boolean
+  userId?: boolean
   valorPago?: boolean
   isBlocked?: boolean
   isPremium?: boolean
@@ -512,12 +520,13 @@ export type HistoricoUsuarioSelect<ExtArgs extends runtime.Types.Extensions.Inte
   dtFimPremium?: boolean
   statusAss?: boolean
   plano?: boolean
-  createdAt?: boolean
+  operationType?: boolean
+  changedAt?: boolean
 }, ExtArgs["result"]["historicoUsuario"]>
 
 export type HistoricoUsuarioSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  idHistUsuario?: boolean
+  userId?: boolean
   valorPago?: boolean
   isBlocked?: boolean
   isPremium?: boolean
@@ -525,12 +534,13 @@ export type HistoricoUsuarioSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   dtFimPremium?: boolean
   statusAss?: boolean
   plano?: boolean
-  createdAt?: boolean
+  operationType?: boolean
+  changedAt?: boolean
 }, ExtArgs["result"]["historicoUsuario"]>
 
 export type HistoricoUsuarioSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  idHistUsuario?: boolean
+  userId?: boolean
   valorPago?: boolean
   isBlocked?: boolean
   isPremium?: boolean
@@ -538,12 +548,13 @@ export type HistoricoUsuarioSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   dtFimPremium?: boolean
   statusAss?: boolean
   plano?: boolean
-  createdAt?: boolean
+  operationType?: boolean
+  changedAt?: boolean
 }, ExtArgs["result"]["historicoUsuario"]>
 
 export type HistoricoUsuarioSelectScalar = {
   id?: boolean
-  idHistUsuario?: boolean
+  userId?: boolean
   valorPago?: boolean
   isBlocked?: boolean
   isPremium?: boolean
@@ -551,25 +562,27 @@ export type HistoricoUsuarioSelectScalar = {
   dtFimPremium?: boolean
   statusAss?: boolean
   plano?: boolean
-  createdAt?: boolean
+  operationType?: boolean
+  changedAt?: boolean
 }
 
-export type HistoricoUsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "idHistUsuario" | "valorPago" | "isBlocked" | "isPremium" | "dtIniPremium" | "dtFimPremium" | "statusAss" | "plano" | "createdAt", ExtArgs["result"]["historicoUsuario"]>
+export type HistoricoUsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "valorPago" | "isBlocked" | "isPremium" | "dtIniPremium" | "dtFimPremium" | "statusAss" | "plano" | "operationType" | "changedAt", ExtArgs["result"]["historicoUsuario"]>
 
 export type $HistoricoUsuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "HistoricoUsuario"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    idHistUsuario: number
-    valorPago: runtime.Decimal
+    userId: string
+    valorPago: runtime.Decimal | null
     isBlocked: boolean | null
     isPremium: boolean | null
     dtIniPremium: Date | null
     dtFimPremium: Date | null
     statusAss: number | null
     plano: number | null
-    createdAt: Date
+    operationType: string
+    changedAt: Date
   }, ExtArgs["result"]["historicoUsuario"]>
   composites: {}
 }
@@ -994,7 +1007,7 @@ export interface Prisma__HistoricoUsuarioClient<T, Null = never, ExtArgs extends
  */
 export interface HistoricoUsuarioFieldRefs {
   readonly id: Prisma.FieldRef<"HistoricoUsuario", 'Int'>
-  readonly idHistUsuario: Prisma.FieldRef<"HistoricoUsuario", 'Int'>
+  readonly userId: Prisma.FieldRef<"HistoricoUsuario", 'String'>
   readonly valorPago: Prisma.FieldRef<"HistoricoUsuario", 'Decimal'>
   readonly isBlocked: Prisma.FieldRef<"HistoricoUsuario", 'Boolean'>
   readonly isPremium: Prisma.FieldRef<"HistoricoUsuario", 'Boolean'>
@@ -1002,7 +1015,8 @@ export interface HistoricoUsuarioFieldRefs {
   readonly dtFimPremium: Prisma.FieldRef<"HistoricoUsuario", 'DateTime'>
   readonly statusAss: Prisma.FieldRef<"HistoricoUsuario", 'Int'>
   readonly plano: Prisma.FieldRef<"HistoricoUsuario", 'Int'>
-  readonly createdAt: Prisma.FieldRef<"HistoricoUsuario", 'DateTime'>
+  readonly operationType: Prisma.FieldRef<"HistoricoUsuario", 'String'>
+  readonly changedAt: Prisma.FieldRef<"HistoricoUsuario", 'DateTime'>
 }
     
 

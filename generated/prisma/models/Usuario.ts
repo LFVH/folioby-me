@@ -27,20 +27,19 @@ export type AggregateUsuario = {
 }
 
 export type UsuarioAvgAggregateOutputType = {
-  idHistorico: number | null
   statusAss: number | null
   plano: number | null
+  valorPago: runtime.Decimal | null
 }
 
 export type UsuarioSumAggregateOutputType = {
-  idHistorico: number | null
   statusAss: number | null
   plano: number | null
+  valorPago: runtime.Decimal | null
 }
 
 export type UsuarioMinAggregateOutputType = {
   id: string | null
-  idHistorico: number | null
   name: string | null
   slug: string | null
   email: string | null
@@ -53,6 +52,7 @@ export type UsuarioMinAggregateOutputType = {
   stripeSubId: string | null
   statusAss: number | null
   plano: number | null
+  valorPago: runtime.Decimal | null
   refreshPasswordToken: string | null
   refreshPasswordTokenExpires: Date | null
   updatedAt: Date | null
@@ -61,7 +61,6 @@ export type UsuarioMinAggregateOutputType = {
 
 export type UsuarioMaxAggregateOutputType = {
   id: string | null
-  idHistorico: number | null
   name: string | null
   slug: string | null
   email: string | null
@@ -74,6 +73,7 @@ export type UsuarioMaxAggregateOutputType = {
   stripeSubId: string | null
   statusAss: number | null
   plano: number | null
+  valorPago: runtime.Decimal | null
   refreshPasswordToken: string | null
   refreshPasswordTokenExpires: Date | null
   updatedAt: Date | null
@@ -82,7 +82,6 @@ export type UsuarioMaxAggregateOutputType = {
 
 export type UsuarioCountAggregateOutputType = {
   id: number
-  idHistorico: number
   name: number
   slug: number
   email: number
@@ -95,6 +94,7 @@ export type UsuarioCountAggregateOutputType = {
   stripeSubId: number
   statusAss: number
   plano: number
+  valorPago: number
   refreshPasswordToken: number
   refreshPasswordTokenExpires: number
   updatedAt: number
@@ -104,20 +104,19 @@ export type UsuarioCountAggregateOutputType = {
 
 
 export type UsuarioAvgAggregateInputType = {
-  idHistorico?: true
   statusAss?: true
   plano?: true
+  valorPago?: true
 }
 
 export type UsuarioSumAggregateInputType = {
-  idHistorico?: true
   statusAss?: true
   plano?: true
+  valorPago?: true
 }
 
 export type UsuarioMinAggregateInputType = {
   id?: true
-  idHistorico?: true
   name?: true
   slug?: true
   email?: true
@@ -130,6 +129,7 @@ export type UsuarioMinAggregateInputType = {
   stripeSubId?: true
   statusAss?: true
   plano?: true
+  valorPago?: true
   refreshPasswordToken?: true
   refreshPasswordTokenExpires?: true
   updatedAt?: true
@@ -138,7 +138,6 @@ export type UsuarioMinAggregateInputType = {
 
 export type UsuarioMaxAggregateInputType = {
   id?: true
-  idHistorico?: true
   name?: true
   slug?: true
   email?: true
@@ -151,6 +150,7 @@ export type UsuarioMaxAggregateInputType = {
   stripeSubId?: true
   statusAss?: true
   plano?: true
+  valorPago?: true
   refreshPasswordToken?: true
   refreshPasswordTokenExpires?: true
   updatedAt?: true
@@ -159,7 +159,6 @@ export type UsuarioMaxAggregateInputType = {
 
 export type UsuarioCountAggregateInputType = {
   id?: true
-  idHistorico?: true
   name?: true
   slug?: true
   email?: true
@@ -172,6 +171,7 @@ export type UsuarioCountAggregateInputType = {
   stripeSubId?: true
   statusAss?: true
   plano?: true
+  valorPago?: true
   refreshPasswordToken?: true
   refreshPasswordTokenExpires?: true
   updatedAt?: true
@@ -267,7 +267,6 @@ export type UsuarioGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type UsuarioGroupByOutputType = {
   id: string
-  idHistorico: number
   name: string
   slug: string
   email: string
@@ -280,6 +279,7 @@ export type UsuarioGroupByOutputType = {
   stripeSubId: string | null
   statusAss: number
   plano: number
+  valorPago: runtime.Decimal | null
   refreshPasswordToken: string | null
   refreshPasswordTokenExpires: Date | null
   updatedAt: Date
@@ -311,7 +311,6 @@ export type UsuarioWhereInput = {
   OR?: Prisma.UsuarioWhereInput[]
   NOT?: Prisma.UsuarioWhereInput | Prisma.UsuarioWhereInput[]
   id?: Prisma.StringFilter<"Usuario"> | string
-  idHistorico?: Prisma.IntFilter<"Usuario"> | number
   name?: Prisma.StringFilter<"Usuario"> | string
   slug?: Prisma.StringFilter<"Usuario"> | string
   email?: Prisma.StringFilter<"Usuario"> | string
@@ -324,6 +323,7 @@ export type UsuarioWhereInput = {
   stripeSubId?: Prisma.StringNullableFilter<"Usuario"> | string | null
   statusAss?: Prisma.IntFilter<"Usuario"> | number
   plano?: Prisma.IntFilter<"Usuario"> | number
+  valorPago?: Prisma.DecimalNullableFilter<"Usuario"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: Prisma.StringNullableFilter<"Usuario"> | string | null
   refreshPasswordTokenExpires?: Prisma.DateTimeNullableFilter<"Usuario"> | Date | string | null
   updatedAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
@@ -335,7 +335,6 @@ export type UsuarioWhereInput = {
 
 export type UsuarioOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  idHistorico?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -348,6 +347,7 @@ export type UsuarioOrderByWithRelationInput = {
   stripeSubId?: Prisma.SortOrderInput | Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
+  valorPago?: Prisma.SortOrderInput | Prisma.SortOrder
   refreshPasswordToken?: Prisma.SortOrderInput | Prisma.SortOrder
   refreshPasswordTokenExpires?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -359,7 +359,6 @@ export type UsuarioOrderByWithRelationInput = {
 
 export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  idHistorico?: number
   slug?: string
   email?: string
   stripeCliId?: string
@@ -375,6 +374,7 @@ export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
   dtFimPremium?: Prisma.DateTimeNullableFilter<"Usuario"> | Date | string | null
   statusAss?: Prisma.IntFilter<"Usuario"> | number
   plano?: Prisma.IntFilter<"Usuario"> | number
+  valorPago?: Prisma.DecimalNullableFilter<"Usuario"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: Prisma.StringNullableFilter<"Usuario"> | string | null
   refreshPasswordTokenExpires?: Prisma.DateTimeNullableFilter<"Usuario"> | Date | string | null
   updatedAt?: Prisma.DateTimeFilter<"Usuario"> | Date | string
@@ -382,11 +382,10 @@ export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
   refreshToken?: Prisma.XOR<Prisma.RefreshTokenNullableScalarRelationFilter, Prisma.RefreshTokenWhereInput> | null
   conteudos?: Prisma.ConteudoListRelationFilter
   categorias?: Prisma.CategoriaListRelationFilter
-}, "id" | "idHistorico" | "slug" | "email" | "stripeCliId" | "stripeSubId">
+}, "id" | "slug" | "email" | "stripeCliId" | "stripeSubId">
 
 export type UsuarioOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  idHistorico?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -399,6 +398,7 @@ export type UsuarioOrderByWithAggregationInput = {
   stripeSubId?: Prisma.SortOrderInput | Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
+  valorPago?: Prisma.SortOrderInput | Prisma.SortOrder
   refreshPasswordToken?: Prisma.SortOrderInput | Prisma.SortOrder
   refreshPasswordTokenExpires?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -415,7 +415,6 @@ export type UsuarioScalarWhereWithAggregatesInput = {
   OR?: Prisma.UsuarioScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UsuarioScalarWhereWithAggregatesInput | Prisma.UsuarioScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Usuario"> | string
-  idHistorico?: Prisma.IntWithAggregatesFilter<"Usuario"> | number
   name?: Prisma.StringWithAggregatesFilter<"Usuario"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Usuario"> | string
   email?: Prisma.StringWithAggregatesFilter<"Usuario"> | string
@@ -428,6 +427,7 @@ export type UsuarioScalarWhereWithAggregatesInput = {
   stripeSubId?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
   statusAss?: Prisma.IntWithAggregatesFilter<"Usuario"> | number
   plano?: Prisma.IntWithAggregatesFilter<"Usuario"> | number
+  valorPago?: Prisma.DecimalNullableWithAggregatesFilter<"Usuario"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
   refreshPasswordTokenExpires?: Prisma.DateTimeNullableWithAggregatesFilter<"Usuario"> | Date | string | null
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Usuario"> | Date | string
@@ -436,7 +436,6 @@ export type UsuarioScalarWhereWithAggregatesInput = {
 
 export type UsuarioCreateInput = {
   id?: string
-  idHistorico?: number
   name: string
   slug: string
   email: string
@@ -449,6 +448,7 @@ export type UsuarioCreateInput = {
   stripeSubId?: string | null
   statusAss?: number
   plano?: number
+  valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: string | null
   refreshPasswordTokenExpires?: Date | string | null
   updatedAt?: Date | string
@@ -460,7 +460,6 @@ export type UsuarioCreateInput = {
 
 export type UsuarioUncheckedCreateInput = {
   id?: string
-  idHistorico?: number
   name: string
   slug: string
   email: string
@@ -473,6 +472,7 @@ export type UsuarioUncheckedCreateInput = {
   stripeSubId?: string | null
   statusAss?: number
   plano?: number
+  valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: string | null
   refreshPasswordTokenExpires?: Date | string | null
   updatedAt?: Date | string
@@ -484,7 +484,6 @@ export type UsuarioUncheckedCreateInput = {
 
 export type UsuarioUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  idHistorico?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -497,6 +496,7 @@ export type UsuarioUpdateInput = {
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshPasswordTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -508,7 +508,6 @@ export type UsuarioUpdateInput = {
 
 export type UsuarioUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  idHistorico?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -521,6 +520,7 @@ export type UsuarioUncheckedUpdateInput = {
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshPasswordTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -532,7 +532,6 @@ export type UsuarioUncheckedUpdateInput = {
 
 export type UsuarioCreateManyInput = {
   id?: string
-  idHistorico?: number
   name: string
   slug: string
   email: string
@@ -545,6 +544,7 @@ export type UsuarioCreateManyInput = {
   stripeSubId?: string | null
   statusAss?: number
   plano?: number
+  valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: string | null
   refreshPasswordTokenExpires?: Date | string | null
   updatedAt?: Date | string
@@ -553,7 +553,6 @@ export type UsuarioCreateManyInput = {
 
 export type UsuarioUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  idHistorico?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -566,6 +565,7 @@ export type UsuarioUpdateManyMutationInput = {
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshPasswordTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -574,7 +574,6 @@ export type UsuarioUpdateManyMutationInput = {
 
 export type UsuarioUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  idHistorico?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -587,6 +586,7 @@ export type UsuarioUncheckedUpdateManyInput = {
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshPasswordTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -595,7 +595,6 @@ export type UsuarioUncheckedUpdateManyInput = {
 
 export type UsuarioCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  idHistorico?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -608,6 +607,7 @@ export type UsuarioCountOrderByAggregateInput = {
   stripeSubId?: Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
+  valorPago?: Prisma.SortOrder
   refreshPasswordToken?: Prisma.SortOrder
   refreshPasswordTokenExpires?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -615,14 +615,13 @@ export type UsuarioCountOrderByAggregateInput = {
 }
 
 export type UsuarioAvgOrderByAggregateInput = {
-  idHistorico?: Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
+  valorPago?: Prisma.SortOrder
 }
 
 export type UsuarioMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  idHistorico?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -635,6 +634,7 @@ export type UsuarioMaxOrderByAggregateInput = {
   stripeSubId?: Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
+  valorPago?: Prisma.SortOrder
   refreshPasswordToken?: Prisma.SortOrder
   refreshPasswordTokenExpires?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -643,7 +643,6 @@ export type UsuarioMaxOrderByAggregateInput = {
 
 export type UsuarioMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  idHistorico?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -656,6 +655,7 @@ export type UsuarioMinOrderByAggregateInput = {
   stripeSubId?: Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
+  valorPago?: Prisma.SortOrder
   refreshPasswordToken?: Prisma.SortOrder
   refreshPasswordTokenExpires?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -663,9 +663,9 @@ export type UsuarioMinOrderByAggregateInput = {
 }
 
 export type UsuarioSumOrderByAggregateInput = {
-  idHistorico?: Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
+  valorPago?: Prisma.SortOrder
 }
 
 export type UsuarioScalarRelationFilter = {
@@ -675,14 +675,6 @@ export type UsuarioScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -695,6 +687,22 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -745,7 +753,6 @@ export type UsuarioUpdateOneRequiredWithoutRefreshTokenNestedInput = {
 
 export type UsuarioCreateWithoutConteudosInput = {
   id?: string
-  idHistorico?: number
   name: string
   slug: string
   email: string
@@ -758,6 +765,7 @@ export type UsuarioCreateWithoutConteudosInput = {
   stripeSubId?: string | null
   statusAss?: number
   plano?: number
+  valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: string | null
   refreshPasswordTokenExpires?: Date | string | null
   updatedAt?: Date | string
@@ -768,7 +776,6 @@ export type UsuarioCreateWithoutConteudosInput = {
 
 export type UsuarioUncheckedCreateWithoutConteudosInput = {
   id?: string
-  idHistorico?: number
   name: string
   slug: string
   email: string
@@ -781,6 +788,7 @@ export type UsuarioUncheckedCreateWithoutConteudosInput = {
   stripeSubId?: string | null
   statusAss?: number
   plano?: number
+  valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: string | null
   refreshPasswordTokenExpires?: Date | string | null
   updatedAt?: Date | string
@@ -807,7 +815,6 @@ export type UsuarioUpdateToOneWithWhereWithoutConteudosInput = {
 
 export type UsuarioUpdateWithoutConteudosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  idHistorico?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -820,6 +827,7 @@ export type UsuarioUpdateWithoutConteudosInput = {
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshPasswordTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -830,7 +838,6 @@ export type UsuarioUpdateWithoutConteudosInput = {
 
 export type UsuarioUncheckedUpdateWithoutConteudosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  idHistorico?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -843,6 +850,7 @@ export type UsuarioUncheckedUpdateWithoutConteudosInput = {
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshPasswordTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -853,7 +861,6 @@ export type UsuarioUncheckedUpdateWithoutConteudosInput = {
 
 export type UsuarioCreateWithoutCategoriasInput = {
   id?: string
-  idHistorico?: number
   name: string
   slug: string
   email: string
@@ -866,6 +873,7 @@ export type UsuarioCreateWithoutCategoriasInput = {
   stripeSubId?: string | null
   statusAss?: number
   plano?: number
+  valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: string | null
   refreshPasswordTokenExpires?: Date | string | null
   updatedAt?: Date | string
@@ -876,7 +884,6 @@ export type UsuarioCreateWithoutCategoriasInput = {
 
 export type UsuarioUncheckedCreateWithoutCategoriasInput = {
   id?: string
-  idHistorico?: number
   name: string
   slug: string
   email: string
@@ -889,6 +896,7 @@ export type UsuarioUncheckedCreateWithoutCategoriasInput = {
   stripeSubId?: string | null
   statusAss?: number
   plano?: number
+  valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: string | null
   refreshPasswordTokenExpires?: Date | string | null
   updatedAt?: Date | string
@@ -915,7 +923,6 @@ export type UsuarioUpdateToOneWithWhereWithoutCategoriasInput = {
 
 export type UsuarioUpdateWithoutCategoriasInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  idHistorico?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -928,6 +935,7 @@ export type UsuarioUpdateWithoutCategoriasInput = {
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshPasswordTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -938,7 +946,6 @@ export type UsuarioUpdateWithoutCategoriasInput = {
 
 export type UsuarioUncheckedUpdateWithoutCategoriasInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  idHistorico?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -951,6 +958,7 @@ export type UsuarioUncheckedUpdateWithoutCategoriasInput = {
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshPasswordTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -961,7 +969,6 @@ export type UsuarioUncheckedUpdateWithoutCategoriasInput = {
 
 export type UsuarioCreateWithoutRefreshTokenInput = {
   id?: string
-  idHistorico?: number
   name: string
   slug: string
   email: string
@@ -974,6 +981,7 @@ export type UsuarioCreateWithoutRefreshTokenInput = {
   stripeSubId?: string | null
   statusAss?: number
   plano?: number
+  valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: string | null
   refreshPasswordTokenExpires?: Date | string | null
   updatedAt?: Date | string
@@ -984,7 +992,6 @@ export type UsuarioCreateWithoutRefreshTokenInput = {
 
 export type UsuarioUncheckedCreateWithoutRefreshTokenInput = {
   id?: string
-  idHistorico?: number
   name: string
   slug: string
   email: string
@@ -997,6 +1004,7 @@ export type UsuarioUncheckedCreateWithoutRefreshTokenInput = {
   stripeSubId?: string | null
   statusAss?: number
   plano?: number
+  valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: string | null
   refreshPasswordTokenExpires?: Date | string | null
   updatedAt?: Date | string
@@ -1023,7 +1031,6 @@ export type UsuarioUpdateToOneWithWhereWithoutRefreshTokenInput = {
 
 export type UsuarioUpdateWithoutRefreshTokenInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  idHistorico?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1036,6 +1043,7 @@ export type UsuarioUpdateWithoutRefreshTokenInput = {
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshPasswordTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1046,7 +1054,6 @@ export type UsuarioUpdateWithoutRefreshTokenInput = {
 
 export type UsuarioUncheckedUpdateWithoutRefreshTokenInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  idHistorico?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1059,6 +1066,7 @@ export type UsuarioUncheckedUpdateWithoutRefreshTokenInput = {
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
+  valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   refreshPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshPasswordTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1109,7 +1117,6 @@ export type UsuarioCountOutputTypeCountCategoriasArgs<ExtArgs extends runtime.Ty
 
 export type UsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  idHistorico?: boolean
   name?: boolean
   slug?: boolean
   email?: boolean
@@ -1122,6 +1129,7 @@ export type UsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   stripeSubId?: boolean
   statusAss?: boolean
   plano?: boolean
+  valorPago?: boolean
   refreshPasswordToken?: boolean
   refreshPasswordTokenExpires?: boolean
   updatedAt?: boolean
@@ -1134,7 +1142,6 @@ export type UsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 
 export type UsuarioSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  idHistorico?: boolean
   name?: boolean
   slug?: boolean
   email?: boolean
@@ -1147,6 +1154,7 @@ export type UsuarioSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   stripeSubId?: boolean
   statusAss?: boolean
   plano?: boolean
+  valorPago?: boolean
   refreshPasswordToken?: boolean
   refreshPasswordTokenExpires?: boolean
   updatedAt?: boolean
@@ -1155,7 +1163,6 @@ export type UsuarioSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type UsuarioSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  idHistorico?: boolean
   name?: boolean
   slug?: boolean
   email?: boolean
@@ -1168,6 +1175,7 @@ export type UsuarioSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   stripeSubId?: boolean
   statusAss?: boolean
   plano?: boolean
+  valorPago?: boolean
   refreshPasswordToken?: boolean
   refreshPasswordTokenExpires?: boolean
   updatedAt?: boolean
@@ -1176,7 +1184,6 @@ export type UsuarioSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type UsuarioSelectScalar = {
   id?: boolean
-  idHistorico?: boolean
   name?: boolean
   slug?: boolean
   email?: boolean
@@ -1189,13 +1196,14 @@ export type UsuarioSelectScalar = {
   stripeSubId?: boolean
   statusAss?: boolean
   plano?: boolean
+  valorPago?: boolean
   refreshPasswordToken?: boolean
   refreshPasswordTokenExpires?: boolean
   updatedAt?: boolean
   createdAt?: boolean
 }
 
-export type UsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "idHistorico" | "name" | "slug" | "email" | "password" | "isBlocked" | "isPremium" | "dtIniPremium" | "dtFimPremium" | "stripeCliId" | "stripeSubId" | "statusAss" | "plano" | "refreshPasswordToken" | "refreshPasswordTokenExpires" | "updatedAt" | "createdAt", ExtArgs["result"]["usuario"]>
+export type UsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "email" | "password" | "isBlocked" | "isPremium" | "dtIniPremium" | "dtFimPremium" | "stripeCliId" | "stripeSubId" | "statusAss" | "plano" | "valorPago" | "refreshPasswordToken" | "refreshPasswordTokenExpires" | "updatedAt" | "createdAt", ExtArgs["result"]["usuario"]>
 export type UsuarioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   refreshToken?: boolean | Prisma.Usuario$refreshTokenArgs<ExtArgs>
   conteudos?: boolean | Prisma.Usuario$conteudosArgs<ExtArgs>
@@ -1214,7 +1222,6 @@ export type $UsuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    idHistorico: number
     name: string
     slug: string
     email: string
@@ -1227,6 +1234,7 @@ export type $UsuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     stripeSubId: string | null
     statusAss: number
     plano: number
+    valorPago: runtime.Decimal | null
     refreshPasswordToken: string | null
     refreshPasswordTokenExpires: Date | null
     updatedAt: Date
@@ -1658,7 +1666,6 @@ export interface Prisma__UsuarioClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface UsuarioFieldRefs {
   readonly id: Prisma.FieldRef<"Usuario", 'String'>
-  readonly idHistorico: Prisma.FieldRef<"Usuario", 'Int'>
   readonly name: Prisma.FieldRef<"Usuario", 'String'>
   readonly slug: Prisma.FieldRef<"Usuario", 'String'>
   readonly email: Prisma.FieldRef<"Usuario", 'String'>
@@ -1671,6 +1678,7 @@ export interface UsuarioFieldRefs {
   readonly stripeSubId: Prisma.FieldRef<"Usuario", 'String'>
   readonly statusAss: Prisma.FieldRef<"Usuario", 'Int'>
   readonly plano: Prisma.FieldRef<"Usuario", 'Int'>
+  readonly valorPago: Prisma.FieldRef<"Usuario", 'Decimal'>
   readonly refreshPasswordToken: Prisma.FieldRef<"Usuario", 'String'>
   readonly refreshPasswordTokenExpires: Prisma.FieldRef<"Usuario", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Usuario", 'DateTime'>

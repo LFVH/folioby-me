@@ -28,11 +28,12 @@ const authMiddleware = withAuth({
 
 export async function middleware(request: NextRequest, event: NextFetchEvent) { 
   
-  const appRoutes = process.env.APP_ROUTES?.split(',') || [
-    '/', '/login'
+  const publicRoutes = process.env.PUBLIC_ROUTES?.split(',') || [
+    '/'
   ];
-  const publicRoutes = ['/login', '/signup', '/auth', '/']
-
+  const logginRoutes = process.env.DESLOG_ROUTES?.split(',') || [
+    '/'
+  ];
   const currentPath = request.nextUrl.pathname;
   if (currentPath.startsWith('/_next') || 
       currentPath.startsWith('/static') ||
@@ -50,25 +51,35 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
     // Slug válido: permitir acesso à página /[slug]
     return NextResponse.next()
   }
-  const isAppRoute = appRoutes.some(route => 
-    currentPath === route || currentPath.startsWith(route + '/')
-  );
-  if (!isAppRoute) {
-    console.log(`🚫 Rota ignorada: ${currentPath}`);
-    return NextResponse.next();
-  }
+console.log(`Current path: ${currentPath}`);
   const isPublic = publicRoutes.some(route => 
     currentPath === route || currentPath.startsWith(route + '/')
   )
+  if(isPublic) {
+    console.log(`Rota ignorada: ${currentPath}`);
+    return NextResponse.next()
+  }
+  const isLogginRoutes = logginRoutes.some(route => 
+    currentPath === route || currentPath.startsWith(route + '/')
+  )
+
   const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
-  if (!token && !isPublic) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  if (!token) {
+    if(isLogginRoutes){
+      return NextResponse.next()
+    }
+    return NextResponse.redirect(new URL("/login", request.url));
   }
-  if (token && isPublic && currentPath !== '/') {
-    return NextResponse.redirect(new URL('/nextsteps', request.url))
+  if(token){
+    if(token.user?.status){
+      if (!request.nextUrl.pathname.startsWith("/nextsteps/contents") && !request.nextUrl.pathname.startsWith('/api/nextsteps')) {
+        return NextResponse.redirect(new URL("/nextsteps/contents", request.url));
+      }
+      return NextResponse.next()
+    } else{
+      return NextResponse.redirect(new URL("/", request.url));
+    }
   }
-  const authResult = await authMiddleware(request as NextRequestWithAuth, event)
-  if (authResult) return authResult
   const origin = request.headers.get('origin')
   const allowedDomain = process.env.NEXTAUTH_URL
 
@@ -77,37 +88,30 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
     console.log(origin)
     return new NextResponse('404', { status: 403 })
   }
-  if (request.nextUrl.pathname.startsWith('/api/nextsteps') || request.nextUrl.pathname.startsWith('/nextsteps')) {
-    if (!token) {
-      return NextResponse.redirect(new URL('/login', request.url))
-    }
-    return NextResponse.next()
-  }
 
-  const chiefRoutes = process.env.CHIEF_ROUTES?.split(',') || ['/admin'];
-  const isChiefRoute = chiefRoutes.some(route => 
-    request.nextUrl.pathname.startsWith(route)
-  );
-  if (isChiefRoute) {
-    const userRole = (token as any)?.user?.role;
-    const userId = (token as any)?.user?.id;
 
-    if (userRole !== 'chief' || !isActuallyChief(userId)) {
-      if (request.nextUrl.pathname.startsWith('/api')) {
-        return new NextResponse(
-          JSON.stringify({ error: '404 Not Found' }), 
-          { status: 403 }
-        );
-      }
-      return NextResponse.redirect(new URL('/_not-found', request.url));
-    }
-    return NextResponse.next()
-  }
-  if(token && token.user?.status){
-    if (!request.nextUrl.pathname.startsWith("/letsgo")) {
-      return NextResponse.redirect(new URL("/letsgo", request.url));
-    }
-  }
+  // const chiefRoutes = process.env.CHIEF_ROUTES?.split(',') || ['/admin'];
+  // const isChiefRoute = chiefRoutes.some(route => 
+  //   request.nextUrl.pathname.startsWith(route)
+  // );
+  // if (isChiefRoute) {
+  //   const userRole = (token as any)?.user?.role;
+  //   const userId = (token as any)?.user?.id;
+
+  //   if (userRole !== 'chief' || !isActuallyChief(userId)) {
+  //     if (request.nextUrl.pathname.startsWith('/api')) {
+  //       return new NextResponse(
+  //         JSON.stringify({ error: '404 Not Found' }), 
+  //         { status: 403 }
+  //       );
+  //     }
+  //     return NextResponse.redirect(new URL('/_not-found', request.url));
+  //   }
+  //   return NextResponse.next()
+  // }
+
+  
+
   console.log("possível caso descoberto");
   return NextResponse.next()
 }

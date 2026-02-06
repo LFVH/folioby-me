@@ -106,7 +106,7 @@ export default function ConteudosPage() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-white">Gerenciar Conteúdos</h1>
-            <p className="text-gray-400 mt-1">Painel administrativo</p>
+            <p className="text-gray-400 mt-1">Insira, edite ou exclua o que aparece em sua página</p>
           </div>
           
           <div className="flex items-center gap-4">
@@ -116,7 +116,7 @@ export default function ConteudosPage() {
             />
             
             <Link
-              href="/nextsteps/conteudos/novo"
+              href="/nextsteps/contents/new"
               className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors whitespace-nowrap"
             >
               + Novo Conteúdo
@@ -209,7 +209,7 @@ export default function ConteudosPage() {
                 {/* Ações */}
                 <div className="flex gap-2">
                   <Link
-                    href={`/nextsteps/conteudos/editar/${conteudo.id}`}
+                    href={`/nextsteps/contents/edit/${conteudo.id}`}
                     className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 rounded transition-colors text-sm"
                   >
                     Editar
@@ -245,7 +245,7 @@ export default function ConteudosPage() {
                 <p className="text-xl">Nenhum conteúdo encontrado</p>
                 <p className="mt-2">Crie seu primeiro conteúdo para começar</p>
                 <Link
-                  href="/nextsteps/conteudos/novo"
+                  href="/nextsteps/contents/new"
                   className="mt-4 inline-block px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
                 >
                   Criar Primeiro Conteúdo

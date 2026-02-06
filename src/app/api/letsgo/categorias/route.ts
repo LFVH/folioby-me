@@ -5,10 +5,17 @@ import { findBySlug } from '@/utils/verifyUserAuth';
 
 export async function GET(request: NextRequest) {
   try {
+    console.log("entrou1")
     const body = await request.json()
+    console.log("body")
+    console.log(body)
     const { slug } = body
+    console.log("slug")
+    console.log(slug)
     const userDB = await findBySlug(slug)
+    console.log("entrou2")
     if(userDB instanceof NextResponse) return userDB;
+    console.log("entrou3")
     const [categorias, total] = await Promise.all([
     prisma.categoria.findMany({
       where: {
@@ -53,7 +60,8 @@ export async function GET(request: NextRequest) {
         }
       })
     ])
-
+console.log("entrou4")
+console.log(categorias)
     return NextResponse.json({
       success: true,
       data: categorias,
