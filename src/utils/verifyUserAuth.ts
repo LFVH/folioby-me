@@ -107,7 +107,7 @@ export async function findBySlug(slug: string): Promise<Usuario | NextResponse> 
       where: { slug: slug },
     });
   
-    if (userExists && !userExists.isBlocked && !userExists.isPremium) {
+    if (userExists && !userExists.isBlocked && userExists.isPremium) {
       return userExists;
     }
     console.error("SLUG: " + slug)

@@ -40,18 +40,13 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
       currentPath.includes('.') && !currentPath.includes('/api/')) {
     return NextResponse.next();
   }
-    // Remover a barra inicial para comparar
   const potentialSlug = currentPath.slice(1)
   
-  // Obter a lista válida de slugs
   const validSlugs = await getValidUserSlugs()
-  
-  // Verificar se o slug existe na lista
   if (validSlugs.includes(potentialSlug)) {
-    // Slug válido: permitir acesso à página /[slug]
     return NextResponse.next()
   }
-console.log(`Current path: ${currentPath}`);
+
   const isPublic = publicRoutes.some(route => 
     currentPath === route || currentPath.startsWith(route + '/')
   )
@@ -112,6 +107,6 @@ console.log(`Current path: ${currentPath}`);
 
   
 
-  console.log("possível caso descoberto");
+  console.log(`possível caso descoberto slug: ${currentPath}`);
   return NextResponse.next()
 }

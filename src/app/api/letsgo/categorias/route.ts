@@ -5,17 +5,18 @@ import { findBySlug } from '@/utils/verifyUserAuth';
 
 export async function GET(request: NextRequest) {
   try {
-    console.log("entrou1")
-    const body = await request.json()
-    console.log("body")
-    console.log(body)
-    const { slug } = body
-    console.log("slug")
-    console.log(slug)
+    const { searchParams } = new URL(request.url)
+    const slug = searchParams.get('slug')
+    if(!slug) return NextResponse.json(
+      { 
+        success: false,
+        error: 'Erro interno do servidor',
+        message: 'Erro Slug'
+      },
+      { status: 500 }
+    )
     const userDB = await findBySlug(slug)
-    console.log("entrou2")
     if(userDB instanceof NextResponse) return userDB;
-    console.log("entrou3")
     const [categorias, total] = await Promise.all([
     prisma.categoria.findMany({
       where: {
@@ -43,10 +44,16 @@ export async function GET(request: NextRequest) {
             createdAt: true,
             isTrend: true,
           },
-          orderBy: { createdAt: 'desc' },
+          orderBy: [
+            { isTrend: 'desc' },   // true vem primeiro em 'desc'
+            { createdAt: 'desc' }, // depois ordena por data
+          ],
         }
       },
-        orderBy: { createdAt: 'desc' },
+        orderBy: [
+          { isTrend: 'desc' },   // true vem primeiro em 'desc'
+          { createdAt: 'desc' }, // depois ordena por data
+        ],
       }),
       prisma.categoria.count({
         where: {
@@ -60,8 +67,6 @@ export async function GET(request: NextRequest) {
         }
       })
     ])
-console.log("entrou4")
-console.log(categorias)
     return NextResponse.json({
       success: true,
       data: categorias,

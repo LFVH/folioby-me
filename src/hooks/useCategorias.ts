@@ -8,14 +8,13 @@ interface CategoriasData {
 
 export const useCategorias = (slug: string) => {
   return useQuery({
-    queryKey: ['categorias'],
+    queryKey: ['categorias',slug],
     queryFn: async (): Promise<CategoriasData> => {
-      const response = await fetch('/api/letsgo/categorias', {
+      const response = await fetch(`/api/letsgo/categorias?slug=${encodeURIComponent(slug)}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({slug: slug})
+        }
       })
       
       if (!response.ok) {
@@ -41,5 +40,6 @@ export const useCategorias = (slug: string) => {
     },
     staleTime: 5 * 60 * 1000,
     retry: 2,
+    enabled: !!slug
   })
 }
