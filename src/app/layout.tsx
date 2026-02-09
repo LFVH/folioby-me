@@ -3,6 +3,7 @@ import React, { Suspense } from 'react';
 import ClientProviders from "@/components/Providers"
 import { Inter, Poppins, Bebas_Neue } from 'next/font/google';
 import './globals.css';
+import { LoggedBar } from '@/components/logged/LoggedBar';
 
 const inter = Inter({ subsets: ['latin'] });
 const poppins = Poppins({
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body className={`${inter.className} bg-gray-50 text-gray-800`}>
         <div className="min-h-screen flex flex-col">
           <ClientProviders>
+            <LoggedBar/>
             <main className="flex-grow">
             <Suspense fallback={<div>Carregando página...</div>}>
                 {children}

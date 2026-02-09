@@ -8,6 +8,7 @@ declare module "next-auth" {
     status: boolean | false;
     role: string; 
     user: {
+      slug: string;
       id: string; 
       email: string | null;
       name: string | null;
@@ -25,6 +26,7 @@ declare module "next-auth" {
       image: string | null;
       status: boolean | false;
       role: string; 
+      slug: string;
     };
   }
 }

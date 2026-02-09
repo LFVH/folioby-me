@@ -32,7 +32,8 @@ const AuthHandler :AuthOptions= {
         }
         const passwordMatch = await bcrypt.compare(credentials.password, user.password);
         if (!passwordMatch) {
-          throw new Error("Senha incorreta.");
+          console.log(`senha incorreta do camarada ${user.email}`)
+          throw new Error("Usuário ou senha incorreta.");
         }
          const isAdmin = await isActuallyChief(user.id);
 
@@ -41,7 +42,8 @@ const AuthHandler :AuthOptions= {
           name: user.name, 
           email: user.email, 
           status: user.isPremium,
-          role: isAdmin ? 'chief' : 'user'
+          role: isAdmin ? 'chief' : 'user',
+          slug: user.slug
         }; 
       }
     }),
@@ -61,6 +63,7 @@ const AuthHandler :AuthOptions= {
           name: user.name || null,
           status: user.status || null,
           role: user.role || 'user',
+          slug: user.slug || ''
         };
       }
       return token;
