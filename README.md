@@ -10,10 +10,13 @@ folioby.me
 folioby-me
 folioby_db
 TODO
-- revisar middleware - permissoes e redirects
-- exibir e alterar slug no front
-- alterar front página principal traz conteudos do usuario pelo LINK
-- pagina cadastro traz apenas coisas do usuario
+- revisar middleware - permissoes e redirects - ok testado 1d
+- alterar front página principal traz conteudos do usuario pelo LINK -> testado 2dias
+- ajustar header - ok
+- exibir e alterar slug no front - ok
+- pagina user - slug ok senha ok falta teste imagem
+- pagina conteudos traz apenas coisas do usuario - testar com outros usuarios
+- entender o que fica melhor de deixar o usuario inserir, é gif mesmo? só imagens? outros objetos? ele entrnado com link ou video tenho como trabalhar isso?
 - testar tudo 
 - iniciar vercel, banco neon
 - revisar pagamento e testar  

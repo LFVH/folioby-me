@@ -49,7 +49,14 @@ const AuthHandler :AuthOptions= {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: any) {
+    async jwt({ token, user,  trigger, session  }: any) {
+      if (trigger === 'update' && session?.slug) {
+        // Atualiza o token com os novos dados
+        token.user.slug = session.slug
+      }
+      if (trigger === 'update' && session?.image) {
+        token.user.image = session.image
+      }
       if (user) {
         const expiresIn = dayjs().add(7, "days").unix();
         await prisma.refreshToken.upsert({

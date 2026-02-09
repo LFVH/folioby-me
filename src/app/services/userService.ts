@@ -18,7 +18,11 @@ export const userService = {
     if (!slugRegex.test(slug)) {
       throw new Error('Slug inválido. Use apenas letras minúsculas, números e hífens')
     }
+        const findSlugDB = await prisma.usuario.findUnique({
+      where: { slug: slug}
+    })
 
+    if (findSlugDB) {throw new Error('Slug já utilizada') }
     return await prisma.usuario.update({
       where: { id: userId },
       data: { slug }

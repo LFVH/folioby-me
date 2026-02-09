@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { userService } from '@/app/services/userService'
 import { verifyUser } from '@/utils/verifyUserAuth';
+import { refreshSlugCache } from '@/lib/db/slug-service';
 
 export async function PUT(request: NextRequest) {
   try {
@@ -16,7 +17,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const updatedUser = await userService.updateSlug(userId, slug)
-    
+    await refreshSlugCache()
     return NextResponse.json({ success: true, user: updatedUser })
   } catch (error: any) {
     console.error('Error updating slug:', error)

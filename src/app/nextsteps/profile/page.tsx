@@ -43,7 +43,7 @@ export default function UserPage() {
 
     setIsLoading(true)
     try {
-      const response = await fetch('/api/nextsteps/user', {
+      const response = await fetch('/api/nextsteps/user/slug', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -185,28 +185,6 @@ export default function UserPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      
-      {/* Netflix-like Header */}
-      <header className="fixed top-0 w-full z-50 bg-gradient-to-b from-black to-transparent p-6">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-red-600">NETFLIX</h1>
-          <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
-              {userImage ? (
-                <img 
-                  src={userImage} 
-                  alt="Profile" 
-                  className="w-full h-full rounded-full object-cover"
-                />
-              ) : (
-                <span className="text-lg font-semibold">
-                  {session?.user?.name?.charAt(0).toUpperCase()}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
 
       <main className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
