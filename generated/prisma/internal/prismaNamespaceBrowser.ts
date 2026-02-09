@@ -80,6 +80,8 @@ export const UsuarioScalarFieldEnum = {
   slug: 'slug',
   email: 'email',
   password: 'password',
+  image: 'image',
+  desc: 'desc',
   isBlocked: 'isBlocked',
   isPremium: 'isPremium',
   dtIniPremium: 'dtIniPremium',

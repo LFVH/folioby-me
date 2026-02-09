@@ -44,6 +44,8 @@ export type UsuarioMinAggregateOutputType = {
   slug: string | null
   email: string | null
   password: string | null
+  image: string | null
+  desc: string | null
   isBlocked: boolean | null
   isPremium: boolean | null
   dtIniPremium: Date | null
@@ -65,6 +67,8 @@ export type UsuarioMaxAggregateOutputType = {
   slug: string | null
   email: string | null
   password: string | null
+  image: string | null
+  desc: string | null
   isBlocked: boolean | null
   isPremium: boolean | null
   dtIniPremium: Date | null
@@ -86,6 +90,8 @@ export type UsuarioCountAggregateOutputType = {
   slug: number
   email: number
   password: number
+  image: number
+  desc: number
   isBlocked: number
   isPremium: number
   dtIniPremium: number
@@ -121,6 +127,8 @@ export type UsuarioMinAggregateInputType = {
   slug?: true
   email?: true
   password?: true
+  image?: true
+  desc?: true
   isBlocked?: true
   isPremium?: true
   dtIniPremium?: true
@@ -142,6 +150,8 @@ export type UsuarioMaxAggregateInputType = {
   slug?: true
   email?: true
   password?: true
+  image?: true
+  desc?: true
   isBlocked?: true
   isPremium?: true
   dtIniPremium?: true
@@ -163,6 +173,8 @@ export type UsuarioCountAggregateInputType = {
   slug?: true
   email?: true
   password?: true
+  image?: true
+  desc?: true
   isBlocked?: true
   isPremium?: true
   dtIniPremium?: true
@@ -271,6 +283,8 @@ export type UsuarioGroupByOutputType = {
   slug: string
   email: string
   password: string
+  image: string | null
+  desc: string | null
   isBlocked: boolean
   isPremium: boolean
   dtIniPremium: Date | null
@@ -315,6 +329,8 @@ export type UsuarioWhereInput = {
   slug?: Prisma.StringFilter<"Usuario"> | string
   email?: Prisma.StringFilter<"Usuario"> | string
   password?: Prisma.StringFilter<"Usuario"> | string
+  image?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  desc?: Prisma.StringNullableFilter<"Usuario"> | string | null
   isBlocked?: Prisma.BoolFilter<"Usuario"> | boolean
   isPremium?: Prisma.BoolFilter<"Usuario"> | boolean
   dtIniPremium?: Prisma.DateTimeNullableFilter<"Usuario"> | Date | string | null
@@ -339,6 +355,8 @@ export type UsuarioOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  image?: Prisma.SortOrderInput | Prisma.SortOrder
+  desc?: Prisma.SortOrderInput | Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
   dtIniPremium?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -368,6 +386,8 @@ export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UsuarioWhereInput | Prisma.UsuarioWhereInput[]
   name?: Prisma.StringFilter<"Usuario"> | string
   password?: Prisma.StringFilter<"Usuario"> | string
+  image?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  desc?: Prisma.StringNullableFilter<"Usuario"> | string | null
   isBlocked?: Prisma.BoolFilter<"Usuario"> | boolean
   isPremium?: Prisma.BoolFilter<"Usuario"> | boolean
   dtIniPremium?: Prisma.DateTimeNullableFilter<"Usuario"> | Date | string | null
@@ -390,6 +410,8 @@ export type UsuarioOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  image?: Prisma.SortOrderInput | Prisma.SortOrder
+  desc?: Prisma.SortOrderInput | Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
   dtIniPremium?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -419,6 +441,8 @@ export type UsuarioScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"Usuario"> | string
   email?: Prisma.StringWithAggregatesFilter<"Usuario"> | string
   password?: Prisma.StringWithAggregatesFilter<"Usuario"> | string
+  image?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  desc?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
   isBlocked?: Prisma.BoolWithAggregatesFilter<"Usuario"> | boolean
   isPremium?: Prisma.BoolWithAggregatesFilter<"Usuario"> | boolean
   dtIniPremium?: Prisma.DateTimeNullableWithAggregatesFilter<"Usuario"> | Date | string | null
@@ -440,6 +464,8 @@ export type UsuarioCreateInput = {
   slug: string
   email: string
   password: string
+  image?: string | null
+  desc?: string | null
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -464,6 +490,8 @@ export type UsuarioUncheckedCreateInput = {
   slug: string
   email: string
   password: string
+  image?: string | null
+  desc?: string | null
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -488,6 +516,8 @@ export type UsuarioUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -512,6 +542,8 @@ export type UsuarioUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -536,6 +568,8 @@ export type UsuarioCreateManyInput = {
   slug: string
   email: string
   password: string
+  image?: string | null
+  desc?: string | null
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -557,6 +591,8 @@ export type UsuarioUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -578,6 +614,8 @@ export type UsuarioUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -599,6 +637,8 @@ export type UsuarioCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  image?: Prisma.SortOrder
+  desc?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
   dtIniPremium?: Prisma.SortOrder
@@ -626,6 +666,8 @@ export type UsuarioMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  image?: Prisma.SortOrder
+  desc?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
   dtIniPremium?: Prisma.SortOrder
@@ -647,6 +689,8 @@ export type UsuarioMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  image?: Prisma.SortOrder
+  desc?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
   dtIniPremium?: Prisma.SortOrder
@@ -677,16 +721,16 @@ export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -757,6 +801,8 @@ export type UsuarioCreateWithoutConteudosInput = {
   slug: string
   email: string
   password: string
+  image?: string | null
+  desc?: string | null
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -780,6 +826,8 @@ export type UsuarioUncheckedCreateWithoutConteudosInput = {
   slug: string
   email: string
   password: string
+  image?: string | null
+  desc?: string | null
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -819,6 +867,8 @@ export type UsuarioUpdateWithoutConteudosInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -842,6 +892,8 @@ export type UsuarioUncheckedUpdateWithoutConteudosInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -865,6 +917,8 @@ export type UsuarioCreateWithoutCategoriasInput = {
   slug: string
   email: string
   password: string
+  image?: string | null
+  desc?: string | null
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -888,6 +942,8 @@ export type UsuarioUncheckedCreateWithoutCategoriasInput = {
   slug: string
   email: string
   password: string
+  image?: string | null
+  desc?: string | null
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -927,6 +983,8 @@ export type UsuarioUpdateWithoutCategoriasInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -950,6 +1008,8 @@ export type UsuarioUncheckedUpdateWithoutCategoriasInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -973,6 +1033,8 @@ export type UsuarioCreateWithoutRefreshTokenInput = {
   slug: string
   email: string
   password: string
+  image?: string | null
+  desc?: string | null
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -996,6 +1058,8 @@ export type UsuarioUncheckedCreateWithoutRefreshTokenInput = {
   slug: string
   email: string
   password: string
+  image?: string | null
+  desc?: string | null
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -1035,6 +1099,8 @@ export type UsuarioUpdateWithoutRefreshTokenInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1058,6 +1124,8 @@ export type UsuarioUncheckedUpdateWithoutRefreshTokenInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1121,6 +1189,8 @@ export type UsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   slug?: boolean
   email?: boolean
   password?: boolean
+  image?: boolean
+  desc?: boolean
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: boolean
@@ -1146,6 +1216,8 @@ export type UsuarioSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   slug?: boolean
   email?: boolean
   password?: boolean
+  image?: boolean
+  desc?: boolean
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: boolean
@@ -1167,6 +1239,8 @@ export type UsuarioSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   slug?: boolean
   email?: boolean
   password?: boolean
+  image?: boolean
+  desc?: boolean
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: boolean
@@ -1188,6 +1262,8 @@ export type UsuarioSelectScalar = {
   slug?: boolean
   email?: boolean
   password?: boolean
+  image?: boolean
+  desc?: boolean
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: boolean
@@ -1203,7 +1279,7 @@ export type UsuarioSelectScalar = {
   createdAt?: boolean
 }
 
-export type UsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "email" | "password" | "isBlocked" | "isPremium" | "dtIniPremium" | "dtFimPremium" | "stripeCliId" | "stripeSubId" | "statusAss" | "plano" | "valorPago" | "refreshPasswordToken" | "refreshPasswordTokenExpires" | "updatedAt" | "createdAt", ExtArgs["result"]["usuario"]>
+export type UsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "email" | "password" | "image" | "desc" | "isBlocked" | "isPremium" | "dtIniPremium" | "dtFimPremium" | "stripeCliId" | "stripeSubId" | "statusAss" | "plano" | "valorPago" | "refreshPasswordToken" | "refreshPasswordTokenExpires" | "updatedAt" | "createdAt", ExtArgs["result"]["usuario"]>
 export type UsuarioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   refreshToken?: boolean | Prisma.Usuario$refreshTokenArgs<ExtArgs>
   conteudos?: boolean | Prisma.Usuario$conteudosArgs<ExtArgs>
@@ -1226,6 +1302,8 @@ export type $UsuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     slug: string
     email: string
     password: string
+    image: string | null
+    desc: string | null
     isBlocked: boolean
     isPremium: boolean
     dtIniPremium: Date | null
@@ -1670,6 +1748,8 @@ export interface UsuarioFieldRefs {
   readonly slug: Prisma.FieldRef<"Usuario", 'String'>
   readonly email: Prisma.FieldRef<"Usuario", 'String'>
   readonly password: Prisma.FieldRef<"Usuario", 'String'>
+  readonly image: Prisma.FieldRef<"Usuario", 'String'>
+  readonly desc: Prisma.FieldRef<"Usuario", 'String'>
   readonly isBlocked: Prisma.FieldRef<"Usuario", 'Boolean'>
   readonly isPremium: Prisma.FieldRef<"Usuario", 'Boolean'>
   readonly dtIniPremium: Prisma.FieldRef<"Usuario", 'DateTime'>
