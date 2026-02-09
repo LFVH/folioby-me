@@ -67,7 +67,9 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
   }
   if(token){
     if(token.user?.status){
-      if (!request.nextUrl.pathname.startsWith("/nextsteps/contents") && !request.nextUrl.pathname.startsWith('/api/nextsteps')) {
+      if (!request.nextUrl.pathname.startsWith("/nextsteps/contents") 
+       && !request.nextUrl.pathname.startsWith('/api/nextsteps')
+       && !request.nextUrl.pathname.startsWith('/nextsteps/profile')) {
         return NextResponse.redirect(new URL("/nextsteps/contents", request.url));
       }
       return NextResponse.next()

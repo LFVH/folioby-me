@@ -14,7 +14,21 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '12')
+    const search = searchParams.get('search')
     const skip = (page - 1) * limit
+
+    // Construir o objeto where dinamicamente
+    const where: any = {
+      userId: userId // Adiciona o filtro por userId
+    }
+
+    // Adiciona condição de search se existir
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { filename: { contains: search, mode: 'insensitive' } }
+      ]
+    }
 
     const [conteudos, total] = await Promise.all([
       prisma.conteudo.findMany({
@@ -27,13 +41,19 @@ export async function GET(request: NextRequest) {
             }
           }
         },
-        orderBy: {
-          updatedAt: 'desc'
-        },
+        where, // Adiciona o where com as condições
+        orderBy: [
+          {
+            isTrend: 'desc' // Primeiro ordena por isTrend (trending primeiro)
+          },
+          {
+            updatedAt: 'desc' // Depois por updatedAt (mais recentes primeiro)
+          }
+        ],
         skip,
         take: limit
       }),
-      prisma.conteudo.count()
+      prisma.conteudo.count({ where }) // Adiciona where também no count para contagem precisa
     ])
 
     const totalPages = Math.ceil(total / limit)

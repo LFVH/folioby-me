@@ -17,7 +17,12 @@ export function LoggedBar() {
       <div className="w-8 h-8 rounded-full bg-gray-300 animate-pulse" />
       );
   }
-
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // para scroll suave
+    });
+  };
   if (!session) {
     return null; 
   }
@@ -36,11 +41,13 @@ export function LoggedBar() {
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center space-x-6 text-sm md:flex">
+            
             {links.map((link) => (
               <Link 
                 className="text-gray-300 hover:text-white transition-colors duration-200 font-bold" 
                 href={link.href} 
                 key={link.title}
+                onClick={scrollToTop}
               >
                 {link.title}
               </Link>

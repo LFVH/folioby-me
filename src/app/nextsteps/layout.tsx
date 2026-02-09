@@ -19,13 +19,17 @@ export default function Layout({
   return (
     <div> 
       <main className="">
-        <div className="pt-10">
+        <div className="pt-10" >
           {children}
         </div>
       </main>
 
-      <footer className="border-t border-gray-800 bg-black py-8 mt-8">
-
+      <footer className="border-t border-gray-800 bg-black">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-gray-400 text-center">
+            © {new Date().getFullYear()} FolioBy. Todos os direitos reservados.
+          </p>
+        </div>
       </footer>
     </div>
   );

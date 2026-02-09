@@ -20,8 +20,8 @@ const bebas = Bebas_Neue({
 });
 
 export const metadata = {
-  title: 'DirectFlix - Sua Plataforma de referências',
-  description: 'As melhores referências em uma experiência incrível',
+  title: 'FolioBy - Your PortFlix ',
+  description: 'The best experience from a portfolio',
 };
 
 export default function RootLayout({

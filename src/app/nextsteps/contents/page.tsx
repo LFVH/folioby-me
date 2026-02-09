@@ -26,7 +26,12 @@ interface PaginationInfo {
   nextPage: number | null
   prevPage: number | null
 }
-
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth' // para scroll suave
+  });
+};
 export default function ConteudosPage() {
   const [conteudos, setConteudos] = useState<Conteudo[]>([])
   const [loading, setLoading] = useState(true)
@@ -47,6 +52,7 @@ export default function ConteudosPage() {
 
   const fetchConteudos = async (page: number, search: string = '') => {
     setLoading(true)
+    scrollToTop();
     try {
       const url = `/api/nextsteps/conteudo?page=${page}&limit=12${search ? `&search=${encodeURIComponent(search)}` : ''}`
       const response = await fetch(url)
@@ -144,7 +150,9 @@ export default function ConteudosPage() {
             </div>
           </div>
         )}
-
+        {pagination.totalPages > 1 && (
+          navPages(fetchConteudos, pagination, searchTerm)
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {conteudos.map((conteudo) => (
             <div key={conteudo.id} className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-gray-600 transition-colors">
@@ -262,36 +270,40 @@ export default function ConteudosPage() {
           </div>
         )}
 
-         {pagination.totalPages > 1 && (
-        <div className="flex justify-center items-center gap-4 mt-8">
-          <button
-            onClick={() => fetchConteudos(pagination.prevPage!, searchTerm)}
-            disabled={!pagination.hasPrevPage}
-            className="px-4 py-2 bg-gray-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
-          >
-            Anterior
-          </button>
-
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-white">
-              Página {pagination.currentPage} de {pagination.totalPages}
-            </span>
-            <span className="text-gray-400">
-              ({pagination.totalItems} itens)
-            </span>
-          </div>
-
-          <button
-            onClick={() => fetchConteudos(pagination.nextPage!, searchTerm)}
-            disabled={!pagination.hasNextPage}
-            className="px-4 py-2 bg-gray-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
-          >
-            Próxima
-          </button>
-        </div>
-      )}
+        {pagination.totalPages > 1 && (
+          navPages(fetchConteudos, pagination, searchTerm)
+        )}
 
       </div>
     </div>
   )
+}
+
+function navPages(fetchConteudos: (page: number, search?: string) => Promise<void>, pagination: PaginationInfo, searchTerm: string) {
+  return <div className="flex justify-center items-center gap-4 mt-8">
+    <button
+      onClick={() => fetchConteudos(pagination.prevPage!, searchTerm)}
+      disabled={!pagination.hasPrevPage}
+      className="px-4 py-2 bg-gray-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
+    >
+      Anterior
+    </button>
+
+    <div className="flex items-center gap-2 text-sm">
+      <span className="text-white">
+         {pagination.currentPage} / {pagination.totalPages}
+      </span>
+      <span className="text-gray-400">
+        Total: ({pagination.totalItems} itens)
+      </span>
+    </div>
+
+    <button
+      onClick={() => fetchConteudos(pagination.nextPage!, searchTerm)}
+      disabled={!pagination.hasNextPage}
+      className="px-4 py-2 bg-gray-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
+    >
+      Próxima
+    </button>
+  </div>
 }
