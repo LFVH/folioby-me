@@ -45,10 +45,12 @@ export async function GET(
     
     const id = parseInt((await params).id, 10);
     if (isNaN(id)) return NextResponse.json({ message: "id inválido" }, { status: 400 });
+    
     if(!isPremium && await isHis(userId, id)) return NextResponse.json(
       { success: false, error: '404 Not Found' },
       { status: 403 }
     )
+    
     const conteudo = await prisma.conteudo.findUnique({
       where: { id: id }
     })
@@ -59,16 +61,30 @@ export async function GET(
         { status: 404 }
       )
     }
-    const buffer = Buffer.from(conteudo.data)
-    
-    return new NextResponse(buffer, {
-    headers: {
-        'Content-Type': conteudo.mimetype,
-        'Content-Disposition': `inline; filename="${conteudo.filename}"`,
-        'Content-Length': buffer.length.toString(),
-        'Cache-Control': 'public, max-age=31536000, immutable',
-      },
-    })
+
+    // ✅ REDIRECIONAR PARA A URL DO BLOB (se existir)
+    if (conteudo.link) {
+      return NextResponse.redirect(conteudo.link, 302)
+    }
+
+    // ⚠️ FALLBACK para dados antigos (se ainda tiver data)
+    if (conteudo.data) {
+      const buffer = Buffer.from(conteudo.data)
+      return new NextResponse(buffer, {
+        headers: {
+          'Content-Type': conteudo.mimetype || 'image/gif',
+          'Content-Disposition': `inline; filename="${conteudo.filename}"`,
+          'Content-Length': buffer.length.toString(),
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
+      })
+    }
+
+    return NextResponse.json(
+      { error: 'Conteúdo sem arquivo' },
+      { status: 404 }
+    )
+
   } catch (error) {
     console.error('Erro ao buscar conteúdo:', error)
     return NextResponse.json(
@@ -77,7 +93,6 @@ export async function GET(
     )
   }
 }
-
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string; }>; }

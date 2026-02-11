@@ -43,6 +43,7 @@ export type ConteudoMinAggregateOutputType = {
   filename: string | null
   mimetype: string | null
   data: runtime.Bytes | null
+  mediaType: string | null
   isTrend: boolean | null
   userId: string | null
   updatedAt: Date | null
@@ -58,6 +59,7 @@ export type ConteudoMaxAggregateOutputType = {
   filename: string | null
   mimetype: string | null
   data: runtime.Bytes | null
+  mediaType: string | null
   isTrend: boolean | null
   userId: string | null
   updatedAt: Date | null
@@ -73,6 +75,8 @@ export type ConteudoCountAggregateOutputType = {
   filename: number
   mimetype: number
   data: number
+  mediaType: number
+  mediaUrls: number
   isTrend: number
   userId: number
   updatedAt: number
@@ -98,6 +102,7 @@ export type ConteudoMinAggregateInputType = {
   filename?: true
   mimetype?: true
   data?: true
+  mediaType?: true
   isTrend?: true
   userId?: true
   updatedAt?: true
@@ -113,6 +118,7 @@ export type ConteudoMaxAggregateInputType = {
   filename?: true
   mimetype?: true
   data?: true
+  mediaType?: true
   isTrend?: true
   userId?: true
   updatedAt?: true
@@ -128,6 +134,8 @@ export type ConteudoCountAggregateInputType = {
   filename?: true
   mimetype?: true
   data?: true
+  mediaType?: true
+  mediaUrls?: true
   isTrend?: true
   userId?: true
   updatedAt?: true
@@ -227,9 +235,11 @@ export type ConteudoGroupByOutputType = {
   link: string | null
   fonte: string | null
   linkext: string | null
-  filename: string
-  mimetype: string
-  data: runtime.Bytes
+  filename: string | null
+  mimetype: string | null
+  data: runtime.Bytes | null
+  mediaType: string
+  mediaUrls: string[]
   isTrend: boolean
   userId: string
   updatedAt: Date
@@ -265,9 +275,11 @@ export type ConteudoWhereInput = {
   link?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   fonte?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   linkext?: Prisma.StringNullableFilter<"Conteudo"> | string | null
-  filename?: Prisma.StringFilter<"Conteudo"> | string
-  mimetype?: Prisma.StringFilter<"Conteudo"> | string
-  data?: Prisma.BytesFilter<"Conteudo"> | runtime.Bytes
+  filename?: Prisma.StringNullableFilter<"Conteudo"> | string | null
+  mimetype?: Prisma.StringNullableFilter<"Conteudo"> | string | null
+  data?: Prisma.BytesNullableFilter<"Conteudo"> | runtime.Bytes | null
+  mediaType?: Prisma.StringFilter<"Conteudo"> | string
+  mediaUrls?: Prisma.StringNullableListFilter<"Conteudo">
   isTrend?: Prisma.BoolFilter<"Conteudo"> | boolean
   userId?: Prisma.StringFilter<"Conteudo"> | string
   updatedAt?: Prisma.DateTimeFilter<"Conteudo"> | Date | string
@@ -282,9 +294,11 @@ export type ConteudoOrderByWithRelationInput = {
   link?: Prisma.SortOrderInput | Prisma.SortOrder
   fonte?: Prisma.SortOrderInput | Prisma.SortOrder
   linkext?: Prisma.SortOrderInput | Prisma.SortOrder
-  filename?: Prisma.SortOrder
-  mimetype?: Prisma.SortOrder
-  data?: Prisma.SortOrder
+  filename?: Prisma.SortOrderInput | Prisma.SortOrder
+  mimetype?: Prisma.SortOrderInput | Prisma.SortOrder
+  data?: Prisma.SortOrderInput | Prisma.SortOrder
+  mediaType?: Prisma.SortOrder
+  mediaUrls?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -302,9 +316,11 @@ export type ConteudoWhereUniqueInput = Prisma.AtLeast<{
   link?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   fonte?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   linkext?: Prisma.StringNullableFilter<"Conteudo"> | string | null
-  filename?: Prisma.StringFilter<"Conteudo"> | string
-  mimetype?: Prisma.StringFilter<"Conteudo"> | string
-  data?: Prisma.BytesFilter<"Conteudo"> | runtime.Bytes
+  filename?: Prisma.StringNullableFilter<"Conteudo"> | string | null
+  mimetype?: Prisma.StringNullableFilter<"Conteudo"> | string | null
+  data?: Prisma.BytesNullableFilter<"Conteudo"> | runtime.Bytes | null
+  mediaType?: Prisma.StringFilter<"Conteudo"> | string
+  mediaUrls?: Prisma.StringNullableListFilter<"Conteudo">
   isTrend?: Prisma.BoolFilter<"Conteudo"> | boolean
   userId?: Prisma.StringFilter<"Conteudo"> | string
   updatedAt?: Prisma.DateTimeFilter<"Conteudo"> | Date | string
@@ -319,9 +335,11 @@ export type ConteudoOrderByWithAggregationInput = {
   link?: Prisma.SortOrderInput | Prisma.SortOrder
   fonte?: Prisma.SortOrderInput | Prisma.SortOrder
   linkext?: Prisma.SortOrderInput | Prisma.SortOrder
-  filename?: Prisma.SortOrder
-  mimetype?: Prisma.SortOrder
-  data?: Prisma.SortOrder
+  filename?: Prisma.SortOrderInput | Prisma.SortOrder
+  mimetype?: Prisma.SortOrderInput | Prisma.SortOrder
+  data?: Prisma.SortOrderInput | Prisma.SortOrder
+  mediaType?: Prisma.SortOrder
+  mediaUrls?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -342,9 +360,11 @@ export type ConteudoScalarWhereWithAggregatesInput = {
   link?: Prisma.StringNullableWithAggregatesFilter<"Conteudo"> | string | null
   fonte?: Prisma.StringNullableWithAggregatesFilter<"Conteudo"> | string | null
   linkext?: Prisma.StringNullableWithAggregatesFilter<"Conteudo"> | string | null
-  filename?: Prisma.StringWithAggregatesFilter<"Conteudo"> | string
-  mimetype?: Prisma.StringWithAggregatesFilter<"Conteudo"> | string
-  data?: Prisma.BytesWithAggregatesFilter<"Conteudo"> | runtime.Bytes
+  filename?: Prisma.StringNullableWithAggregatesFilter<"Conteudo"> | string | null
+  mimetype?: Prisma.StringNullableWithAggregatesFilter<"Conteudo"> | string | null
+  data?: Prisma.BytesNullableWithAggregatesFilter<"Conteudo"> | runtime.Bytes | null
+  mediaType?: Prisma.StringWithAggregatesFilter<"Conteudo"> | string
+  mediaUrls?: Prisma.StringNullableListFilter<"Conteudo">
   isTrend?: Prisma.BoolWithAggregatesFilter<"Conteudo"> | boolean
   userId?: Prisma.StringWithAggregatesFilter<"Conteudo"> | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Conteudo"> | Date | string
@@ -356,9 +376,11 @@ export type ConteudoCreateInput = {
   link?: string | null
   fonte?: string | null
   linkext?: string | null
-  filename: string
-  mimetype: string
-  data: runtime.Bytes
+  filename?: string | null
+  mimetype?: string | null
+  data?: runtime.Bytes | null
+  mediaType?: string
+  mediaUrls?: Prisma.ConteudoCreatemediaUrlsInput | string[]
   isTrend?: boolean
   updatedAt?: Date | string
   createdAt?: Date | string
@@ -372,9 +394,11 @@ export type ConteudoUncheckedCreateInput = {
   link?: string | null
   fonte?: string | null
   linkext?: string | null
-  filename: string
-  mimetype: string
-  data: runtime.Bytes
+  filename?: string | null
+  mimetype?: string | null
+  data?: runtime.Bytes | null
+  mediaType?: string
+  mediaUrls?: Prisma.ConteudoCreatemediaUrlsInput | string[]
   isTrend?: boolean
   userId: string
   updatedAt?: Date | string
@@ -387,9 +411,11 @@ export type ConteudoUpdateInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  filename?: Prisma.StringFieldUpdateOperationsInput | string
-  mimetype?: Prisma.StringFieldUpdateOperationsInput | string
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  filename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimetype?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  mediaType?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaUrls?: Prisma.ConteudoUpdatemediaUrlsInput | string[]
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -403,9 +429,11 @@ export type ConteudoUncheckedUpdateInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  filename?: Prisma.StringFieldUpdateOperationsInput | string
-  mimetype?: Prisma.StringFieldUpdateOperationsInput | string
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  filename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimetype?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  mediaType?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaUrls?: Prisma.ConteudoUpdatemediaUrlsInput | string[]
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -419,9 +447,11 @@ export type ConteudoCreateManyInput = {
   link?: string | null
   fonte?: string | null
   linkext?: string | null
-  filename: string
-  mimetype: string
-  data: runtime.Bytes
+  filename?: string | null
+  mimetype?: string | null
+  data?: runtime.Bytes | null
+  mediaType?: string
+  mediaUrls?: Prisma.ConteudoCreatemediaUrlsInput | string[]
   isTrend?: boolean
   userId: string
   updatedAt?: Date | string
@@ -433,9 +463,11 @@ export type ConteudoUpdateManyMutationInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  filename?: Prisma.StringFieldUpdateOperationsInput | string
-  mimetype?: Prisma.StringFieldUpdateOperationsInput | string
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  filename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimetype?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  mediaType?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaUrls?: Prisma.ConteudoUpdatemediaUrlsInput | string[]
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -447,9 +479,11 @@ export type ConteudoUncheckedUpdateManyInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  filename?: Prisma.StringFieldUpdateOperationsInput | string
-  mimetype?: Prisma.StringFieldUpdateOperationsInput | string
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  filename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimetype?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  mediaType?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaUrls?: Prisma.ConteudoUpdatemediaUrlsInput | string[]
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -466,6 +500,14 @@ export type ConteudoOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type ConteudoCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -475,6 +517,8 @@ export type ConteudoCountOrderByAggregateInput = {
   filename?: Prisma.SortOrder
   mimetype?: Prisma.SortOrder
   data?: Prisma.SortOrder
+  mediaType?: Prisma.SortOrder
+  mediaUrls?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -494,6 +538,7 @@ export type ConteudoMaxOrderByAggregateInput = {
   filename?: Prisma.SortOrder
   mimetype?: Prisma.SortOrder
   data?: Prisma.SortOrder
+  mediaType?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -509,6 +554,7 @@ export type ConteudoMinOrderByAggregateInput = {
   filename?: Prisma.SortOrder
   mimetype?: Prisma.SortOrder
   data?: Prisma.SortOrder
+  mediaType?: Prisma.SortOrder
   isTrend?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -561,8 +607,17 @@ export type ConteudoUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.ConteudoScalarWhereInput | Prisma.ConteudoScalarWhereInput[]
 }
 
-export type BytesFieldUpdateOperationsInput = {
-  set?: runtime.Bytes
+export type ConteudoCreatemediaUrlsInput = {
+  set: string[]
+}
+
+export type NullableBytesFieldUpdateOperationsInput = {
+  set?: runtime.Bytes | null
+}
+
+export type ConteudoUpdatemediaUrlsInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type ConteudoCreateNestedManyWithoutCategoriasInput = {
@@ -608,9 +663,11 @@ export type ConteudoCreateWithoutUserInput = {
   link?: string | null
   fonte?: string | null
   linkext?: string | null
-  filename: string
-  mimetype: string
-  data: runtime.Bytes
+  filename?: string | null
+  mimetype?: string | null
+  data?: runtime.Bytes | null
+  mediaType?: string
+  mediaUrls?: Prisma.ConteudoCreatemediaUrlsInput | string[]
   isTrend?: boolean
   updatedAt?: Date | string
   createdAt?: Date | string
@@ -623,9 +680,11 @@ export type ConteudoUncheckedCreateWithoutUserInput = {
   link?: string | null
   fonte?: string | null
   linkext?: string | null
-  filename: string
-  mimetype: string
-  data: runtime.Bytes
+  filename?: string | null
+  mimetype?: string | null
+  data?: runtime.Bytes | null
+  mediaType?: string
+  mediaUrls?: Prisma.ConteudoCreatemediaUrlsInput | string[]
   isTrend?: boolean
   updatedAt?: Date | string
   createdAt?: Date | string
@@ -667,9 +726,11 @@ export type ConteudoScalarWhereInput = {
   link?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   fonte?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   linkext?: Prisma.StringNullableFilter<"Conteudo"> | string | null
-  filename?: Prisma.StringFilter<"Conteudo"> | string
-  mimetype?: Prisma.StringFilter<"Conteudo"> | string
-  data?: Prisma.BytesFilter<"Conteudo"> | runtime.Bytes
+  filename?: Prisma.StringNullableFilter<"Conteudo"> | string | null
+  mimetype?: Prisma.StringNullableFilter<"Conteudo"> | string | null
+  data?: Prisma.BytesNullableFilter<"Conteudo"> | runtime.Bytes | null
+  mediaType?: Prisma.StringFilter<"Conteudo"> | string
+  mediaUrls?: Prisma.StringNullableListFilter<"Conteudo">
   isTrend?: Prisma.BoolFilter<"Conteudo"> | boolean
   userId?: Prisma.StringFilter<"Conteudo"> | string
   updatedAt?: Prisma.DateTimeFilter<"Conteudo"> | Date | string
@@ -681,9 +742,11 @@ export type ConteudoCreateWithoutCategoriasInput = {
   link?: string | null
   fonte?: string | null
   linkext?: string | null
-  filename: string
-  mimetype: string
-  data: runtime.Bytes
+  filename?: string | null
+  mimetype?: string | null
+  data?: runtime.Bytes | null
+  mediaType?: string
+  mediaUrls?: Prisma.ConteudoCreatemediaUrlsInput | string[]
   isTrend?: boolean
   updatedAt?: Date | string
   createdAt?: Date | string
@@ -696,9 +759,11 @@ export type ConteudoUncheckedCreateWithoutCategoriasInput = {
   link?: string | null
   fonte?: string | null
   linkext?: string | null
-  filename: string
-  mimetype: string
-  data: runtime.Bytes
+  filename?: string | null
+  mimetype?: string | null
+  data?: runtime.Bytes | null
+  mediaType?: string
+  mediaUrls?: Prisma.ConteudoCreatemediaUrlsInput | string[]
   isTrend?: boolean
   userId: string
   updatedAt?: Date | string
@@ -732,9 +797,11 @@ export type ConteudoCreateManyUserInput = {
   link?: string | null
   fonte?: string | null
   linkext?: string | null
-  filename: string
-  mimetype: string
-  data: runtime.Bytes
+  filename?: string | null
+  mimetype?: string | null
+  data?: runtime.Bytes | null
+  mediaType?: string
+  mediaUrls?: Prisma.ConteudoCreatemediaUrlsInput | string[]
   isTrend?: boolean
   updatedAt?: Date | string
   createdAt?: Date | string
@@ -745,9 +812,11 @@ export type ConteudoUpdateWithoutUserInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  filename?: Prisma.StringFieldUpdateOperationsInput | string
-  mimetype?: Prisma.StringFieldUpdateOperationsInput | string
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  filename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimetype?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  mediaType?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaUrls?: Prisma.ConteudoUpdatemediaUrlsInput | string[]
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -760,9 +829,11 @@ export type ConteudoUncheckedUpdateWithoutUserInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  filename?: Prisma.StringFieldUpdateOperationsInput | string
-  mimetype?: Prisma.StringFieldUpdateOperationsInput | string
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  filename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimetype?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  mediaType?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaUrls?: Prisma.ConteudoUpdatemediaUrlsInput | string[]
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -775,9 +846,11 @@ export type ConteudoUncheckedUpdateManyWithoutUserInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  filename?: Prisma.StringFieldUpdateOperationsInput | string
-  mimetype?: Prisma.StringFieldUpdateOperationsInput | string
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  filename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimetype?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  mediaType?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaUrls?: Prisma.ConteudoUpdatemediaUrlsInput | string[]
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -788,9 +861,11 @@ export type ConteudoUpdateWithoutCategoriasInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  filename?: Prisma.StringFieldUpdateOperationsInput | string
-  mimetype?: Prisma.StringFieldUpdateOperationsInput | string
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  filename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimetype?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  mediaType?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaUrls?: Prisma.ConteudoUpdatemediaUrlsInput | string[]
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -803,9 +878,11 @@ export type ConteudoUncheckedUpdateWithoutCategoriasInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  filename?: Prisma.StringFieldUpdateOperationsInput | string
-  mimetype?: Prisma.StringFieldUpdateOperationsInput | string
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  filename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimetype?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  mediaType?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaUrls?: Prisma.ConteudoUpdatemediaUrlsInput | string[]
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -818,9 +895,11 @@ export type ConteudoUncheckedUpdateManyWithoutCategoriasInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fonte?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkext?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  filename?: Prisma.StringFieldUpdateOperationsInput | string
-  mimetype?: Prisma.StringFieldUpdateOperationsInput | string
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  filename?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimetype?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  mediaType?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaUrls?: Prisma.ConteudoUpdatemediaUrlsInput | string[]
   isTrend?: Prisma.BoolFieldUpdateOperationsInput | boolean
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -867,6 +946,8 @@ export type ConteudoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   filename?: boolean
   mimetype?: boolean
   data?: boolean
+  mediaType?: boolean
+  mediaUrls?: boolean
   isTrend?: boolean
   userId?: boolean
   updatedAt?: boolean
@@ -885,6 +966,8 @@ export type ConteudoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   filename?: boolean
   mimetype?: boolean
   data?: boolean
+  mediaType?: boolean
+  mediaUrls?: boolean
   isTrend?: boolean
   userId?: boolean
   updatedAt?: boolean
@@ -901,6 +984,8 @@ export type ConteudoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   filename?: boolean
   mimetype?: boolean
   data?: boolean
+  mediaType?: boolean
+  mediaUrls?: boolean
   isTrend?: boolean
   userId?: boolean
   updatedAt?: boolean
@@ -917,13 +1002,15 @@ export type ConteudoSelectScalar = {
   filename?: boolean
   mimetype?: boolean
   data?: boolean
+  mediaType?: boolean
+  mediaUrls?: boolean
   isTrend?: boolean
   userId?: boolean
   updatedAt?: boolean
   createdAt?: boolean
 }
 
-export type ConteudoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "link" | "fonte" | "linkext" | "filename" | "mimetype" | "data" | "isTrend" | "userId" | "updatedAt" | "createdAt", ExtArgs["result"]["conteudo"]>
+export type ConteudoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "link" | "fonte" | "linkext" | "filename" | "mimetype" | "data" | "mediaType" | "mediaUrls" | "isTrend" | "userId" | "updatedAt" | "createdAt", ExtArgs["result"]["conteudo"]>
 export type ConteudoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   categorias?: boolean | Prisma.Conteudo$categoriasArgs<ExtArgs>
   user?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
@@ -948,9 +1035,11 @@ export type $ConteudoPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     link: string | null
     fonte: string | null
     linkext: string | null
-    filename: string
-    mimetype: string
-    data: runtime.Bytes
+    filename: string | null
+    mimetype: string | null
+    data: runtime.Bytes | null
+    mediaType: string
+    mediaUrls: string[]
     isTrend: boolean
     userId: string
     updatedAt: Date
@@ -1388,6 +1477,8 @@ export interface ConteudoFieldRefs {
   readonly filename: Prisma.FieldRef<"Conteudo", 'String'>
   readonly mimetype: Prisma.FieldRef<"Conteudo", 'String'>
   readonly data: Prisma.FieldRef<"Conteudo", 'Bytes'>
+  readonly mediaType: Prisma.FieldRef<"Conteudo", 'String'>
+  readonly mediaUrls: Prisma.FieldRef<"Conteudo", 'String[]'>
   readonly isTrend: Prisma.FieldRef<"Conteudo", 'Boolean'>
   readonly userId: Prisma.FieldRef<"Conteudo", 'String'>
   readonly updatedAt: Prisma.FieldRef<"Conteudo", 'DateTime'>

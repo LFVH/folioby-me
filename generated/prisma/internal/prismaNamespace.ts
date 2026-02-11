@@ -852,6 +852,8 @@ export const ConteudoScalarFieldEnum = {
   filename: 'filename',
   mimetype: 'mimetype',
   data: 'data',
+  mediaType: 'mediaType',
+  mediaUrls: 'mediaUrls',
   isTrend: 'isTrend',
   userId: 'userId',
   updatedAt: 'updatedAt',
