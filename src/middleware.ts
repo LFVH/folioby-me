@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 import type { NextFetchEvent, NextRequest } from "next/server"
 import { logNow } from "./utils/Logging"
 import { getToken } from "next-auth/jwt"
-import { isActuallyChief as isActuallyChief } from "./utils/verifyUserAuth"
+import { isActuallyChief as isActuallyChief, verifyUser } from "./utils/verifyUserAuth"
 import { getValidUserSlugs } from './lib/db/slug-service'
 
 export const runtime = 'nodejs'
@@ -54,6 +54,7 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
     console.log(`Rota ignorada: ${currentPath}`);
     return NextResponse.next()
   }
+
   const isLogginRoutes = logginRoutes.some(route => 
     currentPath === route || currentPath.startsWith(route + '/')
   )
@@ -64,6 +65,12 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
       return NextResponse.next()
     }
     return NextResponse.redirect(new URL("/login", request.url));
+  }
+  const authResult = await verifyUser();
+  if (authResult instanceof NextResponse) return authResult;
+  const { isPremium } = authResult;
+  if(!isPremium){
+    return NextResponse.redirect(new URL("/", request.url))
   }
   if(token){
     if(token.user?.status){

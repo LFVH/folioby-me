@@ -17,7 +17,7 @@ export default function PricingSection({
   onCancel,
   className = "" 
 }: CheckoutProps) {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
   const [assinatura, setAssinatura] = useState<number | null>(null);
@@ -59,10 +59,14 @@ export default function PricingSection({
       if (!stripeClient) throw new Error("Stripe failed to initialize.");
 
       const { sessionId } = await checkoutResponse.json();
-      await stripeClient.redirectToCheckout({ sessionId });
+      const { error } =  await stripeClient.redirectToCheckout({ sessionId });
       
+      if (error) {
+        console.error("Stripe checkout error:", error);
+      } else {
       // Chama callback de sucesso se fornecido
-      onSuccess?.();
+        onSuccess?.();
+      }
     } catch (error) {
       console.error(error);
     } finally {

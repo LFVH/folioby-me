@@ -54,7 +54,7 @@ export default function UserPage() {
       const data = await response.json()
 
       if (response.ok) {
-        await update({ slug })
+        await update({ slug: 'slug' })
         toast.success('Slug atualizado com sucesso!')
         router.refresh()
       } else {

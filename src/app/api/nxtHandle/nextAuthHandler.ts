@@ -50,13 +50,6 @@ const AuthHandler :AuthOptions= {
   ],
   callbacks: {
     async jwt({ token, user,  trigger, session  }: any) {
-      if (trigger === 'update' && session?.slug) {
-        // Atualiza o token com os novos dados
-        token.user.slug = session.slug
-      }
-      if (trigger === 'update' && session?.image) {
-        token.user.image = session.image
-      }
       if (user) {
         const expiresIn = dayjs().add(7, "days").unix();
         await prisma.refreshToken.upsert({
@@ -73,6 +66,27 @@ const AuthHandler :AuthOptions= {
           slug: user.slug || ''
         };
       }
+      if (trigger === 'update' && session) {
+      // Busca os dados ATUALIZADOS do banco
+        const dbUser = await prisma.usuario.findUnique({
+        where: { email: token.email }, // ou token.user.email
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          isPremium: true,
+          slug: true,
+          image: true,
+        }
+      });
+
+      if (dbUser) {
+        token.user = {
+          ...token.user,
+          ...dbUser,
+        };
+      }
+    }
       return token;
     },
 

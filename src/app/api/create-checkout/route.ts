@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
         }
       },
       payment_method_types:  ["card"],
-      success_url: `${req.headers.get("origin")}/letsgo?congratulations`,
+      success_url: `${req.headers.get("origin")}/?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.get("origin")}/`,
       metadata: {
         userId,

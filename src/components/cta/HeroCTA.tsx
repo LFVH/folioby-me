@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import PricingSection from './PricingSection'
 import HeaderIni from '../HeaderIni'
@@ -10,7 +10,21 @@ import { useSession } from 'next-auth/react'
 export default function HeroCTA() {
   const [email, setEmail] = useState('')
   const router = useRouter()
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get('session_id');
+
+  useEffect(() => {
+  const verifyPayment = async () => {
+        await update( {refreshToken: true});
+        router.refresh()
+        router.push(`/nextsteps/contents`);
+    };
+
+    if (sessionId) {
+      verifyPayment();
+    }
+  }, [sessionId, update, router]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
