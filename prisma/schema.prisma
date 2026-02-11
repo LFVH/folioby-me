@@ -38,9 +38,11 @@ model Conteudo {
   link           String?  //link do gif
   fonte          String? 
   linkext        String?  //video para redirecionar
-  filename       String
-  mimetype       String
-  data           Bytes
+  filename       String?
+  mimetype       String?
+  data           Bytes?
+  mediaType      String   @default("single") // 'single', 'sequence'
+  mediaUrls      String[] // Array de URLs para múltiplas imagens
   isTrend        Boolean  @default(false)
   categorias     Categoria[]
   userId         String

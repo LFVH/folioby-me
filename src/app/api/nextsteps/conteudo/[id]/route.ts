@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../prisma";
 import { isHis, verifyUser } from "@/utils/verifyUserAuth";
+import { BlobService } from "@/lib/blob-service";
 
 export async function DELETE(
   request: NextRequest,
@@ -107,30 +108,57 @@ export async function PUT(
     const link = formData.get('link') as string
     const linkext = formData.get('linkext') as string
     const categoriasIds = formData.get('categoriasIds') as string
-    const file = formData.get('file') as File
+   const newFile = formData.get('file') as File | null;
+    const isSequence = formData.get('isSequence') === 'true';
+    const files = formData.getAll('files') as File[];
 
-    const updateData: any = {
+    let updateData: any = {
       name,
       fonte,
-      link,
-      linkext
-    }
+      linkext,
+      updatedAt: new Date()
+    };
 
-    // Se um novo arquivo foi enviado
-    if (file) {
-      if (!file.type.includes('gif')) {
-        return NextResponse.json(
-          { success: false, error: 'Apenas arquivos GIF são permitidos' },
-          { status: 400 }
-        )
+    // Processar novo arquivo se enviado
+    if (isSequence && files.length > 0) {
+      // Deletar arquivos antigos do Blob
+      if (conteudoExistente.mediaUrls?.length > 0) {
+        for (const url of conteudoExistente.mediaUrls) {
+          await BlobService.deleteFile(url);
+        }
       }
-
-      const bytes = await file.arrayBuffer()
-      const buffer = Buffer.from(bytes)
-
-      updateData.filename = file.name
-      updateData.mimetype = file.type
-      updateData.data = buffer
+      
+      // Upload das novas imagens
+      const uploads = await BlobService.uploadMultiple(files, `nextsteps/sequences/${Date.now()}`);
+      const urls = uploads.map(u => u.url);
+      
+      updateData.link = urls[0];
+      updateData.filename = files[0].name;
+      updateData.mimetype = 'image/sequence';
+      updateData.mediaType = 'sequence';
+      updateData.mediaUrls = urls;
+      updateData.data = Buffer.from('');
+      
+    } else if (newFile) {
+      // Deletar arquivo antigo do Blob
+      if (conteudoExistente.link?.includes('public.blob.vercel-storage.com')) {
+        await BlobService.deleteFile(conteudoExistente.link);
+      }
+      
+      // Upload do novo arquivo
+      const buffer = Buffer.from(await newFile.arrayBuffer());
+      const upload = await BlobService.uploadFromServer(
+        buffer,
+        newFile.name,
+        newFile.type
+      );
+      
+      updateData.link = upload.url;
+      updateData.filename = upload.filename;
+      updateData.mimetype = upload.mimetype;
+      updateData.mediaType = 'single';
+      updateData.mediaUrls = [upload.url];
+      updateData.data = Buffer.from('');
     }
 
     // Processar categorias

@@ -21,6 +21,9 @@ export interface ConteudoWithUrl {
   url: string
   createdAt: Date
   categorias?: Categoria[]
+  mediaType: 'sequence' | 'single';
+  mediaUrls: string[]; // Array de URLs (para sequência)
+  thumbnailUrl?: string; // Primeira imagem ou thumbnail gerada
 }
 export interface Categoria {
   id: string

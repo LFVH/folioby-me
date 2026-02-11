@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { BlobService } from '@/lib/blob-service'
 
 interface Categoria {
   id: number
@@ -14,42 +15,100 @@ interface ConteudoFormProps {
   categorias: Categoria[]
 }
 
+interface FormData {
+  name: string;
+  fonte: string;
+  link: string;
+  linkext: string;
+  file: File | null;
+  files: File[]; // NOVO: para múltiplos arquivos
+  isSequence: boolean;
+}
+
 export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [previewUrl, setPreviewUrl] = useState<string>('')
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [selectedCategorias, setSelectedCategorias] = useState<number[]>([])
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: conteudo?.name || '',
     fonte: conteudo?.fonte || '',
     link: conteudo?.link || '',
     linkext: conteudo?.linkext || '',
-    file: null as File | null
+    file: null,
+    files: [],
+    isSequence: false,
   })
+  useEffect(() => {
+    if (conteudo?.categorias) {
+      setSelectedCategorias(conteudo.categorias.map((c: any) => c.categoriaId));
+    }
+  }, [conteudo]);
 
   useEffect(() => {
-    if (conteudo) {
-      setSelectedCategorias(conteudo.categorias?.map((cat: Categoria) => cat.id) || [])
-      if (conteudo.link) {
-        setPreviewUrl(conteudo.link)
-      } else if (conteudo.id) {
-        setPreviewUrl(`/api/nextsteps/conteudo/${conteudo.id}`)
-      }
+    const urls: string[] = [];
+    
+    if (formData.isSequence) {
+      formData.files.forEach(file => {
+        urls.push(URL.createObjectURL(file));
+      });
+    } else if (formData.file) {
+      urls.push(URL.createObjectURL(formData.file));
+    } else if (conteudo?.mediaUrls?.length > 0) {
+      urls.push(...conteudo.mediaUrls);
+    } else if (conteudo?.link) {
+      urls.push(conteudo.link);
     }
-  }, [conteudo])
+    
+    setPreviewUrls(urls);
+    
+    return () => {
+      urls.forEach(url => {
+        if (url.startsWith('blob:')) {
+          URL.revokeObjectURL(url);
+        }
+      });
+    };
+  }, [formData.file, formData.files, formData.isSequence, conteudo]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      if (!file.type.includes('gif')) {
-        alert('Por favor, selecione apenas arquivos GIF')
-        return
+      const validation = BlobService.validateImage(file);
+      if (!validation.valid) {
+        alert(validation.error);
+        return;
       }
-      setFormData(prev => ({ ...prev, file }))
-      setPreviewUrl(URL.createObjectURL(file))
+      
+      setFormData(prev => ({ 
+        ...prev, 
+        file, 
+        files: [], // Limpar múltiplos
+        isSequence: false 
+      }));
     }
-  }
+  };
+
+  const handleMultipleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    
+    // Validar todos os arquivos
+    for (const file of files) {
+      const validation = BlobService.validateImage(file);
+      if (!validation.valid) {
+        alert(`Arquivo ${file.name}: ${validation.error}`);
+        return;
+      }
+    }
+    
+    setFormData(prev => ({ 
+      ...prev, 
+      files, 
+      file: null, // Limpar arquivo único
+      isSequence: true 
+    }));
+  };
 
   const handleCategoriaToggle = (categoriaId: number) => {
     setSelectedCategorias(prev =>
@@ -60,168 +119,241 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      const submitData = new FormData()
-      submitData.append('name', formData.name)
-      submitData.append('fonte', formData.fonte)
-      submitData.append('link', formData.link)
-      submitData.append('linkext', formData.linkext)
-      submitData.append('categoriasIds', selectedCategorias.join(','))
-
-      if (formData.file) {
-        submitData.append('file', formData.file)
+      const submitData = new FormData();
+      submitData.append('name', formData.name);
+      submitData.append('fonte', formData.fonte);
+      submitData.append('link', formData.link);
+      submitData.append('linkext', formData.linkext);
+      submitData.append('categoriasIds', selectedCategorias.join(','));
+      
+      if (formData.isSequence) {
+        submitData.append('isSequence', 'true');
+        formData.files.forEach(file => {
+          submitData.append('files', file);
+        });
+      } else if (formData.file) {
+        submitData.append('file', formData.file);
       }
 
       const url = conteudo 
         ? `/api/nextsteps/conteudo/${conteudo.id}`
-        : '/api/nextsteps/conteudo'
+        : '/api/nextsteps/conteudo';
 
-      const method = conteudo ? 'PUT' : 'POST'
+      const method = conteudo ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
         body: submitData
-      })
+      });
 
-      const result = await response.json()
+      const result = await response.json();
 
       if (result.success) {
-        router.push('/nextsteps/contents')
-        router.refresh()
+        router.push('/nextsteps/contents');
+        router.refresh();
       } else {
-        alert(result.error || 'Erro ao salvar conteúdo')
+        alert(result.error || 'Erro ao salvar conteúdo');
       }
     } catch (error) {
-      alert('Erro ao salvar conteúdo')
+      alert('Erro ao salvar conteúdo');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-white mb-8">
-        {conteudo ? 'Editar Conteúdo' : 'Novo Conteúdo'}
-      </h1>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Nome */}
+      <div>
+        <label className="block text-white font-semibold mb-2">
+          Nome do Conteúdo *
+        </label>
+        <input
+          type="text"
+          value={formData.name}
+          onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+          className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
+          required
+        />
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Preview do GIF */}
-        {previewUrl && (
-          <div className="bg-gray-800 rounded-lg p-4">
-            <h3 className="text-white font-semibold mb-3">Preview:</h3>
-            <img
-              src={previewUrl}
-              alt="Preview"
-              className="max-w-xs max-h-48 rounded-lg border border-gray-600"
-            />
-          </div>
-        )}
+      {/* Fonte */}
+      <div>
+        <label className="block text-white font-semibold mb-2">
+          Fonte
+        </label>
+        <input
+          type="text"
+          value={formData.fonte}
+          onChange={(e) => setFormData(prev => ({ ...prev, fonte: e.target.value }))}
+          className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
+          placeholder="Ex: Instagram, YouTube, Vimeo"
+        />
+      </div>
 
-        {/* Upload de Arquivo */}
+      {/* Link Externo */}
+      <div>
+        <label className="block text-white font-semibold mb-2">
+          Link para Redirecionamento *
+        </label>
+        <input
+          type="url"
+          value={formData.linkext}
+          onChange={(e) => setFormData(prev => ({ ...prev, linkext: e.target.value }))}
+          className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
+          placeholder="https://..."
+          required
+        />
+      </div>
+
+      {/* Tabs para escolher tipo de upload */}
+      <div className="border-b border-gray-700">
+        <div className="flex space-x-4">
+          <button
+            type="button"
+            onClick={() => setFormData(prev => ({ ...prev, isSequence: false }))}
+            className={`py-2 px-4 font-medium ${
+              !formData.isSequence 
+                ? 'text-blue-400 border-b-2 border-blue-400' 
+                : 'text-gray-400'
+            }`}
+          >
+            GIF / Imagem Única
+          </button>
+          <button
+            type="button"
+            onClick={() => setFormData(prev => ({ ...prev, isSequence: true }))}
+            className={`py-2 px-4 font-medium ${
+              formData.isSequence 
+                ? 'text-blue-400 border-b-2 border-blue-400' 
+                : 'text-gray-400'
+            }`}
+          >
+            Sequência de Imagens
+          </button>
+        </div>
+      </div>
+
+      {/* Upload de arquivo único (GIF/Imagem) */}
+      {!formData.isSequence && (
         <div>
           <label className="block text-white font-semibold mb-2">
-            Arquivo GIF {!conteudo && '*'}
+            {formData.file || !conteudo ? 'Arquivo *' : 'Novo Arquivo (opcional)'}
           </label>
           <input
             type="file"
-            accept=".gif,image/gif"
+            accept=".gif,.jpg,.jpeg,.png,.webp,.avif,image/*"
             onChange={handleFileChange}
             className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
           />
           <p className="text-gray-400 text-sm mt-1">
-            {conteudo ? 'Deixe em branco para manter o arquivo atual' : 'Selecione um arquivo GIF'}
+            GIF, JPEG, PNG, WebP ou AVIF (até 500MB)
           </p>
         </div>
+      )}
 
-        {/* Name */}
+      {/* Upload de múltiplas imagens */}
+      {formData.isSequence && (
         <div>
-          <label className="block text-white font-semibold mb-2">Name (EN)</label>
+          <label className="block text-white font-semibold mb-2">
+            Imagens da Sequência *
+          </label>
           <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            type="file"
+            accept=".jpg,.jpeg,.png,.webp,.avif,image/*"
+            onChange={handleMultipleFilesChange}
             className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
-            placeholder="Name in English"
+            multiple
           />
+          <p className="text-gray-400 text-sm mt-1">
+            Selecione várias imagens (JPEG, PNG, WebP, AVIF)
+          </p>
+          {formData.files.length > 0 && (
+            <p className="text-blue-400 text-sm mt-1">
+              {formData.files.length} imagem(ns) selecionada(s)
+            </p>
+          )}
         </div>
+      )}
 
-        {/* Fonte */}
-        <div>
-          <label className="block text-white font-semibold mb-2">Name (EN)</label>
-          <input
-            type="text"
-            value={formData.fonte}
-            onChange={(e) => setFormData(prev => ({ ...prev, fonte: e.target.value }))}
-            className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
-            placeholder="Fonte"
-          />
-        </div>
-
-        {/* Link */}
-        <div>
-          <label className="block text-white font-semibold mb-2">Link GIF (Opcional)</label>
-          <input
-            type="url"
-            value={formData.link}
-            onChange={(e) => setFormData(prev => ({ ...prev, link: e.target.value }))}
-            className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
-            placeholder="https://exemplo.com/gif.gif"
-          />
-        </div>
-
-        {/* Link */}
-        <div>
-          <label className="block text-white font-semibold mb-2">Link Externo</label>
-          <input
-            type="url"
-            value={formData.linkext}
-            onChange={(e) => setFormData(prev => ({ ...prev, linkext: e.target.value }))}
-            className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
-            placeholder="https://insta.com/video"
-          />
-        </div>
-
-        {/* Seletor de Categorias */}
-        <div>
-          <label className="block text-white font-semibold mb-2">Categorias</label>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-60 overflow-y-auto p-3 bg-gray-800 rounded-lg border border-gray-600">
-            {categorias.map((categoria) => (
-              <label key={categoria.id} className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={selectedCategorias.includes(categoria.id)}
-                  onChange={() => handleCategoriaToggle(categoria.id)}
-                  className="w-4 h-4 text-red-600 bg-gray-700 border-gray-600 rounded focus:ring-red-500"
+      {/* Preview das imagens */}
+      {previewUrls.length > 0 && (
+        <div className="bg-gray-800 rounded-lg p-4">
+          <h3 className="text-white font-semibold mb-3">
+            {formData.isSequence ? 'Preview da Sequência:' : 'Preview:'}
+          </h3>
+          <div className={formData.isSequence ? 'grid grid-cols-4 gap-2' : ''}>
+            {previewUrls.map((url, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={url}
+                  alt={`Preview ${index + 1}`}
+                  className={formData.isSequence 
+                    ? 'w-full h-24 object-cover rounded border border-gray-600' 
+                    : 'max-w-xs max-h-48 rounded-lg border border-gray-600'
+                  }
                 />
-                <span className="text-white text-sm">
-                  {categoria.nome} ({categoria.name})
-                </span>
-              </label>
+                {formData.isSequence && (
+                  <span className="absolute top-1 left-1 bg-black bg-opacity-70 text-white text-xs px-1.5 py-0.5 rounded">
+                    {index + 1}
+                  </span>
+                )}
+              </div>
             ))}
           </div>
         </div>
+      )}
 
-        {/* Botões */}
-        <div className="flex gap-4 pt-6">
-          <button
-            type="submit"
-            disabled={loading}
-            className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors disabled:opacity-50"
-          >
-            {loading ? 'Salvando...' : (conteudo ? 'Atualizar' : 'Criar Conteúdo')}
-          </button>
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors"
-          >
-            Cancelar
-          </button>
+      {/* Categorias */}
+      <div>
+        <label className="block text-white font-semibold mb-2">
+          Categorias
+        </label>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 bg-gray-800 p-4 rounded-lg">
+          {categorias.map((categoria) => (
+            <label key={categoria.id} className="flex items-center space-x-2 text-white">
+              <input
+                type="checkbox"
+                value={categoria.id}
+                checked={selectedCategorias.includes(categoria.id)}
+                onChange={(e) => {
+                  const id = categoria.id
+                  if (e.target.checked) {
+                    setSelectedCategorias([...selectedCategorias, id])
+                  } else {
+                    setSelectedCategorias(selectedCategorias.filter(c => c !== id))
+                  }
+                }}
+                className="rounded bg-gray-700 border-gray-600"
+              />
+              <span>{categoria.name}</span>
+            </label>
+          ))}
         </div>
-      </form>
-    </div>
-  )
+      </div>
+
+      {/* Botões */}
+      <div className="flex justify-end space-x-4">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          disabled={loading || (!formData.file && !formData.files.length && !conteudo)}
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+        >
+          {loading ? 'Salvando...' : conteudo ? 'Atualizar' : 'Salvar'}
+        </button>
+      </div>
+    </form>
+  );
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from "../../../../prisma"
 import {verifyUser } from "@/utils/verifyUserAuth"
+import { BlobService } from '@/lib/blob-service';
 
 export async function GET(request: NextRequest) {
   try {
@@ -98,26 +99,37 @@ export async function POST(request: NextRequest) {
     const link = formData.get('link') as string
     const linkext = formData.get('linkext') as string
     const categoriasIds = formData.get('categoriasIds') as string
-    const file = formData.get('file') as File
+      // NOVO: Verificar se é sequência de imagens
+    const isSequence = formData.get('isSequence') === 'true';
+    const files = formData.getAll('files') as File[]; // Para múltiplos uploads
+    const singleFile = formData.get('file') as File | null;
 
-    // Validação do arquivo
-    if (!file) {
-      return NextResponse.json(
-        { success: false, error: 'Nenhum arquivo enviado' },
-        { status: 400 }
-      )
+    let mediaUrls: string[] = [];
+    let mediaType = 'single';
+    let filename = '';
+    let mimetype = '';
+    
+    if (isSequence && files.length > 0) {
+      // Upload de múltiplas imagens
+      mediaType = 'sequence';
+      const uploads = await BlobService.uploadMultiple(files, `nextsteps/sequences/${Date.now()}`);
+      mediaUrls = uploads.map(u => u.url);
+      filename = files[0].name; // Nome do primeiro arquivo como referência
+      mimetype = 'image/sequence';
+      
+    } else if (singleFile) {
+      // Upload de arquivo único (compatível com GIFs existentes)
+      const buffer = Buffer.from(await singleFile.arrayBuffer());
+      const upload = await BlobService.uploadFromServer(
+        buffer,
+        singleFile.name,
+        singleFile.type
+      );
+      mediaUrls = [upload.url];
+      filename = upload.filename;
+      mimetype = upload.mimetype;
     }
 
-    if (!file.type.includes('gif')) {
-      return NextResponse.json(
-        { success: false, error: 'Apenas arquivos GIF são permitidos' },
-        { status: 400 }
-      )
-    }
-
-    // Converter File para Buffer
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
 
     // Processar categorias
     const categoriasConnect = categoriasIds 
@@ -128,11 +140,13 @@ export async function POST(request: NextRequest) {
       data: {
         name,
         fonte,
-        link,
+        link: mediaUrls[0] || null,
         linkext,
-        filename: file.name,
-        mimetype: file.type,
-        data: buffer,
+        filename,
+        mimetype,
+        data: Buffer.from(''),
+        mediaType,
+        mediaUrls,
         categorias: {
           connect: categoriasConnect
         },
