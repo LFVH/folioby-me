@@ -17,7 +17,7 @@ export default function Layout({
     return null; 
   }  
   return (
-    <div> 
+    <div className="bg-black"> 
       <main className="">
         <div className="pt-10" >
           {children}
