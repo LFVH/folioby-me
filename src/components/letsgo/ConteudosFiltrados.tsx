@@ -68,7 +68,7 @@ export default function ConteudosFiltradosComScroll({
             ? `Nenhum resultado encontrado para "${termoPesquisa}"`
             : tipoFiltro === 'categoria'
             ? 'Nenhum conteúdo encontrado nesta categoria.'
-            : 'Nenhuma categoria encontrada.'
+            : 'Nenhum conteúdo encontrado.'
           }
         </p>
         {filtroAtivo && (

@@ -68,25 +68,34 @@ const AuthHandler :AuthOptions= {
       }
       if (trigger === 'update' && session) {
       // Busca os dados ATUALIZADOS do banco
-        const dbUser = await prisma.usuario.findUnique({
-        where: { email: token.email }, // ou token.user.email
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          isPremium: true,
-          slug: true,
-          image: true,
-        }
-      });
-
-      if (dbUser) {
+          const dbUser = await prisma.usuario.findUnique({
+          where: { email: token.user.email }, 
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            isPremium: true,
+            slug: true,
+            image: true,
+          }
+        });
+        if (dbUser) {
+          const expiresIn = dayjs().add(7, "days").unix();
+          await prisma.refreshToken.upsert({
+            where: { userId: dbUser.id },
+            create: { userId: dbUser.id , expiresIn },
+            update: { expiresIn },
+          });
         token.user = {
-          ...token.user,
-          ...dbUser,
+          id: dbUser.id,
+          email: dbUser.email,
+          name: dbUser.name || null,
+          status: dbUser.isPremium || null,
+          role: 'user',
+          slug: dbUser.slug || ''
         };
+        }
       }
-    }
       return token;
     },
 

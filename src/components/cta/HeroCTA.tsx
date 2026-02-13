@@ -12,19 +12,27 @@ export default function HeroCTA() {
   const router = useRouter()
   const { data: session, update } = useSession();
   const searchParams = useSearchParams();
-  const sessionId = searchParams.get('session_id');
+  const refreshTrue = searchParams.get('refresh');
+  
 
   useEffect(() => {
   const verifyPayment = async () => {
         await update( {refreshToken: true});
         router.refresh()
-        router.push(`/nextsteps/contents`);
+        router.push("/")
     };
 
-    if (sessionId) {
+    if (refreshTrue) {
       verifyPayment();
     }
-  }, [sessionId, update, router]);
+  }, [refreshTrue, update, router]);
+
+    useEffect(() => {
+    if (session && session.user.status) {
+      router.push("/nextsteps/contents")
+    }
+    
+  }, [session]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
