@@ -65,6 +65,7 @@ export default function HeaderWithCategories() {
   }
 
   const handleProfileClick = () => {
+    limparFiltros()
   }
 
   const handleSearch = (termo: string) => {
@@ -110,6 +111,14 @@ export default function HeaderWithCategories() {
           </Link>
         
             <nav className="hidden md:flex items-center gap-4 flex-wrap min-w-0">
+              <Link
+                className="text-gray-300 hover:text-white transition-colors duration-200 font-bold"
+                href={`/${slug}/profile`}
+                key={userName}
+                onClick={handleProfileClick}
+              >
+                {userName}
+              </Link>
               <button
                 onClick={handleInicioClick}
                 className={`${
@@ -118,16 +127,8 @@ export default function HeaderWithCategories() {
                     : 'text-gray-300 hover:text-white'
                 } transition-colors whitespace-nowrap text-sm px-2 py-1`}
               >
-                Start
+                Start 
               </button>
-              <Link
-                className="text-gray-300 hover:text-white transition-colors duration-200 font-bold"
-                href="/profile"
-                key={userName}
-                onClick={handleProfileClick}
-              >
-                About {userName}
-              </Link>
               {categoriasPrincipais.map((categoria) => (
         <div key={categoria.id} className="relative">
           <button

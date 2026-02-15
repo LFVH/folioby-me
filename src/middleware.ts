@@ -35,13 +35,15 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
     '/'
   ];
   const currentPath = request.nextUrl.pathname;
+  console.log("currentPath")
+  console.log(currentPath)
   if (currentPath.startsWith('/_next') || 
       currentPath.startsWith('/static') ||
       currentPath.includes('.') && !currentPath.includes('/api/')) {
     return NextResponse.next();
   }
-  const potentialSlug = currentPath.slice(1)
-  
+  const potentialSlug = currentPath.replace(/^\//, '').replace(/\/profile$/, '');
+  console.log(potentialSlug)
   const validSlugs = await getValidUserSlugs()
   if (validSlugs.includes(potentialSlug)) {
     return NextResponse.next()
