@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import SearchBarNxt from '@/components/SearchBarNxt'
 import { ToggleStatus } from '@/components/ToggleStatus'
+import { scrollToTop } from '@/lib/utils'
 
 interface Conteudo {
   isTrend: boolean
@@ -26,12 +27,6 @@ interface PaginationInfo {
   nextPage: number | null
   prevPage: number | null
 }
-const scrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth' // para scroll suave
-  });
-};
 export default function ConteudosPage() {
   const [conteudos, setConteudos] = useState<Conteudo[]>([])
   const [loading, setLoading] = useState(true)

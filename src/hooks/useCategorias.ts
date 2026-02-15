@@ -3,7 +3,7 @@ import { CategoriaWithUrls } from '@/types'
 
 interface CategoriasData {
   categorias: CategoriaWithUrls[]
-  estatisticas?: number
+  userName?: string
 }
 
 export const useCategorias = (slug: string) => {
@@ -35,7 +35,7 @@ export const useCategorias = (slug: string) => {
 
       return {
         categorias: categoriasProcessadas,
-        estatisticas: result.estatisticas,
+        userName: result.name,
       }
     },
     staleTime: 5 * 60 * 1000,

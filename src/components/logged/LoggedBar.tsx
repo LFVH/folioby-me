@@ -4,11 +4,12 @@ import { signOut, useSession } from "next-auth/react"
 import { UserButton } from "./UserButtons"
 import Link from "next/link";
 import { MenuIcon } from "../signinsignup/icons";
+import { scrollToTop } from "@/lib/utils";
 
 const links = [
-  { href: '/nextsteps/contents', title: 'ManageMyPage' },
+  { href: '/nextsteps/contents', title: 'Manage Content' },
+  { href: '/nextsteps/categories', title: 'Coming Soon...' },
 ];
-
 
 export function LoggedBar() {
   const { data: session, status } = useSession();
@@ -17,12 +18,7 @@ export function LoggedBar() {
       <div className="w-8 h-8 rounded-full bg-gray-300 animate-pulse" />
       );
   }
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth' // para scroll suave
-    });
-  };
+
   if (!session || !session.user.status) {
     return null; 
   }

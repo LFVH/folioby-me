@@ -42,7 +42,6 @@ export interface CategoriaWithUrls {
   descricao?: string | null
   isTrend: boolean
   conteudos: ConteudoWithUrl[] 
-  conteudosBloqueados?: number 
   createdAt: string
   updatedAt: string
 }

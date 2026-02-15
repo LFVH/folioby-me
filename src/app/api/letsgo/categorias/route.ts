@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: categorias,
-      //userType: 'premium'
+      name: userDB.name
     })
   } catch (error) {
     console.error('Erro ao buscar categorias:', error)

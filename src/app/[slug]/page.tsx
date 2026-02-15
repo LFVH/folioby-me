@@ -13,7 +13,6 @@ export default function FlixPage() {
   const { data, isLoading: bannerLoading } = useCategorias(slug)
   const { filtroAtivo, tipoFiltro, termoPesquisa } = useGlobalFilter()
   const categorias = data?.categorias || []
-  const nrCategoriasBloq = data?.estatisticas
   if (bannerLoading) {
     return <LoadingSpinner />
   }
@@ -29,7 +28,6 @@ export default function FlixPage() {
           filtroAtivo={filtroAtivo}
           tipoFiltro={tipoFiltro}
           termoPesquisa={termoPesquisa}
-          nrCategoriasBloq={nrCategoriasBloq}
         />
       </main>
   )

@@ -12,7 +12,6 @@ interface ConteudosFiltradosProps {
   filtroAtivo: string | null
   tipoFiltro: 'categoria' | 'search' | null
   termoPesquisa: string
-  nrCategoriasBloq?: number | undefined
 }
 
 export default function ConteudosFiltradosComScroll({ 
@@ -20,7 +19,6 @@ export default function ConteudosFiltradosComScroll({
   filtroAtivo, 
   tipoFiltro, 
   termoPesquisa,
-  nrCategoriasBloq
 }: ConteudosFiltradosProps) {
   const { limparFiltros } = useGlobalFilter()
   const { 
@@ -149,11 +147,7 @@ export default function ConteudosFiltradosComScroll({
           )}
         </>
       )}
-      {nrCategoriasBloq && nrCategoriasBloq>0 &&(
-        <div className="relative rounded-lg overflow-hidden bg-gray-800/30 border-2 border-dashed border-gray-600/50 min-h-[200px]">
-          <LockedCategoriaIndicator count={nrCategoriasBloq} />
-        </div>
-      )}
+
       {!hasMore && categoriasFiltradas.length > 0 && !filtroAtivo && (
         <div className="text-center py-8">
           <p className="text-gray-400">

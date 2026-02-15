@@ -80,18 +80,6 @@ export default function CarrosselCategoria({
           <h2 className="text-2xl font-bold text-white">
             {categoria.nome}
           </h2>
-          {categoria.conteudosBloqueados && categoria.conteudosBloqueados > 0 && (
-            <Link href="/" >
-              <div className="flex items-center gap-1 px-3 py-1 bg-yellow-500/20 border border-yellow-500/40 rounded-full">
-                <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                </svg>
-                <span className="text-yellow-400 text-sm font-medium">
-                  +{categoria.conteudosBloqueados}
-                </span>
-              </div>
-            </Link>
-          )}
         </div>
         
         {categoria.descricao && (
@@ -109,13 +97,7 @@ export default function CarrosselCategoria({
                 layout="lista"
               />
             ))}
-            
-            {/* Espaço reservado para conteúdos bloqueados */}
-            {categoria.conteudosBloqueados && categoria.conteudosBloqueados > 0 && (
-                <div className="relative rounded-lg overflow-hidden bg-gray-800/30 border-2 border-dashed border-gray-600/50 min-h-[200px]">
-                  <LockedContentIndicator count={categoria.conteudosBloqueados} />
-                </div>
-            )}
+          
           </div>
         </div>
       </div>
@@ -202,18 +184,6 @@ export default function CarrosselCategoria({
         <h2 className="text-2xl font-bold text-white">
           {categoria.nome}
         </h2>
-        {categoria.conteudosBloqueados && categoria.conteudosBloqueados > 0 && (
-          <Link href="/" >
-          <div className="flex items-center gap-1 px-2 py-1 bg-yellow-500/20 border border-yellow-500/40 rounded-full">
-            <svg className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-            </svg>
-            <span className="text-yellow-400 text-xs font-medium">
-              +{categoria.conteudosBloqueados}
-            </span>
-          </div>
-          </Link>
-        )}
       </div>
       
       {categoria.descricao && (
@@ -264,13 +234,6 @@ export default function CarrosselCategoria({
                 layout="carrossel"
               />
             ))}
-            
-            {/* Espaço reservado para conteúdos bloqueados no carrossel */}
-            {categoria.conteudosBloqueados && categoria.conteudosBloqueados > 0 && (
-              <div className="flex-shrink-0 w-64 rounded-lg overflow-hidden bg-gray-800/30 border-2 border-dashed border-gray-600/50 relative">
-                <LockedContentIndicator count={categoria.conteudosBloqueados} />
-              </div>
-            )}
           </div>
 
           {isScrolling && (

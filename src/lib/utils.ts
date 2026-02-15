@@ -53,3 +53,13 @@ export function criarURL(
   
   return url;
 }
+
+
+export function scrollToTop() {
+  return () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+}
