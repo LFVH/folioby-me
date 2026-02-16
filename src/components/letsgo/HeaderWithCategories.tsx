@@ -127,7 +127,7 @@ export default function HeaderWithCategories() {
                     : 'text-gray-300 hover:text-white'
                 } transition-colors whitespace-nowrap text-sm px-2 py-1`}
               >
-                Start 
+                Home 
               </button>
               {categoriasPrincipais.map((categoria) => (
         <div key={categoria.id} className="relative">

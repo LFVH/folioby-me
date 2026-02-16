@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import TipTapEditor from '@/components/TipTapEditor';
 
@@ -8,7 +8,7 @@ interface User {
   name: string;
   image: string | null;
   desc: any;
-}   
+}
 
 interface ProfileClientProps {
   user: User;
@@ -42,92 +42,123 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-        {/* Cabeçalho com imagem de capa (opcional) */}
-        <div className="h-32 bg-gradient-to-r from-blue-500 to-purple-600"></div>
-        
-        {/* Área do perfil */}
-        <div className="px-6 pb-6">
-          {/* Avatar */}
-          <div className="flex justify-between items-start -mt-12 mb-4">
-            <div className="relative">
-              {user.image ? (
-                <Image
-                  src={user.image}
-                  alt={user.name}
-                  width={96}
-                  height={96}
-                  className="rounded-full border-4 border-white shadow-lg"
-                />
+    <div className="min-h-screen bg-black text-white">
+      <div className="container mx-auto px-4 py-12 max-w-6xl">
+        {/* Cabeçalho com "PORTFOLIO" */}
+        <div className="mb-16 border-b border-red-600 pb-4">
+          <h1 className="text-4xl font-light tracking-[0.3em] text-white">
+            PORTFOLIO
+          </h1>
+          <div className="h-1 w-24 bg-red-600 mt-2"></div>
+        </div>
+
+        {/* Conteúdo principal - Layout de currículo */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          {/* Coluna da esquerda - Informações e descrição */}
+          <div className="space-y-8">
+            {/* Nome em destaque */}
+            <div>
+              <h2 className="text-5xl font-bold text-white mb-2">
+                {user.name}
+              </h2>
+              <div className="h-0.5 w-32 bg-red-600"></div>
+            </div>
+
+            {/* Seção de descrição/currículo */}
+            <div className="space-y-6">
+              {isEditing ? (
+                <div className="space-y-4">
+                  <TipTapEditor
+                    content={desc}
+                    onChange={setDesc}
+                    editable={true}
+                  />
+                  <div className="flex justify-end space-x-3 pt-4">
+                    <button
+                      onClick={() => {
+                        setDesc(user.desc);
+                        setIsEditing(false);
+                      }}
+                      className="px-6 py-2 border border-red-600 text-white hover:bg-red-600/20 transition-colors rounded-sm font-medium"
+                      disabled={isSaving}
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handleSave}
+                      className="px-6 py-2 bg-red-600 text-white hover:bg-red-700 transition-colors rounded-sm font-medium disabled:opacity-50"
+                      disabled={isSaving}
+                    >
+                      {isSaving ? 'Salvando...' : 'Salvar'}
+                    </button>
+                  </div>
+                </div>
               ) : (
-                <div className="w-24 h-24 rounded-full border-4 border-white shadow-lg bg-gray-200 flex items-center justify-center">
-                  <span className="text-2xl text-gray-500">
-                    {user.name?.charAt(0).toUpperCase()}
-                  </span>
+                <div className="prose prose-invert max-w-none">
+                  {desc && Object.keys(desc).length > 0 ? (
+                    <div className="text-gray-300 leading-relaxed">
+                      <TipTapEditor
+                        content={desc}
+                        onChange={() => {}}
+                        editable={false}
+                      />
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 italic border-l-4 border-red-600 pl-4">
+                      Este usuário ainda não adicionou uma descrição.
+                    </p>
+                  )}
                 </div>
               )}
             </div>
-            
-            {/* Botão de editar (só aparece se for o próprio usuário) */}
-            <button
-              onClick={() => setIsEditing(!isEditing)}
-              className="mt-12 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-            >
-              {isEditing ? 'Cancelar' : 'Editar perfil'}
-            </button>
-          </div>
 
-          {/* Nome do usuário */}
-          <h1 className="text-2xl font-bold mb-4">{user.name}</h1>
-
-          {/* Seção de descrição */}
-          <div className="mt-6">
-            <h2 className="text-lg font-semibold mb-2">Sobre mim</h2>
-            
-            {isEditing ? (
-              <div className="space-y-4">
-                <TipTapEditor
-                  content={desc}
-                  onChange={setDesc}
-                  editable={true}
-                />
-                <div className="flex justify-end space-x-2">
-                  <button
-                    onClick={() => {
-                      setDesc(user.desc);
-                      setIsEditing(false);
-                    }}
-                    className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                    disabled={isSaving}
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
-                    disabled={isSaving}
-                  >
-                    {isSaving ? 'Salvando...' : 'Salvar'}
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="prose max-w-none">
-                {desc && Object.keys(desc).length > 0 ? (
-                  <TipTapEditor
-                    content={desc}
-                    onChange={() => {}}
-                    editable={false}
-                  />
-                ) : (
-                  <p className="text-gray-500 italic">
-                    Este usuário ainda não adicionou uma descrição.
-                  </p>
-                )}
-              </div>
+            {/* Botão de editar (aparece como link discreto) */}
+            {!isEditing && (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="text-sm text-red-600 hover:text-red-500 transition-colors font-medium flex items-center gap-2 group"
+              >
+                <span className="w-5 h-px bg-red-600 group-hover:w-8 transition-all"></span>
+                EDITAR PERFIL
+              </button>
             )}
           </div>
+
+          {/* Coluna da direita - Imagem em destaque */}
+          <div className="relative lg:sticky lg:top-24">
+            <div className="relative aspect-[3/4] w-full max-w-md mx-auto lg:mx-0 lg:ml-auto">
+              {/* Efeito de borda vermelha */}
+              <div className="absolute -inset-1 bg-gradient-to-t from-red-600 to-transparent opacity-50 blur-sm"></div>
+              
+              {/* Container da imagem */}
+              <div className="relative h-full w-full overflow-hidden border-2 border-red-600/30">
+                {user.image ? (
+                  <Image
+                    src={user.image}
+                    alt={user.name}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                ) : (
+                  <div className="h-full w-full bg-zinc-900 flex items-center justify-center">
+                    <span className="text-8xl text-red-600/30 font-light">
+                      {user.name?.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Detalhe decorativo */}
+              <div className="absolute -bottom-4 -right-4 w-24 h-24 border-b-2 border-r-2 border-red-600"></div>
+              <div className="absolute -top-4 -left-4 w-24 h-24 border-t-2 border-l-2 border-red-600"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Rodapé sutil */}
+        <div className="mt-24 pt-8 border-t border-zinc-800 text-center text-zinc-600 text-sm">
+          <p>© {new Date().getFullYear()} • PORTFOLIO</p>
         </div>
       </div>
     </div>

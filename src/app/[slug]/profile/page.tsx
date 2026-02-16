@@ -31,10 +31,7 @@ export default async function ProfilePage({ params }: PageProps) {
   const { slug } = await params; // ✅ Usar await para acessar
   
   try {
-    console.log("slug")
-    console.log(slug)
     const res = await fetch(`${process.env.NEXTAUTH_URL}/api/nextsteps/user/${slug}`    );
-    
     if (!res.ok) {
       return <div>Usuário não encontrado</div>;
     }
@@ -42,7 +39,9 @@ export default async function ProfilePage({ params }: PageProps) {
     const user = await res.json();
     return <ProfileClient user={user} slug={slug} />;
   } catch (error) {
-    console.log(error)
+
+    console.log("ERRO AO CARREGAR")
+    console.error(error)
     return <div>Erro ao carregar perfil</div>;
   }
 }
