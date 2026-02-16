@@ -66,7 +66,8 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
     if(isLogginRoutes){
       return NextResponse.next()
     }
-    return NextResponse.redirect(new URL("/login", request.url));
+    console.log("sem login")
+    return NextResponse.next()
   }
   const authResult = await verifyUser();
   if (authResult instanceof NextResponse) return authResult;
@@ -79,7 +80,9 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
       if (!request.nextUrl.pathname.startsWith("/nextsteps/contents") 
        && !request.nextUrl.pathname.startsWith('/api/nextsteps')
        && !request.nextUrl.pathname.startsWith('/nextsteps/profile')) {
-        return NextResponse.redirect(new URL("/nextsteps/contents", request.url));
+        console.log("passou")
+        //return NextResponse.redirect(new URL("/nextsteps/contents", request.url));
+        return NextResponse.next()
       }
       return NextResponse.next()
     } else{

@@ -45,7 +45,6 @@ export type UsuarioMinAggregateOutputType = {
   email: string | null
   password: string | null
   image: string | null
-  desc: string | null
   isBlocked: boolean | null
   isPremium: boolean | null
   dtIniPremium: Date | null
@@ -68,7 +67,6 @@ export type UsuarioMaxAggregateOutputType = {
   email: string | null
   password: string | null
   image: string | null
-  desc: string | null
   isBlocked: boolean | null
   isPremium: boolean | null
   dtIniPremium: Date | null
@@ -128,7 +126,6 @@ export type UsuarioMinAggregateInputType = {
   email?: true
   password?: true
   image?: true
-  desc?: true
   isBlocked?: true
   isPremium?: true
   dtIniPremium?: true
@@ -151,7 +148,6 @@ export type UsuarioMaxAggregateInputType = {
   email?: true
   password?: true
   image?: true
-  desc?: true
   isBlocked?: true
   isPremium?: true
   dtIniPremium?: true
@@ -284,7 +280,7 @@ export type UsuarioGroupByOutputType = {
   email: string
   password: string
   image: string | null
-  desc: string | null
+  desc: runtime.JsonValue | null
   isBlocked: boolean
   isPremium: boolean
   dtIniPremium: Date | null
@@ -330,7 +326,7 @@ export type UsuarioWhereInput = {
   email?: Prisma.StringFilter<"Usuario"> | string
   password?: Prisma.StringFilter<"Usuario"> | string
   image?: Prisma.StringNullableFilter<"Usuario"> | string | null
-  desc?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  desc?: Prisma.JsonNullableFilter<"Usuario">
   isBlocked?: Prisma.BoolFilter<"Usuario"> | boolean
   isPremium?: Prisma.BoolFilter<"Usuario"> | boolean
   dtIniPremium?: Prisma.DateTimeNullableFilter<"Usuario"> | Date | string | null
@@ -387,7 +383,7 @@ export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Usuario"> | string
   password?: Prisma.StringFilter<"Usuario"> | string
   image?: Prisma.StringNullableFilter<"Usuario"> | string | null
-  desc?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  desc?: Prisma.JsonNullableFilter<"Usuario">
   isBlocked?: Prisma.BoolFilter<"Usuario"> | boolean
   isPremium?: Prisma.BoolFilter<"Usuario"> | boolean
   dtIniPremium?: Prisma.DateTimeNullableFilter<"Usuario"> | Date | string | null
@@ -442,7 +438,7 @@ export type UsuarioScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"Usuario"> | string
   password?: Prisma.StringWithAggregatesFilter<"Usuario"> | string
   image?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
-  desc?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  desc?: Prisma.JsonNullableWithAggregatesFilter<"Usuario">
   isBlocked?: Prisma.BoolWithAggregatesFilter<"Usuario"> | boolean
   isPremium?: Prisma.BoolWithAggregatesFilter<"Usuario"> | boolean
   dtIniPremium?: Prisma.DateTimeNullableWithAggregatesFilter<"Usuario"> | Date | string | null
@@ -465,7 +461,7 @@ export type UsuarioCreateInput = {
   email: string
   password: string
   image?: string | null
-  desc?: string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -491,7 +487,7 @@ export type UsuarioUncheckedCreateInput = {
   email: string
   password: string
   image?: string | null
-  desc?: string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -517,7 +513,7 @@ export type UsuarioUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -543,7 +539,7 @@ export type UsuarioUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -569,7 +565,7 @@ export type UsuarioCreateManyInput = {
   email: string
   password: string
   image?: string | null
-  desc?: string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -592,7 +588,7 @@ export type UsuarioUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -615,7 +611,7 @@ export type UsuarioUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -667,7 +663,6 @@ export type UsuarioMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
   image?: Prisma.SortOrder
-  desc?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
   dtIniPremium?: Prisma.SortOrder
@@ -690,7 +685,6 @@ export type UsuarioMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
   image?: Prisma.SortOrder
-  desc?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
   dtIniPremium?: Prisma.SortOrder
@@ -802,7 +796,7 @@ export type UsuarioCreateWithoutConteudosInput = {
   email: string
   password: string
   image?: string | null
-  desc?: string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -827,7 +821,7 @@ export type UsuarioUncheckedCreateWithoutConteudosInput = {
   email: string
   password: string
   image?: string | null
-  desc?: string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -868,7 +862,7 @@ export type UsuarioUpdateWithoutConteudosInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -893,7 +887,7 @@ export type UsuarioUncheckedUpdateWithoutConteudosInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -918,7 +912,7 @@ export type UsuarioCreateWithoutCategoriasInput = {
   email: string
   password: string
   image?: string | null
-  desc?: string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -943,7 +937,7 @@ export type UsuarioUncheckedCreateWithoutCategoriasInput = {
   email: string
   password: string
   image?: string | null
-  desc?: string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -984,7 +978,7 @@ export type UsuarioUpdateWithoutCategoriasInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1009,7 +1003,7 @@ export type UsuarioUncheckedUpdateWithoutCategoriasInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1034,7 +1028,7 @@ export type UsuarioCreateWithoutRefreshTokenInput = {
   email: string
   password: string
   image?: string | null
-  desc?: string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -1059,7 +1053,7 @@ export type UsuarioUncheckedCreateWithoutRefreshTokenInput = {
   email: string
   password: string
   image?: string | null
-  desc?: string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: boolean
   isPremium?: boolean
   dtIniPremium?: Date | string | null
@@ -1100,7 +1094,7 @@ export type UsuarioUpdateWithoutRefreshTokenInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1125,7 +1119,7 @@ export type UsuarioUncheckedUpdateWithoutRefreshTokenInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  desc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  desc?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dtIniPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1303,7 +1297,7 @@ export type $UsuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     email: string
     password: string
     image: string | null
-    desc: string | null
+    desc: runtime.JsonValue | null
     isBlocked: boolean
     isPremium: boolean
     dtIniPremium: Date | null
@@ -1749,7 +1743,7 @@ export interface UsuarioFieldRefs {
   readonly email: Prisma.FieldRef<"Usuario", 'String'>
   readonly password: Prisma.FieldRef<"Usuario", 'String'>
   readonly image: Prisma.FieldRef<"Usuario", 'String'>
-  readonly desc: Prisma.FieldRef<"Usuario", 'String'>
+  readonly desc: Prisma.FieldRef<"Usuario", 'Json'>
   readonly isBlocked: Prisma.FieldRef<"Usuario", 'Boolean'>
   readonly isPremium: Prisma.FieldRef<"Usuario", 'Boolean'>
   readonly dtIniPremium: Prisma.FieldRef<"Usuario", 'DateTime'>

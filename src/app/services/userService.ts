@@ -28,7 +28,12 @@ export const userService = {
       data: { slug }
     })
   },
-
+  async updateDesc(userId: string, desc: string) {
+    return await prisma.usuario.update({
+      where: { id: userId },
+      data: { desc }
+    })
+  },
   async updateProfileImage(userId: string, imageUrl: string | null) {
     return await prisma.usuario.update({
       where: { id: userId },
