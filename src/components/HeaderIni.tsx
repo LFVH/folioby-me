@@ -20,7 +20,13 @@ export default function Header() {
                 href="/login" 
                 className="px-5 py-2 text-white bg-transparent border border-white/30 hover:bg-white/10 rounded-lg transition-colors font-medium backdrop-blur-sm"
               >
-                Entrar
+                Login
+              </Link>
+              <Link 
+                href="/signup" 
+                className="px-5 py-2 text-white bg-transparent border border-white/30 hover:bg-white/10 rounded-lg transition-colors font-medium backdrop-blur-sm"
+              >
+                SignUp
               </Link>
             </>
           ) : (

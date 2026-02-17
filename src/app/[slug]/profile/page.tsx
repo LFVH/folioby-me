@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     // if (res.ok) {
     //   const user = await res.json();
       return {  
-        title: `Perfil de Teste`,
-        description: `Perfil de Teste`,
+        title: `Profile`,
+        description: `Profile`,
       };
 //     }
 //   } catch (error) {

@@ -142,7 +142,7 @@ export default function PricingSection({
    return (
       <div className={`px-4 sm:px-6 lg:px-8 ${className}`}>
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-4">
             <h1 className="text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl">
               Escolha seu <span className="bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent">Plano</span>
             </h1>
