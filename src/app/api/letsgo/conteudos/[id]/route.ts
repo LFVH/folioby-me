@@ -22,11 +22,11 @@ export async function GET(
         { status: 404 }
       )
     }
-    const buffer = Buffer.from(conteudo.data)
+    const buffer = Buffer.from(conteudo.data ?? [])
     
     return new NextResponse(buffer, {
     headers: {
-        'Content-Type': conteudo.mimetype,
+        'Content-Type': conteudo.mimetype ?? 'application/octet-stream',
         'Content-Disposition': `inline; filename="${conteudo.filename}"`,
         'Content-Length': buffer.length.toString(),
         'Cache-Control': 'public, max-age=31536000, immutable',
