@@ -185,7 +185,6 @@ export default function UserPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-
       <main className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold mb-10">Gerenciar Perfil</h1>
@@ -328,7 +327,7 @@ export default function UserPage() {
                   </div>
                 </div>
               </div>
-
+              
               {/* Informações do Usuário */}
               <div className="bg-[#141414] p-6 rounded-lg">
                 <h2 className="text-2xl font-semibold mb-4">Informações da Conta</h2>

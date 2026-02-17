@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import TipTapEditor from '@/components/TipTapEditor';
+import { useSession } from 'next-auth/react';
 
 interface User {
   name: string;
@@ -19,6 +20,7 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
   const [desc, setDesc] = useState(user.desc);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+   const { data: session } = useSession()
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -113,13 +115,13 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
             </div>
 
             {/* Botão de editar (aparece como link discreto) */}
-            {!isEditing && (
+            {!isEditing && session?.user?.slug === slug &&  (
               <button
                 onClick={() => setIsEditing(true)}
                 className="text-sm text-red-600 hover:text-red-500 transition-colors font-medium flex items-center gap-2 group"
               >
                 <span className="w-5 h-px bg-red-600 group-hover:w-8 transition-all"></span>
-                EDITAR PERFIL
+                EDIT TEXT
               </button>
             )}
           </div>

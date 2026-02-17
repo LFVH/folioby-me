@@ -8,6 +8,7 @@ import { scrollToTop } from "@/lib/utils";
 
 const links = [
   { href: '/nextsteps/contents', title: 'Manage Content' },
+  { href: '/nextsteps/profile', title: 'Profile - Slug/Image' },
   { href: '/nextsteps/categories', title: 'Coming Soon...' },
 ];
 
@@ -29,9 +30,15 @@ export function LoggedBar() {
       <div className="folio-text-pattern w-full rounded-lg overflow-hidden border border-gray-800">
           <div className="container mx-auto flex max-w-7xl items-center justify-between md:px-6">
             {/* Logo */}
-            <Link href={`/${session.user?.slug ? session.user?.slug : ""}`} className="flex items-center space-x-2">
+            <Link href={`/${session.user?.status ? session.user?.slug : ""}`} className="flex items-center space-x-2">
               <div className="text-red-600 font-bold tracking-tight">
-                FolioBy/{session.user?.slug ? session.user?.slug : "yournamehere"} (goto mypage)
+                FolioBy/{session.user?.status ? session.user?.slug : "yournamehere"} (access mypage)
+              </div>
+            </Link>
+
+            <Link href={`/${session.user?.status ? session.user?.slug : ""}/profile`} className="flex items-center space-x-2">
+              <div className="text-red-600 font-bold tracking-tight">
+                {session.user?.status ? "Edit Profile Description" : ""}
               </div>
             </Link>
             {/* Desktop Navigation */}

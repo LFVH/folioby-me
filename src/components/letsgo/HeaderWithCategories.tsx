@@ -119,16 +119,18 @@ export default function HeaderWithCategories() {
               >
                 {userName}
               </Link>
-              <button
-                onClick={handleInicioClick}
-                className={`${
+              <Link
+              className={`${
                   !filtroAtivo
                     ? 'text-white font-semibold'
                     : 'text-gray-300 hover:text-white'
                 } transition-colors whitespace-nowrap text-sm px-2 py-1`}
+                href={`/${slug}`}
+                key={`${userName}H`}
+                onClick={handleInicioClick}
               >
-                Home 
-              </button>
+                Home
+              </Link>
               {categoriasPrincipais.map((categoria) => (
         <div key={categoria.id} className="relative">
           <button
