@@ -9,9 +9,10 @@ export async function verifyUser() {
   try {
     const userDB = await userExists();
     if(userDB instanceof NextResponse) return userDB;
+    if(!userDB?.isPremium) NextResponse.json({ error: 'Not premium user :/' }, { status: 405 })
     return {
-    userId: userDB?.id,
-    isPremium: userDB?.isPremium || false
+      userId: userDB?.id,
+      isPremium: userDB?.isPremium || false
     };
   } catch (error) {
     logNow("verifyUser " + (error instanceof Error ? error.message : 'Ocorreu um erro!'));

@@ -100,76 +100,101 @@ export default function UserPage() {
     }
   }
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp']
-    if (!validTypes.includes(file.type)) {
-      toast.error('Tipo de arquivo não suportado. Use JPEG, PNG ou WebP')
-      return
-    }
+ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Arquivo muito grande (máx. 5MB)')
-      return
-    }
-
-    setUploadingImage(true)
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const response = await fetch('/api/nextsteps/upload', {
-        method: 'POST',
-        body: formData,
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        const updateResponse = await fetch('/api/nextsteps/user/image', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ imageUrl: data.url }),
-        })
-        if (updateResponse.ok) {
-          await update({ image: data.url })
-          setUserImage(data.url)
-          toast.success('Foto de perfil atualizada!')
-        }
-      } else {
-        toast.error(data.error || 'Erro ao fazer upload')
-      }
-    } catch (error) {
-      toast.error('Erro ao fazer upload')
-    } finally {
-      setUploadingImage(false)
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ''
-      }
-    }
+  // Validação de tipo
+  const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+  if (!validTypes.includes(file.type)) {
+    toast.error('Tipo de arquivo não suportado. Use JPEG, PNG ou WebP');
+    return;
   }
 
-  const handleRemoveImage = async () => {
-    setIsLoading(true)
-    try {
-      const response = await fetch('/api/user/image', {
+  // Validação de tamanho (5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    toast.error('Arquivo muito grande (máx. 5MB)');
+    return;
+  }
+
+  setUploadingImage(true);
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    // 1. Upload da imagem (POST)
+    const uploadResponse = await fetch('/api/nextsteps/user/image', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const uploadData = await uploadResponse.json();
+
+    if (!uploadResponse.ok) {
+      throw new Error(uploadData.error || 'Erro ao fazer upload');
+    }
+
+    // 2. Atualizar perfil com a nova URL (PUT)
+    const updateResponse = await fetch('/api/nextsteps/user/image', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        imageUrl: uploadData.url,
+        oldImageUrl: userImage // Passa a imagem antiga para deletar
+      }),
+    });
+
+    const updateData = await updateResponse.json();
+
+    if (updateResponse.ok) {
+      await update({ image: uploadData.url });
+      setUserImage(uploadData.url);
+      toast.success('Foto de perfil atualizada!');
+    } else {
+      throw new Error(updateData.error || 'Erro ao atualizar perfil');
+    }
+
+  } catch (error) {
+    console.error('Erro no upload:', error);
+    toast.error(error instanceof Error ? error.message : 'Erro ao fazer upload');
+  } finally {
+    setUploadingImage(false);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }
+};
+
+const handleRemoveImage = async () => {
+  if (!userImage) return;
+  
+  setIsLoading(true);
+  try {
+    const response = await fetch(
+      `/api/nextsteps/user/image?url=${encodeURIComponent(userImage)}`,
+      {
         method: 'DELETE',
-      })
-
-      if (response.ok) {
-        await update({ image: null })
-        setUserImage(null)
-        toast.success('Foto de perfil removida!')
       }
-    } catch (error) {
-      toast.error('Erro ao remover foto')
-    } finally {
-      setIsLoading(false)
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      await update({ image: null });
+      setUserImage(null);
+      toast.success('Foto de perfil removida!');
+    } else {
+      throw new Error(data.error || 'Erro ao remover foto');
     }
+  } catch (error) {
+    console.error('Erro ao remover:', error);
+    toast.error(error instanceof Error ? error.message : 'Erro ao remover foto');
+  } finally {
+    setIsLoading(false);
   }
+};
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -207,30 +232,60 @@ export default function UserPage() {
                     )}
                   </div>
                   
-                  <div className="space-y-3">
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      onChange={handleImageUpload}
-                      accept="image/*"
-                      className="hidden"
-                    />
-                    <button
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={uploadingImage}
-                      className="px-4 py-2 bg-white text-black font-semibold rounded hover:bg-gray-200 transition disabled:opacity-50"
-                    >
-                      {uploadingImage ? 'Enviando...' : 'Alterar Foto'}
-                    </button>
-                    {userImage && (
+                  <div className="space-y-4">
+                    {/* Instruções em destaque */}
+                    <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-4">
+                      <h4 className="text-sm font-medium text-zinc-300 mb-2 flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
+                        Recomendações para foto
+                      </h4>
+                      
+                      <ul className="space-y-2 text-sm text-zinc-400">
+                        <li className="flex items-start gap-2">
+                          <span className="text-red-600 text-lg leading-5">•</span>
+                          <span><strong className="text-zinc-300">Formato 3:4</strong> (ex: 1200×1600px, 600×800px)</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-red-600 text-lg leading-5">•</span>
+                          <span><strong className="text-zinc-300">Tamanho máximo:</strong> 5MB</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-red-600 text-lg leading-5">•</span>
+                          <span><strong className="text-zinc-300">Formatos aceitos:</strong> JPG, PNG, WebP</span>
+                        </li>
+                        <li className="flex items-start gap-2 text-xs border-t border-zinc-800 pt-2 mt-1">
+                          <span className="text-red-600">💡</span>
+                          <span>Imagens fora do formato 3:4 serão automaticamente ajustadas para caber no moldura</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    {/* Botões existentes */}
+                    <div className="space-y-3">
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleImageUpload}
+                        accept="image/*"
+                        className="hidden"
+                      />
                       <button
-                        onClick={handleRemoveImage}
-                        disabled={isLoading}
-                        className="px-4 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition disabled:opacity-50"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadingImage}
+                        className="px-4 py-2 bg-white text-black font-semibold rounded hover:bg-gray-200 transition disabled:opacity-50 w-full sm:w-auto"
                       >
-                        Remover Foto
+                        {uploadingImage ? 'Enviando...' : 'Alterar Foto'}
                       </button>
-                    )}
+                      {userImage && (
+                        <button
+                          onClick={handleRemoveImage}
+                          disabled={isLoading}
+                          className="px-4 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition disabled:opacity-50 w-full sm:w-auto"
+                        >
+                          Remover Foto
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

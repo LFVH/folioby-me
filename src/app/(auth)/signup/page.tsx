@@ -12,7 +12,7 @@ export default function Page() {
       </div>
       <div className="mt-6">
         <SignupForm onLoginSuccess={() => {
-    router.push('/letsgo');
+    router.push('/');
   }}/>
       </div>
       <div className="mt-6 text-center text-sm">

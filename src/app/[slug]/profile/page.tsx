@@ -31,7 +31,7 @@ export default async function ProfilePage({ params }: PageProps) {
   const { slug } = await params;
   
   try {
-    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/nextsteps/user/${slug}`    );
+    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/letsgo/user/${slug}`    );
     if (!res.ok) {
       return <div>Usuário não encontrado</div>;
     }

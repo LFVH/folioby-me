@@ -1,5 +1,4 @@
 import { put, del, list } from '@vercel/blob';
-import prisma from '@/prisma';
 export interface UploadedFile {
   url: string;
   filename: string;

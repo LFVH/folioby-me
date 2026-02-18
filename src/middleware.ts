@@ -69,10 +69,15 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
         return NextResponse.redirect(new URL("/login", request.url));
   }
   const authResult = await verifyUser();
-  if (authResult instanceof NextResponse) return authResult;
-  const { isPremium } = authResult;
-  if(!isPremium){
-    return NextResponse.redirect(new URL("/", request.url))
+  console.log("0")
+  if (authResult instanceof NextResponse) {
+  console.log("1")
+    if(authResult.status === 405) {
+      console.log("2")
+        return NextResponse.redirect(new URL("/", request.url))
+      } 
+     console.log("2.2") 
+    return authResult;
   }
   if(token){
     if(token.user?.status){
