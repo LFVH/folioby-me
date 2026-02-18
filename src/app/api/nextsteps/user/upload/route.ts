@@ -18,13 +18,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Nenhum arquivo enviado' }, { status: 400 })
     }
 
-    // Validar tipo de arquivo
     const validTypes = ['image/jpeg', 'image/png', 'image/webp']
     if (!validTypes.includes(file.type)) {
       return NextResponse.json({ error: 'Tipo de arquivo não suportado' }, { status: 400 })
     }
 
-    // Validar tamanho (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       return NextResponse.json({ error: 'Arquivo muito grande (máx. 5MB)' }, { status: 400 })
     }
@@ -32,12 +30,9 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
     
-    // Gerar nome único para o arquivo
     const filename = `${uuidv4()}${path.extname(file.name)}`
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'profiles')
     
-    // Em produção, você deve usar um serviço como S3, Cloudinary, etc.
-    // Aqui está um exemplo básico com filesystem
     await writeFile(path.join(uploadDir, filename), buffer)
     
     const imageUrl = `/uploads/profiles/${filename}`

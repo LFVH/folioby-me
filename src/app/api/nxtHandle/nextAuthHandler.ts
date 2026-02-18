@@ -67,7 +67,6 @@ const AuthHandler :AuthOptions= {
         };
       }
       if (trigger === 'update' && session) {
-      // Busca os dados ATUALIZADOS do banco
           const dbUser = await prisma.usuario.findUnique({
           where: { email: token.user.email }, 
           select: {

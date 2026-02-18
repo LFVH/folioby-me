@@ -42,8 +42,6 @@ export async function POST(req: Request) {
         if (customerId) {
           try {
             const subscriptionId = invoice.lines.data[0].parent?.subscription_item_details?.subscription;  // sub_12
-
-            // 2. Buscar detalhes da assinatura via invoice
             const priceId = invoice.lines.data[0].pricing?.price_details?.price;
             const userId = invoice.lines.data[0].metadata.userId
             const currentPeriodEnd = new Date(invoice.lines.data[0].period.end * 1000);

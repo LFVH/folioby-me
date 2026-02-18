@@ -62,12 +62,10 @@ export async function GET(
       )
     }
 
-    // ✅ REDIRECIONAR PARA A URL DO BLOB (se existir)
     if (conteudo.link) {
       return NextResponse.redirect(conteudo.link, 302)
     }
 
-    // ⚠️ FALLBACK para dados antigos (se ainda tiver data)
     if (conteudo.data) {
       const buffer = Buffer.from(conteudo.data)
       return new NextResponse(buffer, {
@@ -134,16 +132,12 @@ export async function PUT(
       updatedAt: new Date()
     };
 
-    // Processar novo arquivo se enviado
     if (isSequence && files.length > 0) {
-      // Deletar arquivos antigos do Blob
       if (conteudoExistente.mediaUrls?.length > 0) {
         for (const url of conteudoExistente.mediaUrls) {
           await BlobService.deleteFile(url);
         }
       }
-      
-      // Upload das novas imagens
       const uploads = await BlobService.uploadMultiple(files, `nextsteps/sequences/${Date.now()}`);
       const urls = uploads.map(u => u.url);
       
@@ -155,12 +149,9 @@ export async function PUT(
       updateData.data = Buffer.from('');
       
     } else if (newFile) {
-      // Deletar arquivo antigo do Blob
       if (conteudoExistente.link?.includes('public.blob.vercel-storage.com')) {
         await BlobService.deleteFile(conteudoExistente.link);
       }
-      
-      // Upload do novo arquivo
       const buffer = Buffer.from(await newFile.arrayBuffer());
       const upload = await BlobService.uploadFromServer(
         buffer,
@@ -175,8 +166,6 @@ export async function PUT(
       updateData.mediaUrls = [upload.url];
       updateData.data = Buffer.from('');
     }
-
-    // Processar categorias
     if (categoriasIds) {
       const categoriasConnect = categoriasIds.split(',').map(id => ({ id: parseInt(id) }))
       updateData.categorias = {

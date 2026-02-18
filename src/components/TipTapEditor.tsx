@@ -28,7 +28,6 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
     },
   });
 
-  // Atualiza o conteúdo quando a prop content muda
   useEffect(() => {
     if (editor && content && !editor.isDestroyed) {
       const currentContent = editor.getJSON();

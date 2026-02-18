@@ -18,12 +18,10 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search')
     const skip = (page - 1) * limit
 
-    // Construir o objeto where dinamicamente
     const where: any = {
-      userId: userId // Adiciona o filtro por userId
+      userId: userId
     }
 
-    // Adiciona condição de search se existir
     if (search) {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },
@@ -42,19 +40,19 @@ export async function GET(request: NextRequest) {
             }
           }
         },
-        where, // Adiciona o where com as condições
+        where,
         orderBy: [
           {
-            isTrend: 'desc' // Primeiro ordena por isTrend (trending primeiro)
+            isTrend: 'desc'
           },
           {
-            updatedAt: 'desc' // Depois por updatedAt (mais recentes primeiro)
+            updatedAt: 'desc'
           }
         ],
         skip,
         take: limit
       }),
-      prisma.conteudo.count({ where }) // Adiciona where também no count para contagem precisa
+      prisma.conteudo.count({ where })
     ])
 
     const totalPages = Math.ceil(total / limit)
@@ -99,9 +97,8 @@ export async function POST(request: NextRequest) {
     const link = formData.get('link') as string
     const linkext = formData.get('linkext') as string
     const categoriasIds = formData.get('categoriasIds') as string
-      // NOVO: Verificar se é sequência de imagens
     const isSequence = formData.get('isSequence') === 'true';
-    const files = formData.getAll('files') as File[]; // Para múltiplos uploads
+    const files = formData.getAll('files') as File[];
     const singleFile = formData.get('file') as File | null;
 
     let mediaUrls: string[] = [];
@@ -110,15 +107,13 @@ export async function POST(request: NextRequest) {
     let mimetype = '';
     
     if (isSequence && files.length > 0) {
-      // Upload de múltiplas imagens
       mediaType = 'sequence';
       const uploads = await BlobService.uploadMultiple(files, `nextsteps/sequences/${Date.now()}`);
       mediaUrls = uploads.map(u => u.url);
-      filename = files[0].name; // Nome do primeiro arquivo como referência
+      filename = files[0].name;
       mimetype = 'image/sequence';
       
     } else if (singleFile) {
-      // Upload de arquivo único (compatível com GIFs existentes)
       const buffer = Buffer.from(await singleFile.arrayBuffer());
       const upload = await BlobService.uploadFromServer(
         buffer,
@@ -130,8 +125,6 @@ export async function POST(request: NextRequest) {
       mimetype = upload.mimetype;
     }
 
-
-    // Processar categorias
     const categoriasConnect = categoriasIds 
       ? categoriasIds.split(',').map(id => ({ id: parseInt(id) }))
       : []

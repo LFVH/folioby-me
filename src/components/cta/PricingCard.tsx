@@ -16,8 +16,6 @@ interface PricingCardProps {
 export function PricingCard({ plano, assinaturaSelecionada, onSelecionar }: PricingCardProps) {
   const isSelecionado = assinaturaSelecionada === plano.id;
   const isPopular = plano.popular;
-
-  // Cores baseadas no tipo de plano
   const cores = {
     red: {
       bg: 'bg-red-600',

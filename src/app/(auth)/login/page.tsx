@@ -6,7 +6,6 @@ import Link from 'next/link';
 export default function Page() {
   const router = useRouter();
 
-  // Função para tratar o sucesso do login
   const handleLoginSuccess = () => {
     router.push('/');
   };

@@ -14,7 +14,6 @@ if (process.env.NODE_ENV === 'production') {
   pool = new Pool({ connectionString: process.env.DATABASE_URL! })
   prisma = new PrismaClient({ adapter: new PrismaPg(pool) })
 } else {
-  // Desenvolvimento: reutiliza ou cria novo
   if (!global.__pool) {
     global.__pool = new Pool({ connectionString: process.env.DATABASE_URL! })
   }
@@ -28,7 +27,6 @@ if (process.env.NODE_ENV === 'production') {
   prisma = global.__prisma
 }
 
-// Cleanup no final (opcional)
 process.on('beforeExit', async () => {
   await pool.end()
   await prisma.$disconnect()

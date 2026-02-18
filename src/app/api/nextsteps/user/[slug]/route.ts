@@ -4,11 +4,11 @@ import { NextRequest, NextResponse } from 'next/server';
 // GET
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> } // ✅ Tipo Promise
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
         console.log("passou")
-    const { slug } = await params; // ✅ Usar await
+    const { slug } = await params; 
     console.log("passou")
     console.log(slug)
     const user = await prisma.usuario.findUnique({
@@ -29,10 +29,10 @@ export async function GET(
 // PUT
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> } // ✅ Tipo Promise
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = await params; // ✅ Usar await
+    const { slug } = await params;
     const body = await request.json();
     const { desc } = body;
 

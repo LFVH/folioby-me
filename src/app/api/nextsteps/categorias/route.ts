@@ -18,7 +18,6 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || ''
     const skip = (page - 1) * limit
 
-    // Construir where com busca
     const where: any = {}
     if (search) {
       where.OR = [
@@ -85,7 +84,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { nome, name, descricao } = body
     
-    // Validação básica
     if (!nome && !name) {
       return NextResponse.json(
         { success: false, error: 'Nome (PT) ou Name (EN) é obrigatório' },
@@ -114,7 +112,6 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Erro ao criar categoria:', error)
     
-    // Erro de unique constraint
     if (error.code === 'P2002') {
       return NextResponse.json(
         { success: false, error: error },

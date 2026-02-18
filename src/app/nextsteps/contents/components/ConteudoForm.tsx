@@ -21,7 +21,7 @@ interface FormData {
   link: string;
   linkext: string;
   file: File | null;
-  files: File[]; // NOVO: para múltiplos arquivos
+  files: File[];
   isSequence: boolean;
 }
 
@@ -84,7 +84,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
       setFormData(prev => ({ 
         ...prev, 
         file, 
-        files: [], // Limpar múltiplos
+        files: [],
         isSequence: false 
       }));
     }
@@ -93,7 +93,6 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
   const handleMultipleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     
-    // Validar todos os arquivos
     for (const file of files) {
       const validation = BlobService.validateImage(file);
       if (!validation.valid) {
@@ -105,7 +104,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
     setFormData(prev => ({ 
       ...prev, 
       files, 
-      file: null, // Limpar arquivo único
+      file: null,
       isSequence: true 
     }));
   };

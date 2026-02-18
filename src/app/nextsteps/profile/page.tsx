@@ -12,7 +12,6 @@ export default function UserPage() {
   const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Estados para o formulário
   const [slug, setSlug] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -20,7 +19,6 @@ export default function UserPage() {
   const [uploadingImage, setUploadingImage] = useState(false)
   const [userImage, setUserImage] = useState<string | null>(null)
 
-  // Inicializar com dados do usuário
   useEffect(() => {
     if (session?.user) {
       setSlug(session.user.slug || '')
@@ -28,13 +26,11 @@ export default function UserPage() {
     }
   }, [session])
 
-  // Função para validar slug
-  const validateSlug = (slug: string) => {
+    const validateSlug = (slug: string) => {
     const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
     return slugRegex.test(slug)
   }
 
-  // Função para atualizar slug
   const handleUpdateSlug = async () => {
     if (!validateSlug(slug)) {
       toast.error('Slug inválido. Use apenas letras minúsculas, números e hífens')
@@ -67,7 +63,6 @@ export default function UserPage() {
     }
   }
 
-  // Função para atualizar senha
   const handleUpdatePassword = async () => {
     if (password !== confirmPassword) {
       toast.error('As senhas não coincidem')
@@ -105,19 +100,15 @@ export default function UserPage() {
     }
   }
 
-  // Função para upload de imagem
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-
-    // Validar tipo de arquivo
     const validTypes = ['image/jpeg', 'image/png', 'image/webp']
     if (!validTypes.includes(file.type)) {
       toast.error('Tipo de arquivo não suportado. Use JPEG, PNG ou WebP')
       return
     }
 
-    // Validar tamanho (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast.error('Arquivo muito grande (máx. 5MB)')
       return
@@ -136,15 +127,13 @@ export default function UserPage() {
       const data = await response.json()
 
       if (response.ok) {
-        // Atualizar a imagem no perfil do usuário
         const updateResponse = await fetch('/api/nextsteps/user/image', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ imageUrl: data.url }),
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imageUrl: data.url }),
         })
-
         if (updateResponse.ok) {
           await update({ image: data.url })
           setUserImage(data.url)
@@ -163,7 +152,6 @@ export default function UserPage() {
     }
   }
 
-  // Função para remover imagem
   const handleRemoveImage = async () => {
     setIsLoading(true)
     try {

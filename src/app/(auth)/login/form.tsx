@@ -18,7 +18,6 @@ export const LoginForm = ({ onLoginSuccess }: LoginFormProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  // Pega o ID da assinatura da URL
   const assinaturaId = searchParams.get('plan');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -56,7 +55,6 @@ export const LoginForm = ({ onLoginSuccess }: LoginFormProps) => {
       setErrors((prev) => ({ ...prev, general: result.error ?? 'Login failed' }));
     } else {
       if (assinaturaId) {
-        // Redireciona para o pagamento com a assinatura
         router.push(`/?plan=${assinaturaId}`);
       } else{
         onLoginSuccess();

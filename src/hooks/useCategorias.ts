@@ -24,7 +24,6 @@ export const useCategorias = (slug: string) => {
       
       const result = await response.json()
       
-      // Processa as categorias adicionando URLs
       const categoriasProcessadas = result.data.map((categoria: any) => ({
         ...categoria,
         conteudos: categoria.conteudos.map((conteudo: any) => ({

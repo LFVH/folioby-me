@@ -64,7 +64,6 @@ export default function PricingSection({
       if (error) {
         console.error("Stripe checkout error:", error);
       } else {
-      // Chama callback de sucesso se fornecido
         onSuccess?.();
       }
     } catch (error) {

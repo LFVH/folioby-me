@@ -13,7 +13,6 @@ export const userService = {
   },
 
   async updateSlug(userId: string, slug: string) {
-    // Validação do slug
     const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
     if (!slugRegex.test(slug)) {
       throw new Error('Slug inválido. Use apenas letras minúsculas, números e hífens')

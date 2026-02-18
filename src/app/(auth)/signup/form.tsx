@@ -40,7 +40,6 @@ export function SignupForm({ onLoginSuccess }: SignupFormProps) {
   
   const assinaturaId = searchParams.get('plan');
 
-  // Validação em tempo real
   useEffect(() => {
     if (formState.password && formState.confirmPassword) {
       setPasswordsMatch(formState.password === formState.confirmPassword);
@@ -56,7 +55,6 @@ export function SignupForm({ onLoginSuccess }: SignupFormProps) {
         [field]: event.target.value
       }));
       
-      // Limpa erro específico quando o usuário começa a digitar
       if (errors[field]) {
         setErrors(prev => ({ ...prev, [field]: undefined }));
       }
@@ -67,7 +65,6 @@ export function SignupForm({ onLoginSuccess }: SignupFormProps) {
     setErrors({});
     setIsLoading(true);
 
-    // Validação da confirmação de senha
     if (formState.password !== formState.confirmPassword) {
       setErrors({ confirmPassword: 'Passwords do not match' });
       setIsLoading(false);

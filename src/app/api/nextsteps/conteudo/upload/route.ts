@@ -16,16 +16,12 @@ export async function POST(request: NextRequest) {
     if (!file) {
       return NextResponse.json({ error: 'Nenhum arquivo enviado' }, { status: 400 });
     }
-
-    // Validar tipo de arquivo
     const allowedTypes = ['image/gif', 'image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/avif'];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json({ 
         error: 'Formato não suportado. Use GIF, JPEG, PNG, WebP ou AVIF.' 
       }, { status: 400 });
     }
-
-    // Upload direto para o Vercel Blob
     const blob = await put(`nextsteps/${Date.now()}-${file.name}`, file, {
       access: 'public',
       addRandomSuffix: true,

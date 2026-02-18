@@ -48,7 +48,6 @@ export default function CarrosselCategoria({
     }
   }, [categoria.conteudos, layout])
 
-  // Componente do cadeado
   const LockedContentIndicator = ({ count }: { count: number }) => (
     <Link href="/" >
     <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center z-10">

@@ -24,7 +24,6 @@ export async function POST(request: NextRequest) {
       { status: 401 }
     );
     
-    // Se você não tiver o customerId armazenado, pode buscar pelas assinaturas
     const subscriptions = await stripe.subscriptions.list({
       customer: userDB.stripeCliId, 
       limit: 1,
@@ -36,7 +35,6 @@ export async function POST(request: NextRequest) {
 
     const customerId = subscriptions.data[0].customer as string;
 
-    // Criar sessão do portal
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: return_url || `${process.env.NEXTAUTH_URL}/dashboard`,

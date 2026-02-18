@@ -45,14 +45,14 @@ export async function GET(request: NextRequest) {
             isTrend: true,
           },
           orderBy: [
-            { isTrend: 'desc' },   // true vem primeiro em 'desc'
-            { createdAt: 'desc' }, // depois ordena por data
+            { isTrend: 'desc' },   // istrend true vem antes
+            { createdAt: 'desc' },
           ],
         }
       },
         orderBy: [
-          { isTrend: 'desc' },   // true vem primeiro em 'desc'
-          { createdAt: 'desc' }, // depois ordena por data
+          { isTrend: 'desc' },
+          { createdAt: 'desc' },
         ],
       }),
       prisma.categoria.count({

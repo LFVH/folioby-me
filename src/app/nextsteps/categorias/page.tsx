@@ -42,7 +42,6 @@ export default function CategoriasPage() {
     prevPage: null
   })
 
- // Busca categorias quando searchTerm muda (sempre da página 1)
   useEffect(() => {
     fetchCategorias(1, searchTerm)
   }, [searchTerm])
@@ -80,7 +79,6 @@ export default function CategoriasPage() {
       const result = await response.json()
 
       if (result.success) {
-        // Recarrega a página atual após exclusão
         fetchCategorias(pagination.currentPage, searchTerm)
       } else {
         alert(result.error || 'Erro ao excluir categoria')
@@ -90,7 +88,6 @@ export default function CategoriasPage() {
     }
   }
 
-  // Funções de paginação mais claras
   const handleNextPage = () => {
     if (pagination.hasNextPage) {
       fetchCategorias(pagination.nextPage!, searchTerm)
