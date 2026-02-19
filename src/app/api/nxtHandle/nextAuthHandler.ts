@@ -43,7 +43,8 @@ const AuthHandler :AuthOptions= {
           email: user.email, 
           status: user.isPremium,
           role: isAdmin ? 'chief' : 'user',
-          slug: user.slug
+          slug: user.slug,
+          image: user.image || ''
         }; 
       }
     }),
@@ -63,7 +64,8 @@ const AuthHandler :AuthOptions= {
           name: user.name || null,
           status: user.status || null,
           role: user.role || 'user',
-          slug: user.slug || ''
+          slug: user.slug || '',
+          image: user.image || ''
         };
       }
       if (trigger === 'update' && session) {
@@ -91,7 +93,8 @@ const AuthHandler :AuthOptions= {
           name: dbUser.name || null,
           status: dbUser.isPremium || null,
           role: 'user',
-          slug: dbUser.slug || ''
+          slug: dbUser.slug || '',
+          image: dbUser.image || ''
         };
         }
       }

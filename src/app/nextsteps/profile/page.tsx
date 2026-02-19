@@ -1,6 +1,7 @@
 // app/profile/page.tsx
 'use client'
 
+import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -20,7 +21,9 @@ export default function UserPage() {
   const [userImage, setUserImage] = useState<string | null>(null)
 
   useEffect(() => {
+    
     if (session?.user) {
+    console.log(session.user.image)
       setSlug(session.user.slug || '')
       setUserImage(session.user.image || null)
     }
@@ -201,23 +204,25 @@ const handleRemoveImage = async () => {
     <div className="min-h-screen bg-black text-white">
       <main className="pt-32 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold mb-10">Gerenciar Perfil</h1>
+          <h1 className="text-4xl font-bold mb-10">Manage Profile</h1>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Coluna 1: Informações do usuário */}
             <div className="space-y-8">
               {/* Seção de Foto de Perfil */}
               <div className="bg-[#141414] p-6 rounded-lg">
-                <h2 className="text-2xl font-semibold mb-4">Foto de Perfil</h2>
+                <h2 className="text-2xl font-semibold mb-4">Profile Photo (/slug/profile)</h2>
                 <div className="flex items-center space-x-6">
                   <div className="relative">
                     <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-800">
                       {userImage ? (
-                        <img 
-                          src={userImage} 
-                          alt="Profile" 
-                          className="w-full h-full object-cover"
-                        />
+                        <Image
+                          src={userImage}
+                          alt={session?.user?.name ?? "user"}
+                          fill
+                          className="object-cover object-top"
+                          priority
+                      />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
                           <span className="text-4xl font-bold">
@@ -238,25 +243,25 @@ const handleRemoveImage = async () => {
                     <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-4">
                       <h4 className="text-sm font-medium text-zinc-300 mb-2 flex items-center gap-2">
                         <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
-                        Recomendações para foto
+                        Recomendations:
                       </h4>
                       
                       <ul className="space-y-2 text-sm text-zinc-400">
                         <li className="flex items-start gap-2">
                           <span className="text-red-600 text-lg leading-5">•</span>
-                          <span><strong className="text-zinc-300">Formato 3:4</strong> (ex: 1200×1600px, 600×800px)</span>
+                          <span><strong className="text-zinc-300">Format 3:4</strong> (ex: 1200×1600px, 600×800px)</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="text-red-600 text-lg leading-5">•</span>
-                          <span><strong className="text-zinc-300">Tamanho máximo:</strong> 5MB</span>
+                          <span><strong className="text-zinc-300">Max Size:</strong> 5MB</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="text-red-600 text-lg leading-5">•</span>
-                          <span><strong className="text-zinc-300">Formatos aceitos:</strong> JPG, PNG, WebP</span>
+                          <span><strong className="text-zinc-300">Accepted formats:</strong> JPG, PNG, WebP</span>
                         </li>
                         <li className="flex items-start gap-2 text-xs border-t border-zinc-800 pt-2 mt-1">
                           <span className="text-red-600">💡</span>
-                          <span>Imagens fora do formato 3:4 serão automaticamente ajustadas para caber no moldura</span>
+                          <span>Images may be adjusted</span>
                         </li>
                       </ul>
                     </div>
@@ -325,11 +330,11 @@ const handleRemoveImage = async () => {
             <div className="space-y-8">
               {/* Seção de Alterar Senha */}
               <div className="bg-[#141414] p-6 rounded-lg">
-                <h2 className="text-2xl font-semibold mb-4">Alterar Senha</h2>
+                <h2 className="text-2xl font-semibold mb-4">Change Password</h2>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm text-gray-400 mb-2">
-                      Nova Senha
+                      New Password
                     </label>
                     <input
                       type="password"
@@ -340,7 +345,7 @@ const handleRemoveImage = async () => {
                   </div>
                   <div>
                     <label className="block text-sm text-gray-400 mb-2">
-                      Confirmar Nova Senha
+                      Confirm new password
                     </label>
                     <input
                       type="password"
@@ -361,10 +366,10 @@ const handleRemoveImage = async () => {
 
               {/* Seção de Assinatura */}
               <div className="bg-[#141414] p-6 rounded-lg">
-                <h2 className="text-2xl font-semibold mb-4">Assinatura</h2>
+                <h2 className="text-2xl font-semibold mb-4">Signature</h2>
                 <div className="space-y-4">
                   <p className="text-gray-400">
-                    Gerencie sua assinatura e veja os detalhes do seu plano atual.
+                    Manage your signature
                   </p>
                   <div className="pt-4">
                     <ManageSubscriptionButton />
@@ -374,10 +379,10 @@ const handleRemoveImage = async () => {
               
               {/* Informações do Usuário */}
               <div className="bg-[#141414] p-6 rounded-lg">
-                <h2 className="text-2xl font-semibold mb-4">Informações da Conta</h2>
+                <h2 className="text-2xl font-semibold mb-4">Account info</h2>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm text-gray-400">Nome</p>
+                    <p className="text-sm text-gray-400">Name</p>
                     <p className="text-lg">{session?.user?.name}</p>
                   </div>
                   <div>
@@ -385,7 +390,7 @@ const handleRemoveImage = async () => {
                     <p className="text-lg">{session?.user?.email}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400">Slug Atual</p>
+                    <p className="text-sm text-gray-400">Slug</p>
                     <p className="text-lg">{session?.user?.slug || 'Não definido'}</p>
                   </div>
                 </div>
