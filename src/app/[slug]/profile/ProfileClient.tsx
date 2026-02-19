@@ -139,7 +139,7 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
                     src={user.image}
                     alt={user.name}
                     fill
-                    className="object-cover"
+                    className="object-cover object-top"
                     priority
                   />
                 ) : (

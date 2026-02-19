@@ -66,7 +66,7 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
     if(isLogginRoutes){
       return NextResponse.next()
     }
-        return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
   const authResult = await verifyUser();
   console.log("0")
