@@ -25,7 +25,7 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const response = await fetch(`/api/nextsteps/user/desc`, {
+      const response = await fetch(`/api/nextsteps/user/${slug}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
