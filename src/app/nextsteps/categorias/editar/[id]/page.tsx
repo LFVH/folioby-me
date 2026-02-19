@@ -149,7 +149,7 @@ export default function EditarCategoriaPage() {
                 disabled={saving || (!formData.nome && !formData.name)}
                 className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {saving ? 'Salvando...' : 'Salvar Alterações'}
+                {saving ? 'Saving...' : 'Save Alterações'}
               </button>
               <button
                 type="button"

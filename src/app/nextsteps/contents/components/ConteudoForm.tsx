@@ -155,10 +155,10 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
         router.push('/nextsteps/contents');
         router.refresh();
       } else {
-        alert(result.error || 'Erro ao salvar conteúdo');
+        alert(result.error || 'Erro ao Save conteúdo');
       }
     } catch (error) {
-      alert('Erro ao salvar conteúdo');
+      alert('Erro ao Save conteúdo');
     } finally {
       setLoading(false);
     }
@@ -343,7 +343,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             disabled={loading || (!formData.file && !formData.files.length && !conteudo)}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
-            {loading ? 'Salvando...' : conteudo ? 'Atualizar' : 'Salvar'}
+            {loading ? 'Saving...' : conteudo ? 'Update' : 'Save'}
           </button>
         </div>
       </form>

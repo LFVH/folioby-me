@@ -26,14 +26,15 @@ export default function UserPage() {
     }
   }, [session])
 
-    const validateSlug = (slug: string) => {
+  const validateSlug = (slug: string) => {
+    if (slug.length > 50) return false  
     const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
     return slugRegex.test(slug)
   }
 
   const handleUpdateSlug = async () => {
     if (!validateSlug(slug)) {
-      toast.error('Slug inválido. Use apenas letras minúsculas, números e hífens')
+      toast.error('Use only lowercase letters, numbers and hyphens (max. 50 characters)')
       return
     }
 
@@ -292,11 +293,11 @@ const handleRemoveImage = async () => {
 
               {/* Seção de Slug */}
               <div className="bg-[#141414] p-6 rounded-lg">
-                <h2 className="text-2xl font-semibold mb-4">Slug do Perfil</h2>
+                <h2 className="text-2xl font-semibold mb-4">Profile's Slug</h2>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm text-gray-400 mb-2">
-                      Seu identificador único
+                      Your unique identifier
                     </label>
                     <input
                       type="text"
@@ -306,7 +307,7 @@ const handleRemoveImage = async () => {
                       placeholder="seu-slug-aqui"
                     />
                     <p className="text-sm text-gray-500 mt-2">
-                      Use apenas letras minúsculas, números e hífens
+                      Use only lowercase letters, numbers and hyphens (max. 50 characters) /name-surname
                     </p>
                   </div>
                   <button
@@ -314,7 +315,7 @@ const handleRemoveImage = async () => {
                     disabled={isLoading || !validateSlug(slug)}
                     className="px-6 py-3 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition disabled:opacity-50"
                   >
-                    {isLoading ? 'Salvando...' : 'Atualizar Slug'}
+                    {isLoading ? 'Saving...' : 'Update Slug'}
                   </button>
                 </div>
               </div>
@@ -353,7 +354,7 @@ const handleRemoveImage = async () => {
                     disabled={isLoading || password !== confirmPassword || password.length < 6}
                     className="px-6 py-3 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition disabled:opacity-50"
                   >
-                    {isLoading ? 'Salvando...' : 'Alterar Senha'}
+                    {isLoading ? 'Saving...' : 'Alterar Senha'}
                   </button>
                 </div>
               </div>

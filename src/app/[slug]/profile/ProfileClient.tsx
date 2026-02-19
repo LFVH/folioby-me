@@ -37,7 +37,7 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
         setIsEditing(false);
       }
     } catch (error) {
-      console.error('Erro ao salvar:', error);
+      console.error('Erro ao Save:', error);
     } finally {
       setIsSaving(false);
     }
@@ -91,7 +91,7 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
                       className="px-6 py-2 bg-red-600 text-white hover:bg-red-700 transition-colors rounded-sm font-medium disabled:opacity-50"
                       disabled={isSaving}
                     >
-                      {isSaving ? 'Salvando...' : 'Salvar'}
+                      {isSaving ? 'Saving...' : 'Save'}
                     </button>
                   </div>
                 </div>
