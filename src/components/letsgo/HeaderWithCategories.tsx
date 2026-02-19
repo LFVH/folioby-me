@@ -117,7 +117,7 @@ export default function HeaderWithCategories() {
                 key={userName}
                 onClick={handleProfileClick}
               >
-                {userName}
+                {userName?.split(' ')[0] || 'Usuário'}
               </Link>
               <Link
               className={`${
