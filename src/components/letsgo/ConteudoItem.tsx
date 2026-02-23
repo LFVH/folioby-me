@@ -10,6 +10,12 @@ export default function ConteudoItem({ conteudo, layout = 'carrossel' }: Conteud
   const [isHovered, setIsHovered] = useState(false)
   const intervalRef = useRef<NodeJS.Timeout>()
   const isSequence = conteudo.mediaType === 'sequence' && conteudo.mediaUrls?.length > 1
+  console.log('isSequence')
+  console.log(isSequence)
+  console.log("conteudo.mediaType")
+  console.log(conteudo.mediaType)
+  console.log("conteudo.mediaUrls?.length")
+  console.log(conteudo.mediaUrls?.length)
   const isGif = !isSequence && conteudo.mimetype?.includes('gif')
   const mediaUrls = conteudo.mediaUrls?.length ? conteudo.mediaUrls : [conteudo.url]
   useEffect(() => {

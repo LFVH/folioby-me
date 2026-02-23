@@ -26,7 +26,7 @@ export function UserButton() {
       <button
         onClick={handleClick}
         className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        title="Gerencie sua assinatura"
+        title="Manage Profile"
       >
         {session.user?.image ? (
         <img

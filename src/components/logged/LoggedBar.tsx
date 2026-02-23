@@ -7,9 +7,9 @@ import { MenuIcon } from "../signinsignup/icons";
 import { scrollToTop } from "@/lib/utils";
 
 const links = [
-  { href: '/nextsteps/contents', title: 'Manage Content' },
-  { href: '/nextsteps/profile', title: 'Profile - Slug/Image' },
-  { href: '/nextsteps/categories', title: 'Coming Soon...' },
+  { href: '/nextsteps/contents', title: 'Page Contents' },
+  { href: '/nextsteps/profile', title: 'Slug and ProfileImage' },
+  { href: '/nextsteps/categories', title: 'Soon...' },
 ];
 
 export function LoggedBar() {
@@ -38,7 +38,7 @@ export function LoggedBar() {
 
             <Link href={`/${session.user?.status ? session.user?.slug : ""}/profile`} className="flex items-center space-x-2">
               <div className="text-red-600 font-bold tracking-tight">
-                {session.user?.status ? "Edit Profile Description" : ""}
+                {session.user?.status ? "Profile Description" : ""}
               </div>
             </Link>
             {/* Desktop Navigation */}

@@ -58,7 +58,7 @@ export default function ConteudosPage() {
         setPagination(result.pagination)
       }
     } catch (error) {
-      console.error('Erro ao carregar conteúdos:', error)
+      console.error('Error loading contents:', error)
     } finally {
       setLoading(false)
     }
@@ -69,7 +69,7 @@ export default function ConteudosPage() {
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Tem certeza que deseja excluir este conteúdo?')) return
+    if (!confirm('Are you sure you want to delete?')) return
 
     try {
       const response = await fetch(`/api/nextsteps/conteudo/${id}`, {
@@ -81,10 +81,10 @@ export default function ConteudosPage() {
       if (result.success) {
         fetchConteudos(pagination.currentPage, searchTerm)
       } else {
-        alert(result.error || 'Erro ao excluir conteúdo')
+        alert(result.error || 'Error on delete')
       }
     } catch (error) {
-      alert('Erro ao excluir conteúdo')
+      alert('Error on delete')
     }
   }
 
@@ -106,21 +106,21 @@ export default function ConteudosPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">Gerenciar Conteúdos</h1>
-            <p className="text-gray-400 mt-1">Insira, edite ou exclua o que aparece em sua página</p>
+            <h1 className="text-3xl font-bold text-white">Manage Contents</h1>
+            <p className="text-gray-400 mt-1">Insert, edit or delete contents that appear on your page</p>
           </div>
           
           <div className="flex items-center gap-4">
             <SearchBarNxt 
               onSearch={handleSearch}
-              placeholder="Buscar por nome, arquivo ou categoria..."
+              placeholder="Search by name, file or categor..."
             />
             
             <Link
               href="/nextsteps/contents/new"
               className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors whitespace-nowrap"
             >
-              + Novo Conteúdo
+              + New Content
             </Link>
           </div>
         </div>
@@ -130,17 +130,17 @@ export default function ConteudosPage() {
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-white">
-                  Resultados para: <strong>"{searchTerm}"</strong>
+                  Results to: <strong>"{searchTerm}"</strong>
                 </span>
                 <span className="text-gray-400 ml-4">
-                  {pagination.totalItems} conteúdo(s) encontrado(s)
+                  {pagination.totalItems} content(s) found
                 </span>
               </div>
               <button
                 onClick={() => handleSearch('')}
                 className="text-gray-400 hover:text-white transition-colors text-sm"
               >
-                Limpar busca
+                Clean up search
               </button>
             </div>
           </div>
@@ -215,13 +215,13 @@ export default function ConteudosPage() {
                     href={`/nextsteps/contents/edit/${conteudo.id}`}
                     className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 rounded transition-colors text-sm"
                   >
-                    Editar
+                    Edit
                   </Link>
                   <button
                     onClick={() => handleDelete(conteudo.id)}
                     className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded transition-colors text-sm"
                   >
-                    Excluir
+                    Delte
                   </button>
                 </div>
               </div>
@@ -234,24 +234,24 @@ export default function ConteudosPage() {
           <div className="text-center text-gray-400 py-16">
             {searchTerm ? (
               <>
-                <p className="text-xl">Nenhum resultado encontrado</p>
-                <p className="mt-2">Tente alterar os termos da busca</p>
+                <p className="text-xl">No results found</p>
+                <p className="mt-2">Try changing search terms</p>
                 <button
                   onClick={() => handleSearch('')}
                   className="mt-4 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded transition-colors"
                 >
-                  Limpar busca
+                  Clean up search
                 </button>
               </>
             ) : (
               <>
-                <p className="text-xl">Nenhum conteúdo encontrado</p>
-                <p className="mt-2">Crie seu primeiro conteúdo para começar</p>
+                <p className="text-xl">No contents found</p>
+                <p className="mt-2">Insert your first content to begin </p>
                 <Link
                   href="/nextsteps/contents/new"
                   className="mt-4 inline-block px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
                 >
-                  Criar Primeiro Conteúdo
+                  Insert your content
                 </Link>
               </>
             )}
@@ -281,7 +281,7 @@ function navPages(fetchConteudos: (page: number, search?: string) => Promise<voi
       disabled={!pagination.hasPrevPage}
       className="px-4 py-2 bg-gray-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
     >
-      Anterior
+      Previous
     </button>
 
     <div className="flex items-center gap-2 text-sm">
@@ -298,7 +298,7 @@ function navPages(fetchConteudos: (page: number, search?: string) => Promise<voi
       disabled={!pagination.hasNextPage}
       className="px-4 py-2 bg-gray-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
     >
-      Próxima
+      Next
     </button>
   </div>
 }

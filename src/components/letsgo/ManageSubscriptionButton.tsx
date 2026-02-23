@@ -87,7 +87,7 @@ export default function ManageSubscriptionButtonWithCheck({
       ) : (
         <>
           <CreditCardIcon className="w-4 h-4 mr-2" />
-          Gerencie sua assinatura Stripe
+          Manage your Stripe signature 
         </>
       )}
     </button>
