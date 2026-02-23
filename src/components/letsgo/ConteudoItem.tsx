@@ -162,13 +162,7 @@ export default function ConteudoItem({ conteudo, layout = 'carrossel' }: Conteud
           </p>
           
           <p className="text-gray-300 text-xs truncate transform translate-y-2 group-hover/item:translate-y-0 transition-transform duration-400">
-            {(
-              isSequence 
-                ? `Sequência de ${mediaUrls.length} imagens` 
-                : isGif 
-                  ? 'GIF animado' 
-                  : 'Imagem estática'
-            )}
+            Watch on {conteudo.fonte}
           </p>
           
           {conteudo.linkext && (

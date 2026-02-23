@@ -18,6 +18,7 @@ export interface ConteudoWithUrl {
   link?: string | null
   data: Buffer
   linkext?: string | null 
+  fonte: string | null
   url: string
   createdAt: Date
   categorias?: Categoria[]

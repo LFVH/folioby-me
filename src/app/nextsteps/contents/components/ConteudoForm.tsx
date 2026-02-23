@@ -181,6 +181,20 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             required
           />
         </div>
+        {/* Link Externo */}
+        <div>
+          <label className="block text-white font-semibold mb-2">
+            Link para Redirecionamento *
+          </label>
+          <input
+            type="url"
+            value={formData.linkext}
+            onChange={(e) => setFormData(prev => ({ ...prev, linkext: e.target.value }))}
+            className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
+            placeholder="https://fonte.com/..."
+            required
+          />
+        </div>
         {/* Fonte */}
         <div>
           <label className="block text-white font-semibold mb-2">
@@ -192,20 +206,6 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             onChange={(e) => setFormData(prev => ({ ...prev, fonte: e.target.value }))}
             className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
             placeholder="Ex: Instagram, YouTube, Vimeo"
-          />
-        </div>
-        {/* Link Externo */}
-        <div>
-          <label className="block text-white font-semibold mb-2">
-            Link para Redirecionamento *
-          </label>
-          <input
-            type="url"
-            value={formData.linkext}
-            onChange={(e) => setFormData(prev => ({ ...prev, linkext: e.target.value }))}
-            className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
-            placeholder="https://..."
-            required
           />
         </div>
         {/* Tabs para escolher tipo de upload */}
@@ -343,7 +343,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             disabled={loading || (!formData.file && !formData.files.length && !conteudo)}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
-            {loading ? 'Saving...' : conteudo ? 'Update' : 'Save'}
+            {loading ? 'Saving...' : conteudo ? 'Atualizar' : 'Save'}
           </button>
         </div>
       </form>
