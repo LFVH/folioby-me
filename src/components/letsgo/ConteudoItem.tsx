@@ -10,12 +10,6 @@ export default function ConteudoItem({ conteudo, layout = 'carrossel' }: Conteud
   const [isHovered, setIsHovered] = useState(false)
   const intervalRef = useRef<NodeJS.Timeout>()
   const isSequence = conteudo.mediaType === 'sequence' && conteudo.mediaUrls?.length > 1
-  console.log('isSequence')
-  console.log(isSequence)
-  console.log("conteudo.mediaType")
-  console.log(conteudo.mediaType)
-  console.log("conteudo.mediaUrls?.length")
-  console.log(conteudo.mediaUrls?.length)
   const isGif = !isSequence && conteudo.mimetype?.includes('gif')
   const mediaUrls = conteudo.mediaUrls?.length ? conteudo.mediaUrls : [conteudo.url]
   useEffect(() => {
@@ -150,7 +144,7 @@ export default function ConteudoItem({ conteudo, layout = 'carrossel' }: Conteud
       )}
       <img
         src={currentMediaUrl}
-        alt={conteudo.filename}
+        alt={conteudo.name || conteudo.filename.replace(/\.[^/.]+$/, '')}
         className={`w-full h-full object-cover transition-transform duration-500 ease-out group-hover/item:scale-110 ${
           conteudo.isTrend ? 'brightness-110' : ''
         }`}
