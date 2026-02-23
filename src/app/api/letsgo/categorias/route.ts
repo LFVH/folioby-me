@@ -38,6 +38,8 @@ export async function GET(request: NextRequest) {
             name: true,
             filename: true,
             mimetype: true,
+            mediaType: true,
+            mediaUrls: true,
             link: true,
             linkext: true,
             fonte: true,
