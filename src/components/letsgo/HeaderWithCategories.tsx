@@ -143,7 +143,7 @@ export default function HeaderWithCategories() {
                   : 'text-gray-300 hover:text-white hover:bg-gray-800'
             }`}
           >
-            {categoria.nome}
+            {categoria.name}
         
             {/* Badge "TRENDING" para categorias em alta */}
             {categoria.isTrend && (
@@ -193,7 +193,7 @@ export default function HeaderWithCategories() {
                                 : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                             } transition-colors flex justify-between items-center`}
                           >
-                            <span>{categoria.nome}</span>
+                            <span>{categoria.name}</span>
                             <span className="text-xs bg-gray-700 px-2 py-1 rounded">
                               {categoria.conteudos.length}
                             </span>
@@ -241,7 +241,7 @@ export default function HeaderWithCategories() {
                     : 'text-gray-300 bg-gray-800 hover:bg-gray-700'
                 } transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full`}
               >
-                {categoria.nome}
+                {categoria.name}
               </button>
             ))}
             {categorias && categorias.length > 6 && (

@@ -204,7 +204,7 @@ export default function ConteudosPage() {
                       key={categoria.id}
                       className="bg-gray-700 text-white text-xs px-2 py-1 rounded"
                     >
-                      {categoria.nome}
+                      {categoria.name}
                     </span>
                   ))}
                 </div>
