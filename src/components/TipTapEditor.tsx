@@ -201,7 +201,7 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
           padding: 0.375rem 0.75rem;
           border: 1px solid #cbd5e1;
           border-radius: 0.375rem;
-          background-color: white;
+          background-color: grey;
           font-size: 0.875rem;
           cursor: pointer;
           outline: none;
@@ -224,7 +224,7 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
           padding: 0.375rem 0.75rem;
           border: 1px solid #cbd5e1;
           border-radius: 0.375rem;
-          background-color: white;
+          background-color: grey;
           font-size: 1rem;
           cursor: pointer;
           min-width: 36px;
@@ -239,7 +239,7 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
         .toolbar-button.is-active {
           background-color: #3b82f6;
           border-color: #3b82f6;
-          color: white;
+          color: grey;
         }
 
         .clear-format {
