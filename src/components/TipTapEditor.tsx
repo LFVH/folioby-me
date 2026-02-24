@@ -3,10 +3,10 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
-import TextStyle from '@tiptap/extension-text-style';
 import FontFamily from '@tiptap/extension-font-family';
 import Underline from '@tiptap/extension-underline';
 import { useEffect } from 'react';
+import { TextStyle } from '@tiptap/extension-text-style';
 
 interface TiptapEditorProps {
   content: any;
