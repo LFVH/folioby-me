@@ -77,7 +77,7 @@ export default function CarrosselCategoria({
       <div className="relative">
         <div className="flex items-center gap-3 mb-6 px-8">
           <h2 className="text-2xl font-bold text-white">
-            {categoria.nome}
+            {categoria.name}
           </h2>
         </div>
         
@@ -181,7 +181,7 @@ export default function CarrosselCategoria({
     <div className="relative group">
       <div className="flex items-center gap-3 mb-4 px-8">
         <h2 className="text-2xl font-bold text-white">
-          {categoria.nome}
+          {categoria.name}
         </h2>
       </div>
       
