@@ -164,6 +164,43 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
     }
   };
 
+  const extractAndSetFonteFromUrl = (url: string) => {
+    try {
+      // Verifica se é uma URL válida 
+      if (!url || !url.trim()) {
+        setFormData(prev => ({ ...prev, fonte: '' }));
+        return;
+      }
+
+      // Adiciona protocolo se não tiver para o URL constructor funcionar
+      let urlToParse = url.trim();
+      if (!urlToParse.startsWith('http://') && !urlToParse.startsWith('https://')) {
+        urlToParse = 'https://' + urlToParse;
+      }
+
+      const urlObj = new URL(urlToParse);
+      const hostname = urlObj.hostname;
+      
+      // Remove 'www.' se existir
+      let domain = hostname.replace(/^www\./, '');
+      
+      // Pega apenas a primeira parte do domínio (antes do primeiro ponto)
+      // Ex: instagram.com -> instagram
+      // youtube.com.br -> youtube
+      domain = domain.split('.')[0];
+      
+      // Capitaliza primeira letra
+      if (domain) {
+        const capitalizedDomain = domain.charAt(0).toUpperCase() + domain.slice(1).toLowerCase();
+        setFormData(prev => ({ ...prev, fonte: capitalizedDomain }));
+      } else {
+        setFormData(prev => ({ ...prev, fonte: '' }));
+      }
+    } catch (error) {
+      // Se não for uma URL válida, mantém o campo fonte vazio
+      setFormData(prev => ({ ...prev, fonte: '' }));
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -189,7 +226,11 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
           <input
             type="url"
             value={formData.linkext}
-            onChange={(e) => setFormData(prev => ({ ...prev, linkext: e.target.value }))}
+            onChange={(e) => {
+              const newUrl = e.target.value;
+              setFormData(prev => ({ ...prev, linkext: newUrl }));
+              extractAndSetFonteFromUrl(newUrl);
+            }}
             className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
             placeholder="https://fonte.com/..."
             required
