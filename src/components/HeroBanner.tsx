@@ -36,7 +36,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada  }: HeroBanne
       
       <img
         src={currentBanner.url}
-        alt={currentBanner.filename}
+        alt={currentBanner.name || currentBanner.filename.replace(/\.[^/.]+$/, '')}
         className="w-full h-full object-cover"
       />
       
@@ -45,7 +45,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada  }: HeroBanne
       <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16">
         <div className="max-w-2xl">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-            {currentBanner.filename.replace('.gif', '')}
+            {currentBanner.name || currentBanner.filename.replace(/\.[^/.]+$/, '')}
           </h1>
           <div className="flex gap-4">
             
