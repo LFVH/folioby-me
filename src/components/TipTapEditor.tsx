@@ -3,16 +3,37 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
+import TextStyle from '@tiptap/extension-text-style';
 import FontFamily from '@tiptap/extension-font-family';
 import Underline from '@tiptap/extension-underline';
 import { useEffect } from 'react';
-import { TextStyle } from '@tiptap/extension-text-style';
 
 interface TiptapEditorProps {
   content: any;
   onChange: (content: any) => void;
   editable?: boolean;
 }
+
+// Extensão personalizada para tamanho da fonte
+const FontSize = TextStyle.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      fontSize: {
+        default: null,
+        parseHTML: element => element.style.fontSize,
+        renderHTML: attributes => {
+          if (!attributes.fontSize) {
+            return {};
+          }
+          return {
+            style: `font-size: ${attributes.fontSize}`,
+          };
+        },
+      },
+    };
+  },
+});
 
 // Array de tamanhos de fonte disponíveis
 const FONT_SIZES = [
@@ -50,9 +71,9 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        heading: false, // Vamos usar nosso próprio controle de tamanho
+        heading: false,
       }),
-      TextStyle,
+      FontSize, // Usando nossa extensão personalizada
       FontFamily.configure({
         types: ['textStyle'],
       }),
@@ -100,6 +121,17 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
     editor.chain().focus().clearNodes().unsetAllMarks().run();
   };
 
+  // Obter atributos atuais do texto selecionado
+  const getCurrentFontFamily = () => {
+    const { fontFamily } = editor.getAttributes('textStyle');
+    return fontFamily || 'Arial';
+  };
+
+  const getCurrentFontSize = () => {
+    const { fontSize } = editor.getAttributes('textStyle');
+    return fontSize || '16px';
+  };
+
   return (
     <div className="tiptap-editor">
       {editable && (
@@ -108,7 +140,7 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
           <div className="toolbar-group">
             <select 
               onChange={(e) => setFontFamily(e.target.value)}
-              value={editor.getAttributes('textStyle').fontFamily || 'Arial'}
+              value={getCurrentFontFamily()}
               className="font-family-select"
               title="Fonte"
             >
@@ -119,7 +151,7 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
             
             <select 
               onChange={(e) => setFontSize(e.target.value)}
-              value={editor.getAttributes('textStyle').fontSize || '16px'}
+              value={getCurrentFontSize()}
               className="font-size-select"
               title="Tamanho da fonte"
             >
@@ -171,9 +203,10 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
       
       <style jsx global>{`
         .tiptap-editor {
-          border: 1px solid #e2e8f0;
+          border: 1px solid #333;
           border-radius: 0.5rem;
           overflow: hidden;
+          background-color: #141414;
         }
 
         .toolbar {
@@ -181,15 +214,15 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
           flex-wrap: wrap;
           gap: 0.5rem;
           padding: 0.75rem;
-          background-color: #f8fafc;
-          border-bottom: 1px solid #e2e8f0;
+          background-color: #1f1f1f;
+          border-bottom: 1px solid #333;
         }
 
         .toolbar-group {
           display: flex;
           gap: 0.25rem;
           padding: 0 0.5rem;
-          border-right: 1px solid #cbd5e1;
+          border-right: 1px solid #444;
         }
 
         .toolbar-group:last-child {
@@ -199,9 +232,10 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
         .font-family-select,
         .font-size-select {
           padding: 0.375rem 0.75rem;
-          border: 1px solid #cbd5e1;
+          border: 1px solid #444;
           border-radius: 0.375rem;
-          background-color: grey;
+          background-color: #2a2a2a;
+          color: #fff;
           font-size: 0.875rem;
           cursor: pointer;
           outline: none;
@@ -209,7 +243,13 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
 
         .font-family-select:hover,
         .font-size-select:hover {
-          border-color: #3b82f6;
+          border-color: #e50914;
+        }
+
+        .font-family-select option,
+        .font-size-select option {
+          background-color: #2a2a2a;
+          color: #fff;
         }
 
         .font-family-select {
@@ -222,9 +262,10 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
 
         .toolbar-button {
           padding: 0.375rem 0.75rem;
-          border: 1px solid #cbd5e1;
+          border: 1px solid #444;
           border-radius: 0.375rem;
-          background-color: grey;
+          background-color: #2a2a2a;
+          color: #fff;
           font-size: 1rem;
           cursor: pointer;
           min-width: 36px;
@@ -232,14 +273,14 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
         }
 
         .toolbar-button:hover {
-          background-color: #e2e8f0;
-          border-color: #94a3b8;
+          background-color: #404040;
+          border-color: #e50914;
         }
 
         .toolbar-button.is-active {
-          background-color: #3b82f6;
-          border-color: #3b82f6;
-          color: grey;
+          background-color: #e50914;
+          border-color: #e50914;
+          color: #fff;
         }
 
         .clear-format {
@@ -251,15 +292,23 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
           min-height: 200px;
           padding: 1rem;
           outline: none;
+          color: #fff;
+          background-color: #141414;
         }
         
         .tiptap-editor .ProseMirror p.is-editor-empty:first-child::before {
           content: attr(data-placeholder);
           float: left;
-          color: #9ca3af;
+          color: #666;
           pointer-events: none;
           height: 0;
           font-style: italic;
+        }
+
+        /* Estilo para texto selecionado */
+        .tiptap-editor .ProseMirror ::selection {
+          background-color: #e50914;
+          color: #fff;
         }
       `}</style>
       
