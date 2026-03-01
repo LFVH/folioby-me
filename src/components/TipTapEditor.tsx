@@ -314,7 +314,7 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
                       type="url"
                       value={linkUrl}
                       onChange={(e) => setLinkUrl(e.target.value)}
-                      placeholder="https://exemplo.com"
+                      placeholder="https://example.com"
                       className="link-modal-input"
                       autoFocus
                     />
