@@ -5,7 +5,8 @@ import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import FontFamily from '@tiptap/extension-font-family';
 import Underline from '@tiptap/extension-underline';
-import { useEffect } from 'react';
+import Link from '@tiptap/extension-link';
+import { useEffect, useState } from 'react';
 import { TextStyle } from '@tiptap/extension-text-style';
 
 interface TiptapEditorProps {
@@ -68,16 +69,30 @@ const FONT_FAMILIES = [
 ];
 
 export default function TiptapEditor({ content, onChange, editable = true }: TiptapEditorProps) {
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+  const [linkUrl, setLinkUrl] = useState('');
+  const [linkText, setLinkText] = useState('');
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
         heading: false,
       }),
-      FontSize, // Usando nossa extensão personalizada
+      FontSize,
       FontFamily.configure({
         types: ['textStyle'],
       }),
       Underline,
+      Link.configure({
+        openOnClick: false,
+        linkOnPaste: true,
+        HTMLAttributes: {
+          class: 'tiptap-link',
+          rel: 'noopener noreferrer',
+          target: '_blank',
+        },
+        validate: url => /^https?:\/\//.test(url),
+      }),
       Placeholder.configure({
         placeholder: 'I am a...',
         emptyEditorClass: 'is-editor-empty',
@@ -100,10 +115,6 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
     }
   }, [editor, content]);
 
-  if (!editor) {
-    return null;
-  }
-
   // Funções de formatação
   const toggleBold = () => editor.chain().focus().toggleBold().run();
   const toggleItalic = () => editor.chain().focus().toggleItalic().run();
@@ -121,6 +132,57 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
     editor.chain().focus().clearNodes().unsetAllMarks().run();
   };
 
+  // Funções de link
+  const openLinkModal = () => {
+    if (editor) {
+      const previousUrl = editor.getAttributes('link').href;
+      setLinkUrl(previousUrl || '');
+      
+      // Pega o texto selecionado para usar como texto do link
+      const { from, to } = editor.state.selection;
+      const selectedText = editor.state.doc.textBetween(from, to, ' ');
+      setLinkText(selectedText);
+      
+      setIsLinkModalOpen(true);
+    }
+  };
+
+  const setLink = () => {
+    if (!editor) return;
+
+    if (linkUrl) {
+      // Se há texto selecionado, aplica o link
+      if (linkText && !editor.state.selection.empty) {
+        editor
+          .chain()
+          .focus()
+          .extendMarkRange('link')
+          .setLink({ href: linkUrl })
+          .run();
+      } else {
+        // Se não há texto selecionado, insere um novo texto com link
+        editor
+          .chain()
+          .focus()
+          .insertContent(`<a href="${linkUrl}" target="_blank">${linkText || linkUrl}</a>`)
+          .run();
+      }
+    }
+
+    closeLinkModal();
+  };
+
+  const unsetLink = () => {
+    editor.chain().focus().unsetLink().run();
+    closeLinkModal();
+  };
+
+  const closeLinkModal = () => {
+    setIsLinkModalOpen(false);
+    setLinkUrl('');
+    setLinkText('');
+  };
+
   // Obter atributos atuais do texto selecionado
   const getCurrentFontFamily = () => {
     const { fontFamily } = editor.getAttributes('textStyle');
@@ -132,73 +194,145 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
     return fontSize || '16px';
   };
 
+  if (!editor) {
+    return null;
+  }
+
   return (
     <div className="tiptap-editor">
       {editable && (
-        <div className="toolbar">
-          {/* Controles de fonte */}
-          <div className="toolbar-group">
-            <select 
-              onChange={(e) => setFontFamily(e.target.value)}
-              value={getCurrentFontFamily()}
-              className="font-family-select"
-              title="Fonte"
-            >
-              {FONT_FAMILIES.map(font => (
-                <option key={font} value={font}>{font}</option>
-              ))}
-            </select>
-            
-            <select 
-              onChange={(e) => setFontSize(e.target.value)}
-              value={getCurrentFontSize()}
-              className="font-size-select"
-              title="Tamanho da fonte"
-            >
-              {FONT_SIZES.map(size => (
-                <option key={size} value={size}>{size}</option>
-              ))}
-            </select>
+        <>
+          <div className="toolbar">
+            {/* Controles de fonte */}
+            <div className="toolbar-group">
+              <select 
+                onChange={(e) => setFontFamily(e.target.value)}
+                value={getCurrentFontFamily()}
+                className="font-family-select"
+                title="Fonte"
+              >
+                {FONT_FAMILIES.map(font => (
+                  <option key={font} value={font}>{font}</option>
+                ))}
+              </select>
+              
+              <select 
+                onChange={(e) => setFontSize(e.target.value)}
+                value={getCurrentFontSize()}
+                className="font-size-select"
+                title="Tamanho da fonte"
+              >
+                {FONT_SIZES.map(size => (
+                  <option key={size} value={size}>{size}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Botões de formatação */}
+            <div className="toolbar-group">
+              <button
+                onClick={toggleBold}
+                className={`toolbar-button ${editor.isActive('bold') ? 'is-active' : ''}`}
+                title="Negrito (Ctrl+B)"
+              >
+                <strong>B</strong>
+              </button>
+              
+              <button
+                onClick={toggleItalic}
+                className={`toolbar-button ${editor.isActive('italic') ? 'is-active' : ''}`}
+                title="Itálico (Ctrl+I)"
+              >
+                <em>I</em>
+              </button>
+              
+              <button
+                onClick={toggleUnderline}
+                className={`toolbar-button ${editor.isActive('underline') ? 'is-active' : ''}`}
+                title="Sublinhado (Ctrl+U)"
+              >
+                <u>U</u>
+              </button>
+            </div>
+
+            {/* Botões de link */}
+            <div className="toolbar-group">
+              <button
+                onClick={openLinkModal}
+                className={`toolbar-button ${editor.isActive('link') ? 'is-active' : ''}`}
+                title="Inserir link (Ctrl+K)"
+              >
+                🔗
+              </button>
+              
+              {editor.isActive('link') && (
+                <button
+                  onClick={unsetLink}
+                  className="toolbar-button"
+                  title="Remover link"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            {/* Botão limpar formatação */}
+            <div className="toolbar-group">
+              <button
+                onClick={clearFormatting}
+                className="toolbar-button"
+                title="Limpar formatação"
+              >
+                <span className="clear-format">↺</span>
+              </button>
+            </div>
           </div>
 
-          {/* Botões de formatação */}
-          <div className="toolbar-group">
-            <button
-              onClick={toggleBold}
-              className={`toolbar-button ${editor.isActive('bold') ? 'is-active' : ''}`}
-              title="Negrito (Ctrl+B)"
-            >
-              <strong>B</strong>
-            </button>
-            
-            <button
-              onClick={toggleItalic}
-              className={`toolbar-button ${editor.isActive('italic') ? 'is-active' : ''}`}
-              title="Itálico (Ctrl+I)"
-            >
-              <em>I</em>
-            </button>
-            
-            <button
-              onClick={toggleUnderline}
-              className={`toolbar-button ${editor.isActive('underline') ? 'is-active' : ''}`}
-              title="Sublinhado (Ctrl+U)"
-            >
-              <u>U</u>
-            </button>
-          </div>
-
-          {/* Botão limpar formatação */}
-          <div className="toolbar-group">
-            <button
-              onClick={clearFormatting}
-              className="toolbar-button"
-              title="Limpar formatação"
-            >
-              <span className="clear-format">↺</span>
-            </button>
-          </div>
-        </div>
+          {/* Modal de link */}
+          {isLinkModalOpen && (
+            <div className="link-modal-overlay" onClick={closeLinkModal}>
+              <div className="link-modal" onClick={(e) => e.stopPropagation()}>
+                <h3>Inserir Link</h3>
+                
+                <div className="link-modal-content">
+                  <div className="link-modal-field">
+                    <label htmlFor="link-text">Texto do link</label>
+                    <input
+                      id="link-text"
+                      type="text"
+                      value={linkText}
+                      onChange={(e) => setLinkText(e.target.value)}
+                      placeholder="Texto a ser exibido"
+                      className="link-modal-input"
+                    />
+                  </div>
+                  
+                  <div className="link-modal-field">
+                    <label htmlFor="link-url">URL</label>
+                    <input
+                      id="link-url"
+                      type="url"
+                      value={linkUrl}
+                      onChange={(e) => setLinkUrl(e.target.value)}
+                      placeholder="https://exemplo.com"
+                      className="link-modal-input"
+                      autoFocus
+                    />
+                  </div>
+                </div>
+                
+                <div className="link-modal-actions">
+                  <button onClick={closeLinkModal} className="link-modal-button cancel">
+                    Cancelar
+                  </button>
+                  <button onClick={setLink} className="link-modal-button confirm">
+                    Inserir
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
       
       <style jsx global>{`
@@ -305,10 +439,114 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
           font-style: italic;
         }
 
+        /* Estilo para links */
+        .tiptap-editor .ProseMirror .tiptap-link {
+          color: #e50914;
+          text-decoration: underline;
+          cursor: pointer;
+        }
+
+        .tiptap-editor .ProseMirror .tiptap-link:hover {
+          opacity: 0.8;
+        }
+
         /* Estilo para texto selecionado */
         .tiptap-editor .ProseMirror ::selection {
           background-color: #e50914;
           color: #fff;
+        }
+
+        /* Modal de link */
+        .link-modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(0, 0, 0, 0.75);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+        }
+
+        .link-modal {
+          background-color: #1f1f1f;
+          border-radius: 0.5rem;
+          padding: 1.5rem;
+          max-width: 400px;
+          width: 90%;
+          border: 1px solid #333;
+        }
+
+        .link-modal h3 {
+          color: #fff;
+          margin: 0 0 1rem 0;
+          font-size: 1.25rem;
+        }
+
+        .link-modal-content {
+          margin-bottom: 1.5rem;
+        }
+
+        .link-modal-field {
+          margin-bottom: 1rem;
+        }
+
+        .link-modal-field label {
+          display: block;
+          color: #fff;
+          margin-bottom: 0.5rem;
+          font-size: 0.875rem;
+        }
+
+        .link-modal-input {
+          width: 100%;
+          padding: 0.5rem;
+          border: 1px solid #444;
+          border-radius: 0.375rem;
+          background-color: #2a2a2a;
+          color: #fff;
+          font-size: 0.875rem;
+          outline: none;
+        }
+
+        .link-modal-input:focus {
+          border-color: #e50914;
+        }
+
+        .link-modal-actions {
+          display: flex;
+          gap: 0.5rem;
+          justify-content: flex-end;
+        }
+
+        .link-modal-button {
+          padding: 0.5rem 1rem;
+          border: none;
+          border-radius: 0.375rem;
+          font-size: 0.875rem;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .link-modal-button.cancel {
+          background-color: #2a2a2a;
+          color: #fff;
+          border: 1px solid #444;
+        }
+
+        .link-modal-button.cancel:hover {
+          background-color: #404040;
+        }
+
+        .link-modal-button.confirm {
+          background-color: #e50914;
+          color: #fff;
+        }
+
+        .link-modal-button.confirm:hover {
+          background-color: #f6121d;
         }
       `}</style>
       

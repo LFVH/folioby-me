@@ -65,7 +65,16 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
               </h2>
               <div className="h-0.5 w-32 bg-red-600"></div>
             </div>
-
+                        {/* Botão de editar (aparece como link discreto) */}
+            {!isEditing && session?.user?.slug === slug &&  (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="text-sm text-red-600 hover:text-red-500 transition-colors font-medium flex items-center gap-2 group"
+              >
+                <span className="w-5 h-px bg-red-600 group-hover:w-8 transition-all"></span>
+                EDIT TEXT
+              </button>
+            )}
             {/* Seção de descrição/currículo */}
             <div className="space-y-6">
               {isEditing ? (
