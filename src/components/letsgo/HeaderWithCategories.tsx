@@ -129,7 +129,7 @@ export default function HeaderWithCategories() {
                 key={`${userName}H`}
                 onClick={handleInicioClick}
               >
-                Home
+                My Work
               </Link>
               {categoriasPrincipais.map((categoria) => (
         <div key={categoria.id} className="relative">
