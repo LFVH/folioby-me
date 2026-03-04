@@ -1,27 +1,22 @@
 'use client';
-
 import { useState } from 'react';
 import Image from 'next/image';
 import TipTapEditor from '@/components/TipTapEditor';
 import { useSession } from 'next-auth/react';
-
 interface User {
   name: string;
   image: string | null;
   desc: any;
 }
-
 interface ProfileClientProps {
   user: User;
   slug: string;
 }
-
 export default function ProfileClient({ user, slug }: ProfileClientProps) {
   const [desc, setDesc] = useState(user.desc);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
    const { data: session } = useSession()
-
   const handleSave = async () => {
     setIsSaving(true);
     try {
@@ -32,7 +27,6 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
         },
         body: JSON.stringify({ desc }),
       });
-
       if (response.ok) {
         setIsEditing(false);
       }
@@ -42,30 +36,28 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
       setIsSaving(false);
     }
   };
-
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="container mx-auto px-4 py-12 max-w-6xl">
-        {/* Cabeçalho com "PORTFOLIO" */}
+        {}
         <div className="mb-16 border-b border-red-600 pb-4">
           <h1 className="text-4xl font-light tracking-[0.3em] text-white">
             PORTFOLIO
           </h1>
           <div className="h-1 w-24 bg-red-600 mt-2"></div>
         </div>
-
-        {/* Conteúdo principal - Layout de currículo */}
+        {}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Coluna da esquerda - Informações e descrição */}
+          {}
           <div className="space-y-8">
-            {/* Nome em destaque */}
+            {}
             <div>
               <h2 className="text-5xl font-bold text-white mb-2">
                 {user.name}
               </h2>
               <div className="h-0.5 w-32 bg-red-600"></div>
             </div>
-                        {/* Botão de editar (aparece como link discreto) */}
+                        {}
             {!isEditing && session?.user?.slug === slug &&  (
               <button
                 onClick={() => setIsEditing(true)}
@@ -75,7 +67,7 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
                 EDIT TEXT
               </button>
             )}
-            {/* Seção de descrição/currículo */}
+            {}
             <div className="space-y-6">
               {isEditing ? (
                 <div className="space-y-4">
@@ -122,8 +114,7 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
                 </div>
               )}
             </div>
-
-            {/* Botão de editar (aparece como link discreto) */}
+            {}
             {!isEditing && session?.user?.slug === slug &&  (
               <button
                 onClick={() => setIsEditing(true)}
@@ -134,14 +125,12 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
               </button>
             )}
           </div>
-
-          {/* Coluna da direita - Imagem em destaque */}
+          {}
           <div className="relative lg:sticky lg:top-24">
             <div className="relative aspect-[3/4] w-full max-w-md mx-auto lg:mx-0 lg:ml-auto">
-              {/* Efeito de borda vermelha */}
+              {}
               <div className="absolute -inset-1 bg-gradient-to-t from-red-600 to-transparent opacity-50 blur-sm"></div>
-              
-              {/* Container da imagem */}
+              {}
               <div className="relative h-full w-full overflow-hidden border-2 border-red-600/30">
                 {user.image ? (
                   <Image
@@ -159,15 +148,13 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
                   </div>
                 )}
               </div>
-
-              {/* Detalhe decorativo */}
+              {}
               <div className="absolute -bottom-4 -right-4 w-24 h-24 border-b-2 border-r-2 border-red-600"></div>
               <div className="absolute -top-4 -left-4 w-24 h-24 border-t-2 border-l-2 border-red-600"></div>
             </div>
           </div>
         </div>
-
-        {/* Rodapé sutil */}
+        {}
         <div className="mt-24 pt-8 border-t border-zinc-800 text-center text-zinc-600 text-sm">
           <p>© {new Date().getFullYear()} • PORTFOLIO</p>
         </div>
