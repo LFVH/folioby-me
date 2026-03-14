@@ -1,38 +1,28 @@
 // app/[slug]/FlixClient.tsx
-'use client' // ✅ AGORA PODE!
+'use client'
 
 import { useGlobalFilter } from '@/hooks/useGlobalFilter'
 import HeroBanner from '@/components/HeroBanner'
 import ConteudosFiltradosComScroll from '@/components/letsgo/ConteudosFiltrados'
 import LoadingSpinner from '@/components/LoadingSpinner'
-import { useEffect, useState } from 'react'
+import { useCategorias } from '@/hooks/useCategorias' // ✅ SEU HOOK ORIGINAL!
 
-// Interface para as props (TypeScript)
 interface FlixClientProps {
-  categorias: any[] // Substitua 'any' pelo tipo correto
   slug: string
 }
 
-export default function FlixClient({ categorias, slug }: FlixClientProps) {
-  // Estado local para controle de loading (se necessário)
-  const [isLoading, setIsLoading] = useState(false)
+export default function FlixClient({ slug }: FlixClientProps) {
+  // ✅ USA O HOOK NORMALMENTE!
+  // Os dados já vêm pré-carregados do servidor via HydrationBoundary
+  const { data, isLoading } = useCategorias(slug)
   
-  // Hooks client-side
   const { filtroAtivo, tipoFiltro, termoPesquisa } = useGlobalFilter()
-  
-  // Se você precisar fazer mais chamadas API no cliente
-  useEffect(() => {
-    // Exemplo: buscar dados adicionais baseados no slug
-    // setIsLoading(true)
-    // buscarMaisDados(slug).then(...)
-  }, [slug])
-  
-  // Se ainda estiver carregando (dados iniciais já vieram do servidor)
-  // Isso é útil se você precisar buscar mais dados no cliente
+  const categorias = data?.categorias || []
+
   if (isLoading) {
     return <LoadingSpinner />
   }
-  
+
   return (
     <main className="">
       <HeroBanner 

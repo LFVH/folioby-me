@@ -1,29 +1,42 @@
 // lib/api.ts
-// Funções que podem ser chamadas TANTO no servidor quanto no cliente
-
-// Esta função funciona no servidor (para metadata)
 export async function getCategoriasBySlug(slug: string) {
-  // Aqui você faz a chamada direta ao banco de dados
-  // ou para uma API interna
   try {
-    // Exemplo com fetch (se tiver API interna)
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categorias/${slug}`, {
-      // Importante: cache para não fazer muitas requisições
-      next: { revalidate: 3600 } // revalida a cada hora
+    // ✅ Usa variável de ambiente correta
+    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : 'http://localhost:3000'
+    
+    const response = await fetch(`${baseUrl}/api/letsgo/categorias?slug=${encodeURIComponent(slug)}`, {
+      // ⚠️ Importante: 'no-cache' para dados frescos no servidor
+      next: { revalidate: 60 }
     })
     
     if (!response.ok) {
       return { categorias: [] }
     }
     
-    return await response.json()
+    const result = await response.json()
+    
+    // ✅ Processa os dados IGUAL ao hook
+    const categoriasProcessadas = result.data.map((categoria: any) => ({
+      ...categoria,
+      conteudos: categoria.conteudos.map((conteudo: any) => ({
+        ...conteudo,
+        url: conteudo.link || `/api/letsgo/conteudos/${conteudo.id}`
+      }))
+    }))
+
+    return {
+      categorias: categoriasProcessadas,
+      userName: result.name,
+    }
   } catch (error) {
     console.error('Erro em getCategoriasBySlug:', error)
     return { categorias: [] }
   }
 }
 
-// Versão para uso no cliente (se precisar)
+//nao utilizado 
 export async function getCategoriasBySlugClient(slug: string) {
   const response = await fetch(`/api/categorias/${slug}`)
   return response.json()

@@ -1,53 +1,135 @@
 // app/[slug]/page.tsx
 import { Metadata } from 'next'
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
 import FlixClient from './FlixClient'
+import Script from 'next/script'
 import { getCategoriasBySlug } from '@/lib/db/slug-metadata'
 
-// Busca os dados no servidor para gerar metadata
-async function getData(slug: string) {
-  try {
-    // Esta função deve buscar os dados do banco diretamente (sem hooks)
-    const data = await getCategoriasBySlug(slug)
-    return data
-  } catch (error) {
-    console.error('Erro ao buscar dados:', error)
-    return { categorias: [] }
-  }
-}
-
-// generateMetadata - AGORA FUNCIONA porque não tem 'use client'
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const slug = (await params).slug
-  const data = await getData(slug)
+  const data = await getCategoriasBySlug(params.slug)
   const primeiraCategoria = data.categorias?.[0]
-  
-  // Título dinâmico baseado no slug/categoria
-  const titulo = primeiraCategoria?.nome 
-    ? `${primeiraCategoria.nome} - FolioBy`
-    : `Portfólios de ${slug} - FolioBy`
-  
-  const descricao = `Explore os melhores portfólios de ${slug}. Encontre trabalhos incríveis de editores e criativos.`
+  const userName = data.userName || params.slug
   
   return {
-    title: titulo,
-    description: descricao,
+    title: `${userName} - Portfólio Profissional | FolioBy`,
+    description: `Explore o portfólio de ${userName}. Veja trabalhos de edição, motion design e criatividade.`,
     openGraph: {
-      title: titulo,
-      description: descricao,
-      images: ['/og-image.jpg'], // imagem padrão ou dinâmica
+      title: `${userName} - Portfólio Criativo`,
+      description: `Conheça o trabalho de ${userName} no FolioBy`,
+      images: ['https://folioby.com/og-image.jpg'], // Ideal: imagem do usuário
+      type: 'profile',
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${userName} - Portfólio`,
+      description: `Veja o portfólio de ${userName}`,
+    }
   }
 }
 
-// Server Component principal
 export default async function FlixPage({ params }: { params: { slug: string } }) {
-  const data = await getData(params.slug)
+  const queryClient = new QueryClient()
+  const data = await queryClient.fetchQuery({
+    queryKey: ['categorias', params.slug],
+    queryFn: () => getCategoriasBySlug(params.slug),
+  })
+  
+  const userName = data.userName || params.slug
   const categorias = data.categorias || []
   
-  // Passa os dados para o Client Component
-  // Como é Server Component, NÃO tem 'use client' aqui
-  return <FlixClient 
-    categorias={categorias} 
-    slug={params.slug}
-  />
+  // Extrair todos os projetos/trabalhos para o Schema
+  const todosConteudos = categorias.flatMap((cat: any) => cat.conteudos || [])
+  
+  // ============================================
+  // SCHEMA.ORG - DADOS MÍNIMOS ESSENCIAIS
+  // ============================================
+  const schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage', // Tipo principal: Página de Perfil
+    mainEntity: {
+      '@type': 'Person', // A entidade principal é uma Pessoa
+      name: userName,
+      description: `Portfólio profissional de ${userName}`,
+      
+      // DADOS MÍNIMOS (já ajudam muito):
+      identifier: params.slug, // identificador único
+      
+      // -------------------------------------------------
+      // DADOS OPCIONAIS (implemente se tiver):
+      // -------------------------------------------------
+      // image: data.avatarUrl, // Foto do perfil
+      // jobTitle: data.profissao, // Ex: "Editor de Vídeo", "Motion Designer"
+      // worksFor: data.empresa, // Se trabalhar para alguma empresa
+      // sameAs: [ // Redes sociais
+      //   data.instagram,
+      //   data.linkedin,
+      //   data.behance
+      // ].filter(Boolean),
+      // -------------------------------------------------
+    }
+  }
+  
+  // SCHEMA ENRIQUECIDO (se houver projetos)
+  if (todosConteudos.length > 0) {
+    // Adiciona os projetos como "itemList" ou "creativeWork"
+    Object.assign(schemaData.mainEntity, {
+      hasPart: todosConteudos.slice(0, 10).map((conteudo: { titulo: any; descricao: any; thumbnail: any; url: any }, index: number) => ({
+        '@type': 'CreativeWork', // ou 'ImageObject', 'VideoObject'
+        name: conteudo.titulo,
+        description: conteudo.descricao,
+        image: conteudo.thumbnail,
+        url: conteudo.url,
+        position: index + 1,
+        
+        // -------------------------------------------------
+        // DADOS OPCIONAIS POR PROJETO:
+        // -------------------------------------------------
+        // dateCreated: conteudo.dataCriacao,
+        // keywords: conteudo.tags?.join(', '),
+        // -------------------------------------------------
+      }))
+    })
+  }
+  
+  // SCHEMA PARA BREADCRUMB (navegação)
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'FolioBy',
+        item: 'https://folioby.com'
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: userName,
+        item: `https://folioby.com/${params.slug}`
+      }
+    ]
+  }
+
+  return (
+    <>
+      {/* Schema.org Principal */}
+      <Script
+        id="schema-person"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
+      
+      {/* Schema de Navegação (ajuda o Google a entender a estrutura) */}
+      <Script
+        id="schema-breadcrumb"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <FlixClient slug={params.slug} />
+      </HydrationBoundary>
+    </>
+  )
 }
