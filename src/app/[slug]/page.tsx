@@ -3,10 +3,10 @@ import { Metadata } from 'next'
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
 import FlixClient from './FlixClient'
 import Script from 'next/script'
-import { getCategoriasBySlug } from '@/lib/db/slug-metadata'
+import { getPortfolioBySlug } from '@/lib/db/slug-metadata'
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const data = await getCategoriasBySlug(params.slug)
+  const data = await getPortfolioBySlug(params.slug)
   const primeiraCategoria = data.categorias?.[0]
   const userName = data.userName || params.slug
   
@@ -31,7 +31,7 @@ export default async function FlixPage({ params }: { params: { slug: string } })
   const queryClient = new QueryClient()
   const data = await queryClient.fetchQuery({
     queryKey: ['categorias', params.slug],
-    queryFn: () => getCategoriasBySlug(params.slug),
+    queryFn: () => getPortfolioBySlug(params.slug),
   })
   
   const userName = data.userName || params.slug

@@ -1,13 +1,11 @@
-// lib/api.ts
-export async function getCategoriasBySlug(slug: string) {
+export async function getPortfolioBySlug(slug: string) {
   try {
-    // ✅ Usa variável de ambiente correta
     const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL 
       ? `https://${process.env.VERCEL_URL}` 
       : 'http://localhost:3000'
     
     const response = await fetch(`${baseUrl}/api/letsgo/categorias?slug=${encodeURIComponent(slug)}`, {
-      // ⚠️ Importante: 'no-cache' para dados frescos no servidor
+      // para dados frescos no servidor cache: 'no-cache',
       next: { revalidate: 60 }
     })
     
@@ -16,8 +14,6 @@ export async function getCategoriasBySlug(slug: string) {
     }
     
     const result = await response.json()
-    
-    // ✅ Processa os dados IGUAL ao hook
     const categoriasProcessadas = result.data.map((categoria: any) => ({
       ...categoria,
       conteudos: categoria.conteudos.map((conteudo: any) => ({
@@ -34,10 +30,4 @@ export async function getCategoriasBySlug(slug: string) {
     console.error('Erro em getCategoriasBySlug:', error)
     return { categorias: [] }
   }
-}
-
-//nao utilizado 
-export async function getCategoriasBySlugClient(slug: string) {
-  const response = await fetch(`/api/categorias/${slug}`)
-  return response.json()
 }
