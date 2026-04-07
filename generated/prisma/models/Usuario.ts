@@ -51,6 +51,9 @@ export type UsuarioMinAggregateOutputType = {
   dtFimPremium: Date | null
   stripeCliId: string | null
   stripeSubId: string | null
+  mercadoPagoPreApprovalId: string | null
+  mercadoPagoPaymentId: string | null
+  mercadoPagoSubscriptionId: string | null
   statusAss: number | null
   plano: number | null
   valorPago: runtime.Decimal | null
@@ -73,6 +76,9 @@ export type UsuarioMaxAggregateOutputType = {
   dtFimPremium: Date | null
   stripeCliId: string | null
   stripeSubId: string | null
+  mercadoPagoPreApprovalId: string | null
+  mercadoPagoPaymentId: string | null
+  mercadoPagoSubscriptionId: string | null
   statusAss: number | null
   plano: number | null
   valorPago: runtime.Decimal | null
@@ -96,6 +102,9 @@ export type UsuarioCountAggregateOutputType = {
   dtFimPremium: number
   stripeCliId: number
   stripeSubId: number
+  mercadoPagoPreApprovalId: number
+  mercadoPagoPaymentId: number
+  mercadoPagoSubscriptionId: number
   statusAss: number
   plano: number
   valorPago: number
@@ -132,6 +141,9 @@ export type UsuarioMinAggregateInputType = {
   dtFimPremium?: true
   stripeCliId?: true
   stripeSubId?: true
+  mercadoPagoPreApprovalId?: true
+  mercadoPagoPaymentId?: true
+  mercadoPagoSubscriptionId?: true
   statusAss?: true
   plano?: true
   valorPago?: true
@@ -154,6 +166,9 @@ export type UsuarioMaxAggregateInputType = {
   dtFimPremium?: true
   stripeCliId?: true
   stripeSubId?: true
+  mercadoPagoPreApprovalId?: true
+  mercadoPagoPaymentId?: true
+  mercadoPagoSubscriptionId?: true
   statusAss?: true
   plano?: true
   valorPago?: true
@@ -177,6 +192,9 @@ export type UsuarioCountAggregateInputType = {
   dtFimPremium?: true
   stripeCliId?: true
   stripeSubId?: true
+  mercadoPagoPreApprovalId?: true
+  mercadoPagoPaymentId?: true
+  mercadoPagoSubscriptionId?: true
   statusAss?: true
   plano?: true
   valorPago?: true
@@ -287,6 +305,9 @@ export type UsuarioGroupByOutputType = {
   dtFimPremium: Date | null
   stripeCliId: string | null
   stripeSubId: string | null
+  mercadoPagoPreApprovalId: string | null
+  mercadoPagoPaymentId: string | null
+  mercadoPagoSubscriptionId: string | null
   statusAss: number
   plano: number
   valorPago: runtime.Decimal | null
@@ -301,7 +322,7 @@ export type UsuarioGroupByOutputType = {
   _max: UsuarioMaxAggregateOutputType | null
 }
 
-type GetUsuarioGroupByPayload<T extends UsuarioGroupByArgs> = Prisma.PrismaPromise<
+export type GetUsuarioGroupByPayload<T extends UsuarioGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UsuarioGroupByOutputType, T['by']> &
       {
@@ -333,6 +354,9 @@ export type UsuarioWhereInput = {
   dtFimPremium?: Prisma.DateTimeNullableFilter<"Usuario"> | Date | string | null
   stripeCliId?: Prisma.StringNullableFilter<"Usuario"> | string | null
   stripeSubId?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  mercadoPagoPreApprovalId?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  mercadoPagoPaymentId?: Prisma.StringNullableFilter<"Usuario"> | string | null
+  mercadoPagoSubscriptionId?: Prisma.StringNullableFilter<"Usuario"> | string | null
   statusAss?: Prisma.IntFilter<"Usuario"> | number
   plano?: Prisma.IntFilter<"Usuario"> | number
   valorPago?: Prisma.DecimalNullableFilter<"Usuario"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -359,6 +383,9 @@ export type UsuarioOrderByWithRelationInput = {
   dtFimPremium?: Prisma.SortOrderInput | Prisma.SortOrder
   stripeCliId?: Prisma.SortOrderInput | Prisma.SortOrder
   stripeSubId?: Prisma.SortOrderInput | Prisma.SortOrder
+  mercadoPagoPreApprovalId?: Prisma.SortOrderInput | Prisma.SortOrder
+  mercadoPagoPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  mercadoPagoSubscriptionId?: Prisma.SortOrderInput | Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
   valorPago?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -377,6 +404,9 @@ export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
   email?: string
   stripeCliId?: string
   stripeSubId?: string
+  mercadoPagoPreApprovalId?: string
+  mercadoPagoPaymentId?: string
+  mercadoPagoSubscriptionId?: string
   AND?: Prisma.UsuarioWhereInput | Prisma.UsuarioWhereInput[]
   OR?: Prisma.UsuarioWhereInput[]
   NOT?: Prisma.UsuarioWhereInput | Prisma.UsuarioWhereInput[]
@@ -398,7 +428,7 @@ export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
   refreshToken?: Prisma.XOR<Prisma.RefreshTokenNullableScalarRelationFilter, Prisma.RefreshTokenWhereInput> | null
   conteudos?: Prisma.ConteudoListRelationFilter
   categorias?: Prisma.CategoriaListRelationFilter
-}, "id" | "slug" | "email" | "stripeCliId" | "stripeSubId">
+}, "id" | "slug" | "email" | "stripeCliId" | "stripeSubId" | "mercadoPagoPreApprovalId" | "mercadoPagoPaymentId" | "mercadoPagoSubscriptionId">
 
 export type UsuarioOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -414,6 +444,9 @@ export type UsuarioOrderByWithAggregationInput = {
   dtFimPremium?: Prisma.SortOrderInput | Prisma.SortOrder
   stripeCliId?: Prisma.SortOrderInput | Prisma.SortOrder
   stripeSubId?: Prisma.SortOrderInput | Prisma.SortOrder
+  mercadoPagoPreApprovalId?: Prisma.SortOrderInput | Prisma.SortOrder
+  mercadoPagoPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  mercadoPagoSubscriptionId?: Prisma.SortOrderInput | Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
   valorPago?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -445,6 +478,9 @@ export type UsuarioScalarWhereWithAggregatesInput = {
   dtFimPremium?: Prisma.DateTimeNullableWithAggregatesFilter<"Usuario"> | Date | string | null
   stripeCliId?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
   stripeSubId?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  mercadoPagoPreApprovalId?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  mercadoPagoPaymentId?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  mercadoPagoSubscriptionId?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
   statusAss?: Prisma.IntWithAggregatesFilter<"Usuario"> | number
   plano?: Prisma.IntWithAggregatesFilter<"Usuario"> | number
   valorPago?: Prisma.DecimalNullableWithAggregatesFilter<"Usuario"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -468,6 +504,9 @@ export type UsuarioCreateInput = {
   dtFimPremium?: Date | string | null
   stripeCliId?: string | null
   stripeSubId?: string | null
+  mercadoPagoPreApprovalId?: string | null
+  mercadoPagoPaymentId?: string | null
+  mercadoPagoSubscriptionId?: string | null
   statusAss?: number
   plano?: number
   valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -494,6 +533,9 @@ export type UsuarioUncheckedCreateInput = {
   dtFimPremium?: Date | string | null
   stripeCliId?: string | null
   stripeSubId?: string | null
+  mercadoPagoPreApprovalId?: string | null
+  mercadoPagoPaymentId?: string | null
+  mercadoPagoSubscriptionId?: string | null
   statusAss?: number
   plano?: number
   valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -520,6 +562,9 @@ export type UsuarioUpdateInput = {
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   stripeCliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPreApprovalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
   valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -546,6 +591,9 @@ export type UsuarioUncheckedUpdateInput = {
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   stripeCliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPreApprovalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
   valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -572,6 +620,9 @@ export type UsuarioCreateManyInput = {
   dtFimPremium?: Date | string | null
   stripeCliId?: string | null
   stripeSubId?: string | null
+  mercadoPagoPreApprovalId?: string | null
+  mercadoPagoPaymentId?: string | null
+  mercadoPagoSubscriptionId?: string | null
   statusAss?: number
   plano?: number
   valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -595,6 +646,9 @@ export type UsuarioUpdateManyMutationInput = {
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   stripeCliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPreApprovalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
   valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -618,6 +672,9 @@ export type UsuarioUncheckedUpdateManyInput = {
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   stripeCliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPreApprovalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
   valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -641,6 +698,9 @@ export type UsuarioCountOrderByAggregateInput = {
   dtFimPremium?: Prisma.SortOrder
   stripeCliId?: Prisma.SortOrder
   stripeSubId?: Prisma.SortOrder
+  mercadoPagoPreApprovalId?: Prisma.SortOrder
+  mercadoPagoPaymentId?: Prisma.SortOrder
+  mercadoPagoSubscriptionId?: Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
   valorPago?: Prisma.SortOrder
@@ -669,6 +729,9 @@ export type UsuarioMaxOrderByAggregateInput = {
   dtFimPremium?: Prisma.SortOrder
   stripeCliId?: Prisma.SortOrder
   stripeSubId?: Prisma.SortOrder
+  mercadoPagoPreApprovalId?: Prisma.SortOrder
+  mercadoPagoPaymentId?: Prisma.SortOrder
+  mercadoPagoSubscriptionId?: Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
   valorPago?: Prisma.SortOrder
@@ -691,6 +754,9 @@ export type UsuarioMinOrderByAggregateInput = {
   dtFimPremium?: Prisma.SortOrder
   stripeCliId?: Prisma.SortOrder
   stripeSubId?: Prisma.SortOrder
+  mercadoPagoPreApprovalId?: Prisma.SortOrder
+  mercadoPagoPaymentId?: Prisma.SortOrder
+  mercadoPagoSubscriptionId?: Prisma.SortOrder
   statusAss?: Prisma.SortOrder
   plano?: Prisma.SortOrder
   valorPago?: Prisma.SortOrder
@@ -803,6 +869,9 @@ export type UsuarioCreateWithoutConteudosInput = {
   dtFimPremium?: Date | string | null
   stripeCliId?: string | null
   stripeSubId?: string | null
+  mercadoPagoPreApprovalId?: string | null
+  mercadoPagoPaymentId?: string | null
+  mercadoPagoSubscriptionId?: string | null
   statusAss?: number
   plano?: number
   valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -828,6 +897,9 @@ export type UsuarioUncheckedCreateWithoutConteudosInput = {
   dtFimPremium?: Date | string | null
   stripeCliId?: string | null
   stripeSubId?: string | null
+  mercadoPagoPreApprovalId?: string | null
+  mercadoPagoPaymentId?: string | null
+  mercadoPagoSubscriptionId?: string | null
   statusAss?: number
   plano?: number
   valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -869,6 +941,9 @@ export type UsuarioUpdateWithoutConteudosInput = {
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   stripeCliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPreApprovalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
   valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -894,6 +969,9 @@ export type UsuarioUncheckedUpdateWithoutConteudosInput = {
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   stripeCliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPreApprovalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
   valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -919,6 +997,9 @@ export type UsuarioCreateWithoutCategoriasInput = {
   dtFimPremium?: Date | string | null
   stripeCliId?: string | null
   stripeSubId?: string | null
+  mercadoPagoPreApprovalId?: string | null
+  mercadoPagoPaymentId?: string | null
+  mercadoPagoSubscriptionId?: string | null
   statusAss?: number
   plano?: number
   valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -944,6 +1025,9 @@ export type UsuarioUncheckedCreateWithoutCategoriasInput = {
   dtFimPremium?: Date | string | null
   stripeCliId?: string | null
   stripeSubId?: string | null
+  mercadoPagoPreApprovalId?: string | null
+  mercadoPagoPaymentId?: string | null
+  mercadoPagoSubscriptionId?: string | null
   statusAss?: number
   plano?: number
   valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -985,6 +1069,9 @@ export type UsuarioUpdateWithoutCategoriasInput = {
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   stripeCliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPreApprovalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
   valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1010,6 +1097,9 @@ export type UsuarioUncheckedUpdateWithoutCategoriasInput = {
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   stripeCliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPreApprovalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
   valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1035,6 +1125,9 @@ export type UsuarioCreateWithoutRefreshTokenInput = {
   dtFimPremium?: Date | string | null
   stripeCliId?: string | null
   stripeSubId?: string | null
+  mercadoPagoPreApprovalId?: string | null
+  mercadoPagoPaymentId?: string | null
+  mercadoPagoSubscriptionId?: string | null
   statusAss?: number
   plano?: number
   valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1060,6 +1153,9 @@ export type UsuarioUncheckedCreateWithoutRefreshTokenInput = {
   dtFimPremium?: Date | string | null
   stripeCliId?: string | null
   stripeSubId?: string | null
+  mercadoPagoPreApprovalId?: string | null
+  mercadoPagoPaymentId?: string | null
+  mercadoPagoSubscriptionId?: string | null
   statusAss?: number
   plano?: number
   valorPago?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1101,6 +1197,9 @@ export type UsuarioUpdateWithoutRefreshTokenInput = {
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   stripeCliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPreApprovalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
   valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1126,6 +1225,9 @@ export type UsuarioUncheckedUpdateWithoutRefreshTokenInput = {
   dtFimPremium?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   stripeCliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPreApprovalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mercadoPagoSubscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusAss?: Prisma.IntFieldUpdateOperationsInput | number
   plano?: Prisma.IntFieldUpdateOperationsInput | number
   valorPago?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1191,6 +1293,9 @@ export type UsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   dtFimPremium?: boolean
   stripeCliId?: boolean
   stripeSubId?: boolean
+  mercadoPagoPreApprovalId?: boolean
+  mercadoPagoPaymentId?: boolean
+  mercadoPagoSubscriptionId?: boolean
   statusAss?: boolean
   plano?: boolean
   valorPago?: boolean
@@ -1218,6 +1323,9 @@ export type UsuarioSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   dtFimPremium?: boolean
   stripeCliId?: boolean
   stripeSubId?: boolean
+  mercadoPagoPreApprovalId?: boolean
+  mercadoPagoPaymentId?: boolean
+  mercadoPagoSubscriptionId?: boolean
   statusAss?: boolean
   plano?: boolean
   valorPago?: boolean
@@ -1241,6 +1349,9 @@ export type UsuarioSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   dtFimPremium?: boolean
   stripeCliId?: boolean
   stripeSubId?: boolean
+  mercadoPagoPreApprovalId?: boolean
+  mercadoPagoPaymentId?: boolean
+  mercadoPagoSubscriptionId?: boolean
   statusAss?: boolean
   plano?: boolean
   valorPago?: boolean
@@ -1264,6 +1375,9 @@ export type UsuarioSelectScalar = {
   dtFimPremium?: boolean
   stripeCliId?: boolean
   stripeSubId?: boolean
+  mercadoPagoPreApprovalId?: boolean
+  mercadoPagoPaymentId?: boolean
+  mercadoPagoSubscriptionId?: boolean
   statusAss?: boolean
   plano?: boolean
   valorPago?: boolean
@@ -1273,7 +1387,7 @@ export type UsuarioSelectScalar = {
   createdAt?: boolean
 }
 
-export type UsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "email" | "password" | "image" | "desc" | "isBlocked" | "isPremium" | "dtIniPremium" | "dtFimPremium" | "stripeCliId" | "stripeSubId" | "statusAss" | "plano" | "valorPago" | "refreshPasswordToken" | "refreshPasswordTokenExpires" | "updatedAt" | "createdAt", ExtArgs["result"]["usuario"]>
+export type UsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "email" | "password" | "image" | "desc" | "isBlocked" | "isPremium" | "dtIniPremium" | "dtFimPremium" | "stripeCliId" | "stripeSubId" | "mercadoPagoPreApprovalId" | "mercadoPagoPaymentId" | "mercadoPagoSubscriptionId" | "statusAss" | "plano" | "valorPago" | "refreshPasswordToken" | "refreshPasswordTokenExpires" | "updatedAt" | "createdAt", ExtArgs["result"]["usuario"]>
 export type UsuarioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   refreshToken?: boolean | Prisma.Usuario$refreshTokenArgs<ExtArgs>
   conteudos?: boolean | Prisma.Usuario$conteudosArgs<ExtArgs>
@@ -1304,6 +1418,9 @@ export type $UsuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     dtFimPremium: Date | null
     stripeCliId: string | null
     stripeSubId: string | null
+    mercadoPagoPreApprovalId: string | null
+    mercadoPagoPaymentId: string | null
+    mercadoPagoSubscriptionId: string | null
     statusAss: number
     plano: number
     valorPago: runtime.Decimal | null
@@ -1750,6 +1867,9 @@ export interface UsuarioFieldRefs {
   readonly dtFimPremium: Prisma.FieldRef<"Usuario", 'DateTime'>
   readonly stripeCliId: Prisma.FieldRef<"Usuario", 'String'>
   readonly stripeSubId: Prisma.FieldRef<"Usuario", 'String'>
+  readonly mercadoPagoPreApprovalId: Prisma.FieldRef<"Usuario", 'String'>
+  readonly mercadoPagoPaymentId: Prisma.FieldRef<"Usuario", 'String'>
+  readonly mercadoPagoSubscriptionId: Prisma.FieldRef<"Usuario", 'String'>
   readonly statusAss: Prisma.FieldRef<"Usuario", 'Int'>
   readonly plano: Prisma.FieldRef<"Usuario", 'Int'>
   readonly valorPago: Prisma.FieldRef<"Usuario", 'Decimal'>
@@ -1953,6 +2073,11 @@ export type UsuarioFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Skip the first `n` Usuarios.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Usuarios.
+   */
   distinct?: Prisma.UsuarioScalarFieldEnum | Prisma.UsuarioScalarFieldEnum[]
 }
 

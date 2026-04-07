@@ -251,7 +251,7 @@ export type ConteudoGroupByOutputType = {
   _max: ConteudoMaxAggregateOutputType | null
 }
 
-type GetConteudoGroupByPayload<T extends ConteudoGroupByArgs> = Prisma.PrismaPromise<
+export type GetConteudoGroupByPayload<T extends ConteudoGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ConteudoGroupByOutputType, T['by']> &
       {
@@ -1679,6 +1679,11 @@ export type ConteudoFindManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Skip the first `n` Conteudos.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Conteudos.
+   */
   distinct?: Prisma.ConteudoScalarFieldEnum | Prisma.ConteudoScalarFieldEnum[]
 }
 

@@ -246,7 +246,7 @@ export type HistoricoUsuarioGroupByOutputType = {
   _max: HistoricoUsuarioMaxAggregateOutputType | null
 }
 
-type GetHistoricoUsuarioGroupByPayload<T extends HistoricoUsuarioGroupByArgs> = Prisma.PrismaPromise<
+export type GetHistoricoUsuarioGroupByPayload<T extends HistoricoUsuarioGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<HistoricoUsuarioGroupByOutputType, T['by']> &
       {
@@ -1193,6 +1193,11 @@ export type HistoricoUsuarioFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` HistoricoUsuarios.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of HistoricoUsuarios.
+   */
   distinct?: Prisma.HistoricoUsuarioScalarFieldEnum | Prisma.HistoricoUsuarioScalarFieldEnum[]
 }
 
