@@ -78,3 +78,51 @@ export enum PlanoCode {
   SEMESTRAL = 3,
   ANUAL = 4
 }
+
+export const planos = [
+    {
+      id: 1,
+      nome: 'Plano Mensal',
+      preco: 'R$30,00',
+      price: 30.00,
+      periodo: '/mês',
+      corDestaque: 'red' as const,
+      beneficios: [
+        'Referências apuradas e valiosas',
+        'Criatividade ilimitada',
+        'Atualização diária de conteúdo',
+        'Acesso 24/7 à plataforma',
+        'Suporte por email'
+      ]
+    },
+    {
+      id: 2,
+      nome: 'Plano Trimestral',
+      preco: 'R$85,00',
+      price: 85.00,
+      periodo: '/trimestre',
+      economia: '20%',
+      popular: true,
+      corDestaque: 'orange' as const,
+      beneficios: [
+        'Todos os benefícios do mensal',
+        '🔥 Suporte prioritário',
+        '🎁 Ofertas exclusivas',
+        '⭐⭐⭐⭐⭐'
+      ]
+    },
+    {
+      id: 3,
+      nome: 'Plano Semestral',
+      preco: 'R$160,00',
+      price: 160.00,
+      periodo: '/semestre',
+      economia: '40%',
+      corDestaque: 'green' as const,
+      beneficios: [
+        'Todos os benefícios do trimestral',
+        '🚀 Mais Foco no que faz a diferença',
+        '⭐⭐⭐⭐⭐'
+      ]
+    }
+  ];

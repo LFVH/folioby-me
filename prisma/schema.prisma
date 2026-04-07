@@ -21,6 +21,7 @@ model Usuario {
   dtFimPremium DateTime?
   stripeCliId  String?  @unique
   stripeSubId  String?  @unique
+  mercadoPagoPreApprovalId String? @unique
   statusAss    Int      @default(1) // status stripe "inativo","ativo", "cancelado", "pendente"
   plano        Int      @default(0)  // status stripe "mensal", "anual", "semestral"
   valorPago      Decimal? @db.Decimal(10, 2)

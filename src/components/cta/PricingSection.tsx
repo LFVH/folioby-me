@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { loadStripe } from "@stripe/stripe-js";
 import { PricingCard } from './PricingCard';
+import { planos } from '@/types';
 
 interface CheckoutProps {
   onSuccess?: () => void;
@@ -39,84 +40,68 @@ export default function PricingSection({
     }
   }, [session, status, assinaturaFromUrl]);
 
-  const handlePayment = async (assinatura: number) => {
-    if (isProcessing) return;
+  // const handlePayment = async (assinatura: number) => {
+  //   if (isProcessing) return;
     
-    setIsProcessing(true);
-    try {
-      const checkoutResponse = await fetch("/api/create-checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ assinatura }),
-      });
+  //   setIsProcessing(true);
+  //   try {
+  //     const checkoutResponse = await fetch("/api/create-checkout", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ assinatura }),
+  //     });
 
-      const stripeClient = await loadStripe(
-        process.env.NEXT_PUBLIC_STRIPE_PUB_KEY as string
-      );
+  //     const stripeClient = await loadStripe(
+  //       process.env.NEXT_PUBLIC_STRIPE_PUB_KEY as string
+  //     );
 
-      if (!stripeClient) throw new Error("Stripe failed to initialize.");
+  //     if (!stripeClient) throw new Error("Stripe failed to initialize.");
 
-      const { sessionId } = await checkoutResponse.json();
-      const { error } =  await stripeClient.redirectToCheckout({ sessionId });
+  //     const { sessionId } = await checkoutResponse.json();
+  //     const { error } =  await stripeClient.redirectToCheckout({ sessionId });
       
-      if (error) {
-        console.error("Stripe checkout error:", error);
-      } else {
-        onSuccess?.();
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+  //     if (error) {
+  //       console.error("Stripe checkout error:", error);
+  //     } else {
+  //       onSuccess?.();
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setIsProcessing(false);
+  //   }
+  // };
 
-    const planos = [
-    {
-      id: 1,
-      nome: 'Plano Mensal',
-      preco: 'R$30,00',
-      periodo: '/mês',
-      corDestaque: 'red' as const,
-      beneficios: [
-        'Referências apuradas e valiosas',
-        'Criatividade ilimitada',
-        'Atualização diária de conteúdo',
-        'Acesso 24/7 à plataforma',
-        'Suporte por email'
-      ]
-    },
-    {
-      id: 2,
-      nome: 'Plano Trimestral',
-      preco: 'R$85,00',
-      periodo: '/trimestre',
-      economia: '20%',
-      popular: true,
-      corDestaque: 'orange' as const,
-      beneficios: [
-        'Todos os benefícios do mensal',
-        '🔥 Suporte prioritário',
-        '🎁 Ofertas exclusivas',
-        '⭐⭐⭐⭐⭐'
-      ]
-    },
-    {
-      id: 3,
-      nome: 'Plano Semestral',
-      preco: 'R$160,00',
-      periodo: '/semestre',
-      economia: '40%',
-      corDestaque: 'green' as const,
-      beneficios: [
-        'Todos os benefícios do trimestral',
-        '🚀 Mais Foco no que faz a diferença',
-        '⭐⭐⭐⭐⭐'
-      ]
+const handlePayment = async (assinatura: number) => {
+  try {
+    const response = await fetch('/api/mercadopago/create-subscription', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        planType: assinatura,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.initPoint) {
+      // Redireciona para o checkout do Mercado Pago
+      window.location.href = data.initPoint;
+    } else {
+      console.error('Erro ao criar assinatura:', data.error);
+      // Mostrar mensagem de erro para o usuário
+      alert('Erro ao processar assinatura. Tente novamente.');
     }
-  ];
+  } catch (error) {
+    console.error('Erro:', error);
+    alert('Erro de conexão. Tente novamente.');
+  }
+};
+
 
   if (isProcessing) {
     return (
