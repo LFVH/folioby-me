@@ -31,7 +31,8 @@ async function processPaymentNotification(paymentId: string) {
   try {
     // Busca os detalhes do pagamento na API do Mercado Pago
     const paymentData = await payment.get({ id: paymentId });
-
+    console.log("paymentData")
+    console.log(paymentData)
     // Extrai os metadados que você passou na criação da pré-aprovação
     const userId = paymentData.external_reference;
     if(!paymentData.id){
@@ -43,7 +44,8 @@ async function processPaymentNotification(paymentId: string) {
     if(!paymentData.date_approved){        console.log("problema date_approved")
         throw new Error("problema date_approved");}
     const currentPeriodEnd = new Date(paymentData.date_approved);
-
+    console.log("paymentData.status")
+console.log(paymentData.status)
     // Verifica o status do pagamento
     if (paymentData.status === 'approved') {
       // Chama a função que você já tem para ativar o plano
@@ -96,10 +98,14 @@ export async function POST(request: NextRequest) {
     if (!isValid) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
+    console.log("body")
+console.log(body)
     // Verifica se é uma notificação de pagamento
     if (body.type === 'payment') {
       // Processa o pagamento de forma assíncrona para responder rápido ao webhook
+      console.log("body.data")
+      console.log(body.data)
+      console.log(body.data.id)
       processPaymentNotification(body.data.id).catch(console.error);
     }
 

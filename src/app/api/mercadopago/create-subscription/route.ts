@@ -38,15 +38,16 @@ export async function POST(req: Request) {
 
     const subscription = await preApproval.create({
       body: {
-        reason: `Assinatura ${planoSelecionado.nome} - Usuário ${userId}`,
+        reason: `Assinatura ${planoSelecionado.nome} - Usuário ${userDB.name}`,
         auto_recurring: {
           frequency: frequency.value,
           frequency_type: frequency.type,
           transaction_amount: planoSelecionado.price,
           currency_id: 'BRL',
         },
-        back_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`,
-        payer_email: 'test_user_123@testuser.com',
+        back_url: `https://nonregimental-optimally-caroyln.ngrok-free.dev/dashboard`,
+        
+        payer_email: `test_user_5727595662563318073@testuser.com`,
         status: 'pending',
       },
     });
