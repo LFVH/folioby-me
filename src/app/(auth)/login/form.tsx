@@ -7,6 +7,8 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { LoginFormSchema } from '@/app/api/auth/auth/definitions';
 import { useRouter, useSearchParams } from 'next/navigation';
+import ForgotPasswordPopup from '@/components/passwd/ForgotPasswordPopup';
+import { contact_mail } from '@/types';
 
 interface LoginFormProps {
   onLoginSuccess: () => void;
@@ -88,9 +90,7 @@ return (
           />
           {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
           <div className="flex items-center justify-between mt-2">
-            <Link className="text-sm text-red-500 hover:text-red-400 underline" href="#">
-              Forgot your password?
-            </Link>
+             <ForgotPasswordPopup email={contact_mail} />
           </div>
         </div>
         {errors.general && (

@@ -88,11 +88,11 @@ export const planos = [
       periodo: '/mês',
       corDestaque: 'red' as const,
       beneficios: [
-        'Referências apuradas e valiosas',
-        'Criatividade ilimitada',
-        'Atualização diária de conteúdo',
+        'Acesso a todas as funções',
+        'Atualização frequente',
         'Acesso 24/7 à plataforma',
-        'Suporte por email'
+        'Suporte por email',
+        '⭐'
       ]
     },
     {
@@ -108,7 +108,7 @@ export const planos = [
         'Todos os benefícios do mensal',
         '🔥 Suporte prioritário',
         '🎁 Ofertas exclusivas',
-        '⭐⭐⭐⭐⭐'
+        '⭐⭐⭐'
       ]
     },
     {
@@ -122,7 +122,9 @@ export const planos = [
       beneficios: [
         'Todos os benefícios do trimestral',
         '🚀 Mais Foco no que faz a diferença',
-        '⭐⭐⭐⭐⭐'
+        '⭐⭐⭐⭐⭐⭐'
       ]
     }
   ];
+
+  export const contact_mail = "contato@email.com"

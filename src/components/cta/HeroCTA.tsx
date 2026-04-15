@@ -70,7 +70,7 @@ export default function HeroCTA() {
         
         {/* Subheadline */}
         <p className="text-xl md:text-2xl text-gray-300 mb-2 max-w-3xl mx-auto leading-relaxed">
-          Organize suas produções de design e edição em categorias 
+          Apresente suas produções de design e edição 
           <span className="text-green-500 font-semibold"> profissionais</span>. 
           Mostre seu trabalho como nunca antes.
         </p>
@@ -79,13 +79,6 @@ export default function HeroCTA() {
         <PricingSection />
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 max-w-4xl mx-auto">
-          <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-gray-800 hover:border-purple-500 transition-all duration-300">
-            <div className="text-purple-500 text-2xl mb-3">🎯</div>
-            <h3 className="text-white font-bold text-lg mb-2">Categorias Personalizadas</h3>
-            <p className="text-gray-400 text-sm">
-              Organize por tipo de trabalho: edição de imagem, motion design, identidade visual e mais
-            </p>
-          </div>
 
           <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-gray-800 hover:border-pink-500 transition-all duration-300">
             <div className="text-pink-500 text-2xl mb-3">📺</div>

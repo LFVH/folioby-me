@@ -27,8 +27,8 @@ model Usuario {
   statusAss    Int      @default(1) // status stripe "inativo","ativo", "cancelado", "pendente"
   plano        Int      @default(0)  // status stripe "mensal", "anual", "semestral"
   valorPago      Decimal? @db.Decimal(10, 2)
-  refreshPasswordToken        String?   //TODO esqueci senha 
-  refreshPasswordTokenExpires DateTime? //TODO esqueci senha
+  refreshPasswordToken        String?    
+  refreshPasswordTokenExpires DateTime? 
   conteudos    Conteudo[]
   categorias   Categoria[]
   updatedAt    DateTime @updatedAt

@@ -7,6 +7,8 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import ManageSubscriptionButton from '@/components/letsgo/ManageSubscriptionButton'
 import { toast } from 'react-toastify';
+import AvisoSubscriptionPopup from '@/components/logged/AvisoSubscription';
+import { contact_mail } from '@/types';
 
 export default function UserPage() {
   const { data: session, update } = useSession()
@@ -371,8 +373,8 @@ const handleRemoveImage = async () => {
                   <p className="text-gray-400">
                     Manage your signature
                   </p>
-                  <div className="pt-4">
-                    <ManageSubscriptionButton />
+                  <div className="flex items-center justify-between mt-2">
+                      <AvisoSubscriptionPopup email={contact_mail} />
                   </div>
                 </div>
               </div>
