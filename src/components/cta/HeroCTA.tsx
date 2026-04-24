@@ -65,7 +65,7 @@ export default function HeroCTA() {
 
         {/* Headline */}
         <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
-          Seu <span className="text-purple-500">Portfólio em Formato Netflix</span>
+          Seu <span className="text-purple-500">Portfólio em Formato Netflix*</span>
         </h2>
         
         {/* Subheadline */}
@@ -78,7 +78,7 @@ export default function HeroCTA() {
         {/* Pricing Section */}
         <PricingSection />
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 max-w-4xl mx-auto">
 
           <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-gray-800 hover:border-pink-500 transition-all duration-300">
             <div className="text-pink-500 text-2xl mb-3">📺</div>
@@ -95,15 +95,25 @@ export default function HeroCTA() {
               Mostre sua evolução criativa e atraia mais oportunidades profissionais
             </p>
           </div>
-        </div>
+          <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-gray-800 hover:border-green-500 transition-all duration-300">
+            <div className="text-blue-500 text-2xl mb-3">🎨</div>
+            <h3 className="text-white font-bold text-lg mb-2">Seção profile</h3>
+            <p className="text-gray-400 text-sm">
+              Insira informações profisisonais como contato, capacitação e links.
+            </p>
+          </div>
 
+        </div>
+          <p className="text-gray-400 text-xs">
+            *FolioBy não possui relação com a plataforma citada
+          </p>
         {/* SEÇÃO DE DEMONSTRAÇÃO - EXEMPLOS E VÍDEO */}
         <div className="mb-20">
           <h3 className="text-3xl font-bold text-white mb-4">
             Veja o <span className="text-purple-500">FolioBy</span> em Ação
           </h3>
           <p className="text-gray-300 mb-10 max-w-2xl mx-auto">
-            Confira como criativos estão apresentando seus portfolios e conquistando novos clientes
+            Confira como designers estão apresentando seus portfolios e conquistando novos clientes
           </p>
 
           {/* Grid de Exemplos */}
@@ -113,7 +123,7 @@ export default function HeroCTA() {
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <span className="text-white font-semibold">Editor de Imagem</span>
               </div>
-              <div className="absolute bottom-4 left-4 text-white font-medium">📸 15 projetos</div>
+              <div className="absolute bottom-4 left-4 text-white font-medium">📸 Fotos</div>
             </div>
 
             {/* Exemplo 2 */}
@@ -121,7 +131,7 @@ export default function HeroCTA() {
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <span className="text-white font-semibold">Motion Design</span>
               </div>
-              <div className="absolute bottom-4 left-4 text-white font-medium">🎬 8 animações</div>
+              <div className="absolute bottom-4 left-4 text-white font-medium">🎬 Animações</div>
             </div>
 
             {/* Exemplo 3 */}
@@ -129,7 +139,7 @@ export default function HeroCTA() {
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <span className="text-white font-semibold">Identidade Visual</span>
               </div>
-              <div className="absolute bottom-4 left-4 text-white font-medium">🎨 12 marcas</div>
+              <div className="absolute bottom-4 left-4 text-white font-medium">🎨 Carrosel</div>
             </div>
           </div>
 
@@ -174,7 +184,7 @@ export default function HeroCTA() {
           )}
 
           <p className="text-gray-400 text-sm mt-4">
-            🔒 Seus dados estão seguros. Comece grátis, cancele quando quiser.
+            🔒 Seus dados estão seguros. Comece grátis, com 7 dias para cancelamento.
           </p>
         </div>
 
