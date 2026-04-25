@@ -27,7 +27,9 @@ const authMiddleware = withAuth({
 })
 
 export async function middleware(request: NextRequest, event: NextFetchEvent) { 
-  
+    return new NextResponse("Temporariamente indisponível", {
+    status: 503,
+  });
   const publicRoutes = process.env.PUBLIC_ROUTES?.split(',') || [
     '/'
   ];

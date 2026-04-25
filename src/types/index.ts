@@ -127,4 +127,4 @@ export const planos = [
     }
   ];
 
-  export const contact_mail = "contato@email.com"
+  export const contact_mail = "contact@folioby.me"
