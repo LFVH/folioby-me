@@ -45,7 +45,7 @@ export async function POST(req: Request) {
           transaction_amount: planoSelecionado.price,
           currency_id: 'BRL',
         },
-        back_url: `https://nonregimental-optimally-caroyln.ngrok-free.dev/dashboard`,
+        back_url: `https://folioby.me/nextsteps/contents`,
         
         payer_email: `test_user_5727595662563318073@testuser.com`,
         status: 'pending',
