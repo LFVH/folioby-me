@@ -8,14 +8,15 @@ export async function POST(req: Request) {
   try {
     const userDB = await userExists();
     if (userDB instanceof NextResponse) return userDB;
-    const userId =  userDB.id;
+
+    const userId = userDB.id;
     const { planType } = await req.json();
 
-     const planoSelecionado = planos.find(plano => plano.id === planType);
-    
+    const planoSelecionado = planos.find((plano) => plano.id === planType);
+
     if (!planoSelecionado) {
       return NextResponse.json(
-        { error: 'Plano não encontrado' },
+        { error: 'Plano nao encontrado' },
         { status: 400 }
       );
     }
@@ -31,37 +32,35 @@ export async function POST(req: Request) {
 
     if (!frequency) {
       return NextResponse.json(
-        { error: 'Tipo de plano inválido' },
+        { error: 'Tipo de plano invalido' },
         { status: 400 }
       );
     }
 
     const subscription = await preApproval.create({
       body: {
-        reason: `Assinatura ${planoSelecionado.nome} - Usuário ${userDB.name}`,
+        reason: `Assinatura ${planoSelecionado.nome} - Usuario ${userDB.name}`,
+        external_reference: userId,
         auto_recurring: {
           frequency: frequency.value,
           frequency_type: frequency.type,
           transaction_amount: planoSelecionado.price,
           currency_id: 'BRL',
         },
-        back_url: `https://folioby.me/nextsteps/contents`,
-        
-        payer_email: `test_user_5727595662563318073@testuser.com`,
+        back_url: 'https://folioby.me/nextsteps/contents',
+        payer_email: 'test_user_5727595662563318073@testuser.com',
         status: 'pending',
       },
     });
 
-    // 4. Salvar o ID da assinatura no seu banco de dados
     await prisma.usuario.update({
       where: { id: userId },
       data: {
-        mercadoPagoPreApprovalId: subscription.id, // Você precisará criar este campo no seu modelo
-        statusAss: 5, // Status de "Aguardando pagamento"
+        mercadoPagoPreApprovalId: subscription.id,
+        statusAss: 5,
       },
     });
 
-    // 5. Retornar o link de pagamento para o frontend
     return NextResponse.json({
       initPoint: subscription.init_point,
       subscriptionId: subscription.id,

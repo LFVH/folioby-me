@@ -55,7 +55,8 @@ export const ModelName = {
   Conteudo: 'Conteudo',
   Categoria: 'Categoria',
   HistoricoUsuario: 'HistoricoUsuario',
-  RefreshToken: 'RefreshToken'
+  RefreshToken: 'RefreshToken',
+  WebhookRequest: 'WebhookRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -165,6 +166,28 @@ export const RefreshTokenScalarFieldEnum = {
 export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
 
 
+export const WebhookRequestScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  path: 'path',
+  method: 'method',
+  authenticated: 'authenticated',
+  externalRequestId: 'externalRequestId',
+  notificationId: 'notificationId',
+  eventType: 'eventType',
+  action: 'action',
+  resourceId: 'resourceId',
+  headers: 'headers',
+  query: 'query',
+  payload: 'payload',
+  rawBody: 'rawBody',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type WebhookRequestScalarFieldEnum = (typeof WebhookRequestScalarFieldEnum)[keyof typeof WebhookRequestScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -179,6 +202,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

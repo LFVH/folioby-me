@@ -66,3 +66,8 @@ export type HistoricoUsuario = Prisma.HistoricoUsuarioModel
  * 
  */
 export type RefreshToken = Prisma.RefreshTokenModel
+/**
+ * Model WebhookRequest
+ * 
+ */
+export type WebhookRequest = Prisma.WebhookRequestModel

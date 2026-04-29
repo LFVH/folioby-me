@@ -91,3 +91,27 @@ model RefreshToken {
   updatedAt     DateTime @updatedAt
   createdAt     DateTime @default(now())
 }
+
+model WebhookRequest {
+  id                String   @id @default(cuid())
+  provider          String
+  path              String
+  method            String
+  authenticated     Boolean  @default(false)
+  externalRequestId String?
+  notificationId    String?
+  eventType         String?
+  action            String?
+  resourceId        String?
+  headers           Json?    @db.Json
+  query             Json?    @db.Json
+  payload           Json     @db.Json
+  rawBody           String?
+  updatedAt         DateTime @updatedAt
+  createdAt         DateTime @default(now())
+
+  @@index([provider, createdAt])
+  @@index([provider, eventType, createdAt])
+  @@index([resourceId, createdAt])
+  @@index([externalRequestId])
+}

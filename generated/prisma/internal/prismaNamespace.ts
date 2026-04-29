@@ -388,7 +388,8 @@ export const ModelName = {
   Conteudo: 'Conteudo',
   Categoria: 'Categoria',
   HistoricoUsuario: 'HistoricoUsuario',
-  RefreshToken: 'RefreshToken'
+  RefreshToken: 'RefreshToken',
+  WebhookRequest: 'WebhookRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -404,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "usuario" | "conteudo" | "categoria" | "historicoUsuario" | "refreshToken"
+    modelProps: "usuario" | "conteudo" | "categoria" | "historicoUsuario" | "refreshToken" | "webhookRequest"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -778,6 +779,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WebhookRequest: {
+      payload: Prisma.$WebhookRequestPayload<ExtArgs>
+      fields: Prisma.WebhookRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WebhookRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WebhookRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.WebhookRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WebhookRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookRequestPayload>
+        }
+        findMany: {
+          args: Prisma.WebhookRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookRequestPayload>[]
+        }
+        create: {
+          args: Prisma.WebhookRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookRequestPayload>
+        }
+        createMany: {
+          args: Prisma.WebhookRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WebhookRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.WebhookRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookRequestPayload>
+        }
+        update: {
+          args: Prisma.WebhookRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.WebhookRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WebhookRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WebhookRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.WebhookRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.WebhookRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWebhookRequest>
+        }
+        groupBy: {
+          args: Prisma.WebhookRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WebhookRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WebhookRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WebhookRequestCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -908,6 +983,28 @@ export const RefreshTokenScalarFieldEnum = {
 export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
 
 
+export const WebhookRequestScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  path: 'path',
+  method: 'method',
+  authenticated: 'authenticated',
+  externalRequestId: 'externalRequestId',
+  notificationId: 'notificationId',
+  eventType: 'eventType',
+  action: 'action',
+  resourceId: 'resourceId',
+  headers: 'headers',
+  query: 'query',
+  payload: 'payload',
+  rawBody: 'rawBody',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type WebhookRequestScalarFieldEnum = (typeof WebhookRequestScalarFieldEnum)[keyof typeof WebhookRequestScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -922,6 +1019,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -1159,6 +1263,7 @@ export type GlobalOmitConfig = {
   categoria?: Prisma.CategoriaOmit
   historicoUsuario?: Prisma.HistoricoUsuarioOmit
   refreshToken?: Prisma.RefreshTokenOmit
+  webhookRequest?: Prisma.WebhookRequestOmit
 }
 
 /* Types for Logging */

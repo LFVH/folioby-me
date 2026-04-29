@@ -1,4 +1,4 @@
-import { MercadoPagoConfig, PreApproval, Payment } from 'mercadopago';
+import { Invoice, MercadoPagoConfig, PreApproval, Payment } from 'mercadopago';
 
 // Valida se a variável de ambiente está definida
 if (!process.env.MERCADO_PAGO_ACCESS_TOKEN) {
@@ -14,3 +14,4 @@ export const client = new MercadoPagoConfig({
 // Instâncias dos recursos que vamos usar
 export const preApproval = new PreApproval(client);
 export const payment = new Payment(client);
+export const invoice = new Invoice(client);
