@@ -2,7 +2,7 @@ import prisma from '@/prisma';
 import { logNow } from '@/utils/Logging';
 
 interface UserPaidParams {
-  mercadoPagoPaymentId: string;
+  mercadoPagoPaymentId?: string;
   mercadoPagoSubscriptionId: string;
   priceId?: number; // ou string, dependendo de como você armazena
   userId?: string;
@@ -28,13 +28,15 @@ export async function userPaid({
       where: { id: userId },
       data: {
         mercadoPagoPreApprovalId: mercadoPagoSubscriptionId,
-        mercadoPagoPaymentId: mercadoPagoPaymentId,
         mercadoPagoSubscriptionId: mercadoPagoSubscriptionId,
         plano,
         dtIniPremium: new Date(),
         dtFimPremium: currentPeriodEnd,
         statusAss: 6,
-        isPremium: true
+        isPremium: true,
+        ...(mercadoPagoPaymentId
+          ? { mercadoPagoPaymentId: mercadoPagoPaymentId }
+          : {})
       },
     });
 

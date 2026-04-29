@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { NextResponse } from 'next/server';
+import { after, NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import prisma from '@/prisma';
 import {
@@ -25,6 +25,11 @@ type MercadoPagoSignature = {
   v1: string;
 };
 
+type MercadoPagoSubscription = Awaited<ReturnType<typeof preApproval.get>>;
+
+const MERCADO_PAGO_MAX_RETRIES = 3;
+const MERCADO_PAGO_RETRY_DELAYS_MS = [1000, 2500];
+
 function toOptionalString(value: unknown): string | null {
   if (typeof value === 'string' && value.trim()) {
     return value;
@@ -46,6 +51,100 @@ function toDateOrNull(value: unknown): Date | null {
 
   const parsedDate = new Date(stringValue);
   return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
+}
+
+function toNumberOrNull(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === 'string') {
+    const normalizedValue = value.replace(',', '.').trim();
+    if (!normalizedValue) {
+      return null;
+    }
+
+    const parsedNumber = Number(normalizedValue);
+    return Number.isFinite(parsedNumber) ? parsedNumber : null;
+  }
+
+  return null;
+}
+
+function sleep(delayMs: number) {
+  return new Promise((resolve) => setTimeout(resolve, delayMs));
+}
+
+function isRetryableMercadoPagoError(error: unknown) {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  const typedError = error as Error & {
+    type?: string;
+    code?: string;
+    status?: number;
+    statusCode?: number;
+  };
+
+  const errorType = typedError.type?.toLowerCase();
+  const statusCode = typedError.statusCode ?? typedError.status;
+  const message = typedError.message.toLowerCase();
+
+  if (typeof statusCode === 'number' && (statusCode === 429 || statusCode >= 500)) {
+    return true;
+  }
+
+  if (errorType === 'request-timeout' || errorType === 'body-timeout') {
+    return true;
+  }
+
+  if (errorType === 'system') {
+    return true;
+  }
+
+  return (
+    message.includes('timeout') ||
+    message.includes('timed out') ||
+    message.includes('econnreset') ||
+    message.includes('etimedout') ||
+    message.includes('socket hang up')
+  );
+}
+
+async function withMercadoPagoRetry<T>(
+  label: string,
+  operation: () => Promise<T>
+) {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= MERCADO_PAGO_MAX_RETRIES; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+
+      if (!isRetryableMercadoPagoError(error) || attempt === MERCADO_PAGO_MAX_RETRIES) {
+        throw error;
+      }
+
+      const delayMs =
+        MERCADO_PAGO_RETRY_DELAYS_MS[attempt - 1] ??
+        MERCADO_PAGO_RETRY_DELAYS_MS[MERCADO_PAGO_RETRY_DELAYS_MS.length - 1];
+
+      console.warn('[mercadopago webhook] Temporary Mercado Pago API failure, retrying', {
+        label,
+        attempt,
+        nextAttempt: attempt + 1,
+        delayMs,
+        error,
+      });
+
+      await sleep(delayMs);
+    }
+  }
+
+  throw lastError;
 }
 
 function parseSignature(signatureHeader: string): MercadoPagoSignature | null {
@@ -138,8 +237,52 @@ async function resolveMercadoPagoUserId(params: {
   return null;
 }
 
+async function tryActivateFromSubscriptionSummary(params: {
+  userId: string;
+  subscriptionId: string;
+  subscription: MercadoPagoSubscription;
+}) {
+  const chargeCount = params.subscription.summarized?.charged_quantity ?? 0;
+  const lastChargedDate = toDateOrNull(
+    params.subscription.summarized?.last_charged_date
+  );
+  const hasConfirmedCharge = chargeCount > 0 || Boolean(lastChargedDate);
+
+  if (!hasConfirmedCharge) {
+    return;
+  }
+
+  const user = await prisma.usuario.findUnique({
+    where: { id: params.userId },
+    select: {
+      mercadoPagoPaymentId: true,
+    },
+  });
+
+  const currentPeriodEnd =
+    toDateOrNull(params.subscription.next_payment_date) ??
+    lastChargedDate ??
+    new Date();
+
+  const transactionAmount =
+    toNumberOrNull(params.subscription.auto_recurring?.transaction_amount) ??
+    toNumberOrNull(params.subscription.summarized?.last_charged_amount) ??
+    undefined;
+
+  await userPaid({
+    mercadoPagoPaymentId: user?.mercadoPagoPaymentId ?? undefined,
+    mercadoPagoSubscriptionId: params.subscriptionId,
+    priceId: transactionAmount,
+    userId: params.userId,
+    currentPeriodEnd,
+  });
+}
+
 async function processPaymentNotification(paymentId: string) {
-  const paymentData = await payment.get({ id: paymentId });
+  const paymentData = await withMercadoPagoRetry(`payment:${paymentId}`, () =>
+    payment.get({ id: paymentId })
+  );
+
   const userId = await resolveMercadoPagoUserId({
     externalReference: paymentData.external_reference,
     paymentId: toOptionalString(paymentData.id),
@@ -188,7 +331,11 @@ async function processPaymentNotification(paymentId: string) {
 }
 
 async function processSubscriptionPreapprovalNotification(subscriptionId: string) {
-  const subscription = await preApproval.get({ id: subscriptionId });
+  const subscription = await withMercadoPagoRetry(
+    `subscription_preapproval:${subscriptionId}`,
+    () => preApproval.get({ id: subscriptionId })
+  );
+
   const resolvedSubscriptionId = toOptionalString(subscription.id);
 
   if (!resolvedSubscriptionId) {
@@ -219,11 +366,22 @@ async function processSubscriptionPreapprovalNotification(subscriptionId: string
 
   if (subscription.status === 'cancelled') {
     await userCancelPlan({ subscriptionId: resolvedSubscriptionId });
+    return;
   }
+
+  await tryActivateFromSubscriptionSummary({
+    userId,
+    subscriptionId: resolvedSubscriptionId,
+    subscription,
+  });
 }
 
 async function processAuthorizedPaymentNotification(authorizedPaymentId: string) {
-  const invoiceData = await invoice.get({ id: authorizedPaymentId });
+  const invoiceData = await withMercadoPagoRetry(
+    `subscription_authorized_payment:${authorizedPaymentId}`,
+    () => invoice.get({ id: authorizedPaymentId })
+  );
+
   const subscriptionId = toOptionalString(invoiceData.preapproval_id);
   const paymentId = toOptionalString(invoiceData.payment?.id);
 
@@ -255,7 +413,11 @@ async function processAuthorizedPaymentNotification(authorizedPaymentId: string)
     return;
   }
 
-  const subscription = await preApproval.get({ id: subscriptionId });
+  const subscription = await withMercadoPagoRetry(
+    `subscription_after_authorized_payment:${subscriptionId}`,
+    () => preApproval.get({ id: subscriptionId })
+  );
+
   const currentPeriodEnd =
     toDateOrNull(subscription.next_payment_date) ??
     toDateOrNull(invoiceData.debit_date) ??
@@ -356,8 +518,12 @@ export async function POST(request: NextRequest) {
       rawBody,
     });
 
-    void processWebhookNotification(body.type, dataId).catch((error) => {
-      console.error('[mercadopago webhook] Error processing notification:', error);
+    after(async () => {
+      try {
+        await processWebhookNotification(body.type, dataId);
+      } catch (error) {
+        console.error('[mercadopago webhook] Error processing notification:', error);
+      }
     });
 
     return NextResponse.json({ received: true });
