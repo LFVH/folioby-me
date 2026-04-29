@@ -1,10 +1,11 @@
 import prisma from '@/prisma';
+import { planos } from '@/types';
 import { logNow } from '@/utils/Logging';
 
 interface UserPaidParams {
   mercadoPagoPaymentId?: string;
   mercadoPagoSubscriptionId: string;
-  priceId?: number; // ou string, dependendo de como você armazena
+  priceId?: number;
   userId?: string;
   currentPeriodEnd: Date;
 }
@@ -13,36 +14,69 @@ interface UserCancelPlanParams {
   subscriptionId: string;
 }
 
+interface SyncMercadoPagoSubscriptionParams {
+  userId: string;
+  subscriptionId: string;
+}
+
+function normalizeCurrencyAmount(value: number) {
+  return Number(value.toFixed(2));
+}
+
+function resolvePlanoByAmount(priceId?: number) {
+  if (typeof priceId !== 'number' || !Number.isFinite(priceId)) {
+    return null;
+  }
+
+  const normalizedPriceId = normalizeCurrencyAmount(priceId);
+
+  return (
+    planos.find(
+      (plano) => normalizeCurrencyAmount(plano.price) === normalizedPriceId
+    ) ?? null
+  );
+}
+
 export async function userPaid({
   mercadoPagoPaymentId,
   mercadoPagoSubscriptionId,
   priceId,
   userId,
-  currentPeriodEnd
+  currentPeriodEnd,
 }: UserPaidParams) {
   try {
-    // Mapeie o priceId para o plano correspondente no seu sistema
-    const plano = priceId; // Adapte conforme sua lógica de negócio
+    const planoResolvido = resolvePlanoByAmount(priceId);
+    const valorPago =
+      typeof priceId === 'number' && Number.isFinite(priceId)
+        ? normalizeCurrencyAmount(priceId)
+        : undefined;
+
+    if (priceId !== undefined && !planoResolvido) {
+      console.warn(
+        `Mercado Pago payment amount ${priceId} does not match any configured plan`
+      );
+    }
 
     await prisma.usuario.update({
       where: { id: userId },
       data: {
         mercadoPagoPreApprovalId: mercadoPagoSubscriptionId,
         mercadoPagoSubscriptionId: mercadoPagoSubscriptionId,
-        plano,
+        ...(planoResolvido ? { plano: planoResolvido.id } : {}),
+        ...(valorPago !== undefined ? { valorPago } : {}),
         dtIniPremium: new Date(),
         dtFimPremium: currentPeriodEnd,
         statusAss: 6,
         isPremium: true,
         ...(mercadoPagoPaymentId
           ? { mercadoPagoPaymentId: mercadoPagoPaymentId }
-          : {})
+          : {}),
       },
     });
 
     logNow(`User ${userId} successfully paid with Mercado Pago`);
   } catch (error) {
-    console.error("Error processing Mercado Pago payment:", error);
+    console.error('Error processing Mercado Pago payment:', error);
     throw error;
   }
 }
@@ -75,14 +109,9 @@ export async function userCancelPlan({ subscriptionId }: UserCancelPlanParams) {
 
     logNow(`User with Mercado Pago subscription ${subscriptionId} canceled their plan`);
   } catch (error) {
-    console.error("Error canceling Mercado Pago plan:", error);
+    console.error('Error canceling Mercado Pago plan:', error);
     throw error;
   }
-}
-
-interface SyncMercadoPagoSubscriptionParams {
-  userId: string;
-  subscriptionId: string;
 }
 
 export async function syncMercadoPagoSubscription({
@@ -100,7 +129,7 @@ export async function syncMercadoPagoSubscription({
 
     logNow(`Mercado Pago subscription ${subscriptionId} synced for user ${userId}`);
   } catch (error) {
-    console.error("Error syncing Mercado Pago subscription:", error);
+    console.error('Error syncing Mercado Pago subscription:', error);
     throw error;
   }
 }
