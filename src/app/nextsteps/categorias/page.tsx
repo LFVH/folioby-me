@@ -120,7 +120,7 @@ export default function CategoriasPage() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-white">Gerenciar Categorias</h1>
-            <p className="text-gray-400 mt-1">Painel administrativo</p>
+            <p className="text-gray-400 mt-1">Crie, edite e remova as categorias da sua p&aacute;gina</p>
           </div>
           
           <div className="flex items-center gap-4">

@@ -57,21 +57,41 @@ export async function userPaid({
       );
     }
 
-    await prisma.usuario.update({
-      where: { id: userId },
-      data: {
-        mercadoPagoPreApprovalId: mercadoPagoSubscriptionId,
-        mercadoPagoSubscriptionId: mercadoPagoSubscriptionId,
-        ...(planoResolvido ? { plano: planoResolvido.id } : {}),
-        ...(valorPago !== undefined ? { valorPago } : {}),
-        dtIniPremium: new Date(),
-        dtFimPremium: currentPeriodEnd,
-        statusAss: 6,
-        isPremium: true,
-        ...(mercadoPagoPaymentId
-          ? { mercadoPagoPaymentId: mercadoPagoPaymentId }
-          : {}),
-      },
+    await prisma.$transaction(async (tx) => {
+      await tx.usuario.update({
+        where: { id: userId },
+        data: {
+          mercadoPagoPreApprovalId: mercadoPagoSubscriptionId,
+          mercadoPagoSubscriptionId: mercadoPagoSubscriptionId,
+          ...(planoResolvido ? { plano: planoResolvido.id } : {}),
+          ...(valorPago !== undefined ? { valorPago } : {}),
+          dtIniPremium: new Date(),
+          dtFimPremium: currentPeriodEnd,
+          statusAss: 6,
+          isPremium: true,
+          ...(mercadoPagoPaymentId
+            ? { mercadoPagoPaymentId: mercadoPagoPaymentId }
+            : {}),
+        },
+      });
+
+      const existingCategoria = await tx.categoria.findFirst({
+        where: { userId },
+        select: { id: true },
+      });
+
+      if (!existingCategoria) {
+        await tx.categoria.create({
+          data: {
+            name: "My Work",
+            user: {
+              connect: {
+                id: userId,
+              },
+            },
+          },
+        });
+      }
     });
 
     logNow(`User ${userId} successfully paid with Mercado Pago`);

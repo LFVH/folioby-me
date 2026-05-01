@@ -9,7 +9,7 @@ import { scrollToTop } from "@/lib/utils";
 const links = [
   { href: '/nextsteps/contents', title: 'Page Contents' },
   { href: '/nextsteps/profile', title: 'Slug and ProfileImage' },
-  { href: '/nextsteps/categories', title: 'Soon...' },
+  { href: '/nextsteps/categorias', title: 'Page Categories' },
 ];
 
 export function LoggedBar() {

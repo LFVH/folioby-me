@@ -91,6 +91,7 @@ export async function middleware(request: NextRequest) {
 
   if (
     !request.nextUrl.pathname.startsWith("/nextsteps/contents") &&
+    !request.nextUrl.pathname.startsWith("/nextsteps/categorias") &&
     !request.nextUrl.pathname.startsWith("/api/nextsteps") &&
     !request.nextUrl.pathname.startsWith("/nextsteps/profile")
   ) {
