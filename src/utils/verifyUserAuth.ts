@@ -4,16 +4,61 @@ import authHandler from "@/app/api/nxtHandle/nextAuthHandler";
 import prisma from "../prisma";
 import { Usuario } from "../../generated/prisma/client";
 import { logNow } from "./Logging";
-''
+
+type VerifiedUser = {
+  userId: string;
+  isPremium: boolean;
+}
+
+export async function verifyUserById(userId: string): Promise<VerifiedUser | NextResponse> {
+  try {
+    if (!userId?.trim()) {
+      return NextResponse.json(
+        { success: false, body: { message: "Usuário não autenticado." } },
+        { status: 401 }
+      );
+    }
+
+    const userDB = await prisma.usuario.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        isPremium: true,
+        isBlocked: true,
+      },
+    });
+
+    if (!userDB || userDB.isBlocked) {
+      return NextResponse.json(
+        { success: false, body: { message: "Usuário ou senha incorretos." } },
+        { status: 400 }
+      );
+    }
+
+    return {
+      userId: userDB.id,
+      isPremium: userDB.isPremium,
+    };
+  } catch (error) {
+    logNow("verifyUserById " + (error instanceof Error ? error.message : "Ocorreu um erro!"));
+    return NextResponse.json(
+      { success: false, body: { message: error instanceof Error ? error.message : "Ocorreu um erro!" } },
+      { status: 400 }
+    );
+  }
+}
+
 export async function verifyUser() {
   try {
-    const userDB = await userExists();
-    if(userDB instanceof NextResponse) return userDB;
-    if(!userDB?.isPremium) NextResponse.json({ error: 'Not premium user :/' }, { status: 405 })
-    return {
-      userId: userDB?.id,
-      isPremium: userDB?.isPremium || false
-    };
+    const session = await getServerSession(authHandler);
+    if (!session?.id) {
+      return NextResponse.json(
+        { success: false, body: { message: "Usuário não autenticado." } },
+        { status: 401 }
+      );
+    }
+
+    return verifyUserById(session.id);
   } catch (error) {
     logNow("verifyUser " + (error instanceof Error ? error.message : 'Ocorreu um erro!'));
     return NextResponse.json(
@@ -22,7 +67,7 @@ export async function verifyUser() {
     );
   }
 }
-export async function isActuallyChief(userId: string) {
+export function isActuallyChief(userId: string) {
   const adminUserIds = process.env.CHIEF_USER_IDS?.split(',') || [];
   return adminUserIds.includes(userId);
 }
