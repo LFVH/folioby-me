@@ -1,6 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server'
-import prisma from "../../../../../prisma"
-import { isActuallyChief, verifyUser } from "@/utils/verifyUserAuth"
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "../../../../../prisma";
+import { verifyUser } from "@/utils/verifyUserAuth";
+
+async function ensureCategoriaAccess(isPremium: boolean) {
+  if (!isPremium) {
+    return NextResponse.json(
+      { success: false, error: "404 Not Found" },
+      { status: 403 }
+    );
+  }
+
+  return null;
+}
 
 export async function PUT(
   request: NextRequest,
@@ -9,34 +20,42 @@ export async function PUT(
   try {
     const authResult = await verifyUser();
     if (authResult instanceof NextResponse) return authResult;
+
     const { userId, isPremium } = authResult;
     const id = parseInt((await params).id, 10);
-    if (isNaN(id)) return NextResponse.json({ message: "id inválido" }, { status: 400 });
-    if(!isActuallyChief(userId)) return NextResponse.json(
-        { success: false, error: '404 Not Found' },
-        { status: 403 }
-      ) 
-    const body = await request.json()
-    const { nome, name, descricao } = body
 
-    const categoriaExistente = await prisma.categoria.findUnique({
-      where: { id: id}
-    })
+    if (isNaN(id)) {
+      return NextResponse.json({ message: "id invalido" }, { status: 400 });
+    }
+
+    const accessError = await ensureCategoriaAccess(isPremium);
+    if (accessError) return accessError;
+
+    const body = await request.json();
+    const { nome, name, descricao } = body;
+
+    const categoriaExistente = await prisma.categoria.findFirst({
+      where: { id, userId }
+    });
 
     if (!categoriaExistente) {
       return NextResponse.json(
-        { success: false, error: 'Categoria não encontrada' },
+        { success: false, error: "Categoria nao encontrada" },
         { status: 404 }
-      )
+      );
     }
 
-    const categoria = await prisma.categoria.update({
-      where: { id: id },
+    await prisma.categoria.updateMany({
+      where: { id, userId },
       data: {
         nome: nome !== undefined ? nome : categoriaExistente.nome,
         name: name !== undefined ? name : categoriaExistente.name,
         descricao: descricao !== undefined ? descricao : categoriaExistente.descricao
-      },
+      }
+    });
+
+    const categoria = await prisma.categoria.findFirst({
+      where: { id, userId },
       include: {
         _count: {
           select: {
@@ -44,27 +63,27 @@ export async function PUT(
           }
         }
       }
-    })
+    });
 
     return NextResponse.json({
       success: true,
       data: categoria,
-      message: 'Categoria atualizada com sucesso'
-    })
+      message: "Categoria atualizada com sucesso"
+    });
   } catch (error: any) {
-    console.error('Erro ao atualizar categoria:', error)
-    
-    if (error.code === 'P2002') {
+    console.error("Erro ao atualizar categoria:", error);
+
+    if (error.code === "P2002") {
       return NextResponse.json(
-        { success: false, error: 'Já existe uma categoria com este nome' },
+        { success: false, error: "Ja existe uma categoria com este nome" },
         { status: 400 }
-      )
+      );
     }
 
     return NextResponse.json(
-      { success: false, error: 'Erro interno do servidor' },
+      { success: false, error: "Erro interno do servidor" },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -75,11 +94,19 @@ export async function DELETE(
   try {
     const authResult = await verifyUser();
     if (authResult instanceof NextResponse) return authResult;
+
     const { userId, isPremium } = authResult;
     const id = parseInt((await params).id, 10);
-    if (isNaN(id)) return NextResponse.json({ message: "id inválido" }, { status: 400 });
-    const categoria = await prisma.categoria.findUnique({
-      where: { id: id},
+
+    if (isNaN(id)) {
+      return NextResponse.json({ message: "id invalido" }, { status: 400 });
+    }
+
+    const accessError = await ensureCategoriaAccess(isPremium);
+    if (accessError) return accessError;
+
+    const categoria = await prisma.categoria.findFirst({
+      where: { id, userId },
       include: {
         _count: {
           select: {
@@ -87,39 +114,39 @@ export async function DELETE(
           }
         }
       }
-    })
+    });
 
     if (!categoria) {
       return NextResponse.json(
-        { success: false, error: 'Categoria não encontrada' },
+        { success: false, error: "Categoria nao encontrada" },
         { status: 404 }
-      )
+      );
     }
 
     if (categoria._count.conteudos > 0) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Não é possível excluir categoria com conteúdos associados' 
+        {
+          success: false,
+          error: "Nao e possivel excluir categoria com conteudos associados"
         },
         { status: 400 }
-      )
+      );
     }
 
-    await prisma.categoria.delete({
-      where: { id: id }
-    })
+    await prisma.categoria.deleteMany({
+      where: { id, userId }
+    });
 
     return NextResponse.json({
       success: true,
-      message: 'Categoria excluída com sucesso'
-    })
+      message: "Categoria excluida com sucesso"
+    });
   } catch (error) {
-    console.error('Erro ao excluir categoria:', error)
+    console.error("Erro ao excluir categoria:", error);
     return NextResponse.json(
-      { success: false, error: 'Erro interno do servidor' },
+      { success: false, error: "Erro interno do servidor" },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -130,11 +157,19 @@ export async function GET(
   try {
     const authResult = await verifyUser();
     if (authResult instanceof NextResponse) return authResult;
+
     const { userId, isPremium } = authResult;
     const id = parseInt((await params).id, 10);
-    if (isNaN(id)) return NextResponse.json({ message: "id inválido" }, { status: 400 });
-    const categoria = await prisma.categoria.findUnique({
-      where: { id: id },
+
+    if (isNaN(id)) {
+      return NextResponse.json({ message: "id invalido" }, { status: 400 });
+    }
+
+    const accessError = await ensureCategoriaAccess(isPremium);
+    if (accessError) return accessError;
+
+    const categoria = await prisma.categoria.findFirst({
+      where: { id, userId },
       include: {
         _count: {
           select: {
@@ -142,25 +177,25 @@ export async function GET(
           }
         }
       }
-    })
+    });
 
     if (!categoria) {
       return NextResponse.json(
-        { success: false, error: 'Categoria não encontrada' },
+        { success: false, error: "Categoria nao encontrada" },
         { status: 404 }
-      )
+      );
     }
 
     return NextResponse.json({
       success: true,
       data: categoria
-    })
+    });
   } catch (error) {
-    console.error('Erro ao buscar categoria:', error)
+    console.error("Erro ao buscar categoria:", error);
     return NextResponse.json(
-      { success: false, error: 'Erro interno do servidor' },
+      { success: false, error: "Erro interno do servidor" },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -171,50 +206,63 @@ export async function PATCH(
   try {
     const authResult = await verifyUser();
     if (authResult instanceof NextResponse) return authResult;
+
     const { userId, isPremium } = authResult;
     const id = parseInt((await params).id, 10);
-    if (isNaN(id)) return NextResponse.json({ message: "id inválido" }, { status: 400 });
-    if(!isActuallyChief(userId)) return NextResponse.json(
-        { success: false, error: '404 Not Found' },
-        { status: 403 }
-      ) 
-    const categoriaExistente = await prisma.categoria.findUnique({
-      where: { id: id }
-    })
+
+    if (isNaN(id)) {
+      return NextResponse.json({ message: "id invalido" }, { status: 400 });
+    }
+
+    const accessError = await ensureCategoriaAccess(isPremium);
+    if (accessError) return accessError;
+
+    const categoriaExistente = await prisma.categoria.findFirst({
+      where: { id, userId }
+    });
 
     if (!categoriaExistente) {
       return NextResponse.json(
-        { success: false, error: 'Categoria não encontrada' },
+        { success: false, error: "Categoria nao encontrada" },
         { status: 404 }
-      )
+      );
     }
-    const body = await request.json()
-    const { toggle } = body
-    if(!toggle) {
+
+    const body = await request.json();
+    const { toggle } = body;
+
+    if (!toggle) {
       return NextResponse.json(
-        { success: false, error: 'O que fazer?' },
+        { success: false, error: "O que fazer?" },
         { status: 404 }
-      )
+      );
     }
-    let categoria;
-    if (toggle ==='istrend'){
-      categoria = await prisma.categoria.update({
-      where: { id: id },
-      data: {
-        isTrend: !categoriaExistente.isTrend
-      },
-    })
-  }
+
+    let categoria = null;
+
+    if (toggle === "istrend") {
+      await prisma.categoria.updateMany({
+        where: { id, userId },
+        data: {
+          isTrend: !categoriaExistente.isTrend
+        }
+      });
+
+      categoria = await prisma.categoria.findFirst({
+        where: { id, userId }
+      });
+    }
+
     return NextResponse.json({
       success: true,
       data: categoria,
-      message: 'Atualizada com sucesso'
-    })
+      message: "Atualizada com sucesso"
+    });
   } catch (error: any) {
-    console.error('Erro ao atualizar categoria:', error)
+    console.error("Erro ao atualizar categoria:", error);
     return NextResponse.json(
-      { success: false, error: 'Erro interno do servidor' },
+      { success: false, error: "Erro interno do servidor" },
       { status: 500 }
-    )
+    );
   }
 }

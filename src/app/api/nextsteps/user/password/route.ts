@@ -8,6 +8,12 @@ export async function PUT(request: NextRequest) {
     const authResult = await verifyUser();
     if (authResult instanceof NextResponse) return authResult;
     const { userId, isPremium } = authResult;
+    if (!isPremium) {
+      return NextResponse.json(
+        { error: '404 Not Found' },
+        { status: 403 }
+      )
+    }
 
 
     const { password } = await request.json()

@@ -10,6 +10,8 @@ type VerifiedUser = {
   isPremium: boolean;
 }
 
+type ResourceType = "conteudo" | "categoria";
+
 export async function verifyUserById(userId: string): Promise<VerifiedUser | NextResponse> {
   try {
     if (!userId?.trim()) {
@@ -37,7 +39,7 @@ export async function verifyUserById(userId: string): Promise<VerifiedUser | Nex
 
     return {
       userId: userDB.id,
-      isPremium: userDB.isPremium,
+      isPremium: userDB.isBlocked ? !userDB.isBlocked : userDB.isPremium,
     };
   } catch (error) {
     logNow("verifyUserById " + (error instanceof Error ? error.message : "Ocorreu um erro!"));
@@ -60,51 +62,63 @@ export async function verifyUser() {
 
     return verifyUserById(session.id);
   } catch (error) {
-    logNow("verifyUser " + (error instanceof Error ? error.message : 'Ocorreu um erro!'));
+    logNow("verifyUser " + (error instanceof Error ? error.message : "Ocorreu um erro!"));
     return NextResponse.json(
-      { success: false, body: { message: error instanceof Error ? error.message : 'Ocorreu um erro!' } },
+      { success: false, body: { message: error instanceof Error ? error.message : "Ocorreu um erro!" } },
       { status: 400 }
     );
   }
 }
+
 export function isActuallyChief(userId: string) {
-  const adminUserIds = process.env.CHIEF_USER_IDS?.split(',') || [];
+  const adminUserIds = process.env.CHIEF_USER_IDS?.split(",") || [];
   return adminUserIds.includes(userId);
 }
-export async function isHis(userId: string, conteudoId: number): Promise<boolean> {
+
+export async function isHis(
+  userId: string,
+  resourceId: number,
+  resourceType: ResourceType = "conteudo"
+): Promise<boolean> {
   try {
-    if (!userId || typeof userId !== 'string' || userId.trim() === '') {
-      console.warn('isHis: userId inválido ou vazio');
+    if (!userId || typeof userId !== "string" || userId.trim() === "") {
+      console.warn("isHis: userId invalido ou vazio");
       return false;
     }
-    if (!conteudoId || typeof conteudoId !== 'number' || conteudoId <= 0) {
-      console.warn('isHis: conteudoId inválido');
+
+    if (!resourceId || typeof resourceId !== "number" || resourceId <= 0) {
+      console.warn("isHis: resourceId invalido");
       return false;
     }
-    const result = await prisma.$queryRaw<Array<{ exists: boolean }>>`
-      SELECT EXISTS(
-        SELECT 1 FROM "Conteudo" 
-        WHERE "id" = ${conteudoId}::integer 
-          AND "userId" = ${userId}::uuid
-        LIMIT 1
-      ) as "exists"
-    `;
-    if (!result || !Array.isArray(result) || result.length === 0) {
-      console.error('isHis: Resultado inesperado da query', result);
-      return false;
+
+    if (resourceType === "categoria") {
+      const categoria = await prisma.categoria.findFirst({
+        where: { id: resourceId, userId },
+        select: { id: true },
+      });
+
+      return Boolean(categoria);
     }
-    return result[0].exists;
+
+    const conteudo = await prisma.conteudo.findFirst({
+      where: { id: resourceId, userId },
+      select: { id: true },
+    });
+
+    return Boolean(conteudo);
   } catch (error) {
-    console.error('Erro em isHis:', {
-      error: error instanceof Error ? error.message : 'Erro desconhecido',
+    console.error("Erro em isHis:", {
+      error: error instanceof Error ? error.message : "Erro desconhecido",
       stack: error instanceof Error ? error.stack : undefined,
       userId,
-      conteudoId,
+      resourceId,
+      resourceType,
       timestamp: new Date().toISOString()
     });
     return false;
   }
 }
+
 export async function userExists(): Promise<Usuario | NextResponse>  {
   const session = await getServerSession(authHandler);
     if (!session || !session.id) {
@@ -125,6 +139,7 @@ export async function userExists(): Promise<Usuario | NextResponse>  {
       { status: 400 }
     );
 }
+
 export async function findBySlug(slug: string): Promise<Usuario | NextResponse>  {
     const userExists = await prisma.usuario.findUnique({
       where: { slug: slug },
@@ -138,6 +153,7 @@ export async function findBySlug(slug: string): Promise<Usuario | NextResponse> 
       { status: 400 }
     );
 }
+
 function checkPremiumExpiration(user: Usuario ) {
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);

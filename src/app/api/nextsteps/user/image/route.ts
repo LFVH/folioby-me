@@ -10,6 +10,12 @@ export async function POST(request: NextRequest) {
     const authResult = await verifyUser();
     if (authResult instanceof NextResponse) return authResult;
     const { userId, isPremium } = authResult;
+    if (!isPremium) {
+      return NextResponse.json(
+        { error: '404 Not Found' },
+        { status: 403 }
+      );
+    }
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
@@ -64,6 +70,12 @@ export async function PUT(request: NextRequest) {
     const authResult = await verifyUser();
     if (authResult instanceof NextResponse) return authResult;
     const { userId, isPremium } = authResult;
+    if (!isPremium) {
+      return NextResponse.json(
+        { error: '404 Not Found' },
+        { status: 403 }
+      );
+    }
 
     const { imageUrl, oldImageUrl } = await request.json();
 
@@ -108,6 +120,12 @@ export async function DELETE(request: NextRequest) {
     const authResult = await verifyUser();
     if (authResult instanceof NextResponse) return authResult;
     const { userId, isPremium } = authResult;
+    if (!isPremium) {
+      return NextResponse.json(
+        { error: '404 Not Found' },
+        { status: 403 }
+      );
+    }
 
     const { searchParams } = new URL(request.url);
     const imageUrl = searchParams.get('url');

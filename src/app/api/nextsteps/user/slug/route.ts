@@ -11,7 +11,13 @@ export async function PUT(request: NextRequest) {
     const authResult = await verifyUser()
     if (authResult instanceof NextResponse) return authResult
 
-    const { userId } = authResult
+    const { userId, isPremium } = authResult
+    if (!isPremium) {
+      return NextResponse.json(
+        { error: '404 Not Found' },
+        { status: 403 }
+      )
+    }
     const { slug } = await request.json()
 
     const updatedUser = await userService.updateSlug(userId, slug)

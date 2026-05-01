@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from "../../../../prisma"
-import { isActuallyChief, verifyUser } from "@/utils/verifyUserAuth"
-import { logNow } from '@/utils/Logging'
+import { verifyUser } from "@/utils/verifyUserAuth"
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,7 +17,9 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || ''
     const skip = (page - 1) * limit
 
-    const where: any = {}
+    const where: any = {
+      userId
+    }
     if (search) {
       where.OR = [
         { nome: { contains: search, mode: 'insensitive' } },
@@ -77,7 +78,7 @@ export async function POST(request: NextRequest) {
     const authResult = await verifyUser();
     if (authResult instanceof NextResponse) return authResult;
     const { userId, isPremium } = authResult;
-    if(!isActuallyChief(userId)) return NextResponse.json(
+    if(!isPremium) return NextResponse.json(
         { success: false, error: '404 Not Found' },
         { status: 403 }
       )

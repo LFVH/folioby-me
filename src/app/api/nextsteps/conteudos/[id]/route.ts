@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../prisma";
-import { isActuallyChief, verifyUser } from "@/utils/verifyUserAuth";
+import { isHis, verifyUser } from "@/utils/verifyUserAuth";
 
 export async function GET(
   request: NextRequest,
@@ -9,9 +9,26 @@ export async function GET(
   try {
     const authResult = await verifyUser();
     if (authResult instanceof NextResponse) return authResult;
+
     const { userId, isPremium } = authResult;
+    const id = parseInt((await params).id, 10);
+
+    if (isNaN(id)) {
+      return NextResponse.json(
+        { success: false, error: "id invalido" },
+        { status: 400 }
+      );
+    }
+
+    if (!isPremium || !(await isHis(userId, id))) {
+      return NextResponse.json(
+        { success: false, error: "Conteudo nao encontrado" },
+        { status: 403 }
+      );
+    }
+
     const conteudo = await prisma.conteudo.findUnique({
-      where: { id: parseInt((await params).id) },
+      where: { id },
       include: {
         categorias: {
           select: {
@@ -21,24 +38,24 @@ export async function GET(
           }
         }
       }
-    })
+    });
 
     if (!conteudo) {
       return NextResponse.json(
-        { success: false, error: 'Conteúdo não encontrado' },
+        { success: false, error: "Conteudo nao encontrado" },
         { status: 404 }
-      )
+      );
     }
 
     return NextResponse.json({
       success: true,
       data: conteudo
-    })
+    });
   } catch (error) {
-    console.error('Erro ao buscar conteúdo:', error)
+    console.error("Erro ao buscar conteudo:", error);
     return NextResponse.json(
-      { success: false, error: 'Erro interno do servidor' },
+      { success: false, error: "Erro interno do servidor" },
       { status: 500 }
-    )
+    );
   }
 }

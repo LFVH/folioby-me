@@ -57,8 +57,8 @@ model Conteudo {
 
 model Categoria {
   id             Int      @id @default(autoincrement())
-  nome           String?  @unique
-  name           String?  @unique
+  nome           String?  
+  name           String?
   descricao      String?
   isTrend        Boolean  @default(false)
   conteudos      Conteudo[]
