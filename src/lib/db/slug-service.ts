@@ -1,4 +1,5 @@
 import prisma from "@/prisma"
+import { isReservedUserSlug } from "@/lib/user-slug"
 const slugCache = {
   data: [] as string[],
   timestamp: 0,
@@ -10,7 +11,9 @@ async function fetchSlugsFromDB(): Promise<string[]> {
     where: { isPremium: true },
     select: { slug: true }
   })
-  return users.map(user => user.slug).filter(Boolean)
+  return users
+    .map(user => user.slug)
+    .filter((slug): slug is string => Boolean(slug) && !isReservedUserSlug(slug))
 }
 export async function getValidUserSlugs(): Promise<string[]> {
   const now = Date.now()

@@ -1,12 +1,15 @@
 'use server';
 
+import bcrypt from 'bcryptjs';
+
 import {
   FormState,
   SignupFormSchema,
 } from '@/app/api/auth/auth/definitions';
-import bcrypt from 'bcryptjs';
+import { generateAvailableUserSlug } from '@/lib/db/user-slug-service';
+import { UserSlugError } from '@/lib/user-slug';
+
 import Prisma from '../../../../prisma';
-import { criarURL } from '@/lib/utils';
 
 export async function signup(
   state: FormState,
@@ -30,7 +33,7 @@ export async function signup(
   const existingUser = await Prisma.usuario.findFirst({
     where: {
       email: validatedFields.data.email,
-    }, 
+    },
   });
 
   if (existingUser) {
@@ -40,28 +43,34 @@ export async function signup(
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const slug = criarURL(name);
-  const userDB = await Prisma.usuario.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-      slug
-    },
-  })
+  const slug = await generateAvailableUserSlug(name);
 
-  if (!userDB) {
+  try {
+    const userDB = await Prisma.usuario.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        slug
+      },
+    });
+
+    return { data: {
+        name: userDB.name,
+        email: userDB.email,
+        password: userDB.password,
+        id: userDB.id,
+      }
+    };
+  } catch (error) {
+    if (error instanceof UserSlugError) {
+      return {
+        message: error.message,
+      };
+    }
+
     return {
       message: 'An error occurred while creating your account.',
     };
-  }
-
-  const userId = userDB.id.toString();
-  return {data:{
-      name: userDB.name,
-      email: userDB.email,
-      password: userDB.password, 
-      id: userDB.id,
-    }
   }
 }

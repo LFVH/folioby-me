@@ -9,6 +9,7 @@ import ManageSubscriptionButton from '@/components/letsgo/ManageSubscriptionButt
 import { toast } from 'react-toastify';
 import AvisoSubscriptionPopup from '@/components/logged/AvisoSubscription';
 import { contact_mail } from '@/types';
+import { getUserSlugValidationError, normalizeUserSlug } from '@/lib/user-slug';
 
 export default function UserPage() {
   const { data: session, update } = useSession()
@@ -30,18 +31,17 @@ export default function UserPage() {
       setUserImage(session.user.image || null)
     }
   }, [session])
-
-  const validateSlug = (slug: string) => {
-    if (slug.length > 50) return false  
-    const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
-    return slugRegex.test(slug)
-  }
+  const slugError = slug ? getUserSlugValidationError(slug) : null
 
   const handleUpdateSlug = async () => {
-    if (!validateSlug(slug)) {
-      toast.error('Use only lowercase letters, numbers and hyphens (max. 50 characters)')
+    const currentSlugError = getUserSlugValidationError(slug)
+
+    if (currentSlugError) {
+      toast.error(currentSlugError)
       return
     }
+
+    const normalizedSlug = normalizeUserSlug(slug)
 
     setIsLoading(true)
     try {
@@ -50,13 +50,14 @@ export default function UserPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ slug }),
+        body: JSON.stringify({ slug: normalizedSlug }),
       })
 
       const data = await response.json()
 
       if (response.ok) {
-        await update({ slug: 'slug' })
+        setSlug(normalizedSlug)
+        await update({ slug: normalizedSlug })
         toast.success('Slug atualizado com sucesso!')
         router.refresh()
       } else {
@@ -309,17 +310,17 @@ const handleRemoveImage = async () => {
                     <input
                       type="text"
                       value={slug}
-                      onChange={(e) => setSlug(e.target.value)}
+                      onChange={(e) => setSlug(e.target.value.toLowerCase())}
                       className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded focus:outline-none focus:border-red-600"
                       placeholder="seu-slug-aqui"
                     />
-                    <p className="text-sm text-gray-500 mt-2">
-                      Use only lowercase letters, numbers and hyphens (max. 50 characters) /name-surname
+                    <p className={`text-sm mt-2 ${slugError ? 'text-red-500' : 'text-gray-500'}`}>
+                      {slugError ?? 'Use only lowercase letters, numbers and hyphens (max. 50 characters) /name-surname'}
                     </p>
                   </div>
                   <button
                     onClick={handleUpdateSlug}
-                    disabled={isLoading || !validateSlug(slug)}
+                    disabled={isLoading || !slug || !!slugError}
                     className="px-6 py-3 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition disabled:opacity-50"
                   >
                     {isLoading ? 'Saving...' : 'Update Slug'}

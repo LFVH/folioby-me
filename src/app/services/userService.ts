@@ -1,11 +1,13 @@
 // app/services/userService.ts
-import prisma from '@/prisma'
 import bcrypt from 'bcryptjs'
+
+import { assertAvailableUserSlug } from '@/lib/db/user-slug-service'
+import prisma from '@/prisma'
 
 export const userService = {
   async updatePassword(userId: string, newPassword: string) {
     const hashedPassword = await bcrypt.hash(newPassword, 10)
-    
+
     return await prisma.usuario.update({
       where: { id: userId },
       data: { password: hashedPassword }
@@ -13,26 +15,21 @@ export const userService = {
   },
 
   async updateSlug(userId: string, slug: string) {
-    const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
-    if (!slugRegex.test(slug)) {
-      throw new Error('Slug inválido. Use apenas letras minúsculas, números e hífens')
-    }
-        const findSlugDB = await prisma.usuario.findUnique({
-      where: { slug: slug}
-    })
+    const normalizedSlug = await assertAvailableUserSlug(slug, userId)
 
-    if (findSlugDB) {throw new Error('Slug já utilizada') }
     return await prisma.usuario.update({
       where: { id: userId },
-      data: { slug }
+      data: { slug: normalizedSlug }
     })
   },
+
   async updateDesc(userId: string, desc: string) {
     return await prisma.usuario.update({
       where: { id: userId },
       data: { desc }
     })
   },
+
   async updateProfileImage(userId: string, imageUrl: string | null) {
     return await prisma.usuario.update({
       where: { id: userId },
