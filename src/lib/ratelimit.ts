@@ -8,6 +8,6 @@ const redis = new Redis({
 
 export const ratelimit = new Ratelimit({
   redis,
-  limiter: Ratelimit.tokenBucket(10, "10 s", 20),
+  limiter: Ratelimit.tokenBucket(10, "10 s", 50),
   // 10 tokens por 10 segundos, burst de 20
 });

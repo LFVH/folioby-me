@@ -59,17 +59,9 @@ export default function ConteudoItem({ conteudo, layout = 'carrossel' }: Conteud
         </div>
       )
     }
-    if (isGif) {
-      return (
-        <div className="absolute top-2 right-2 z-30 bg-black bg-opacity-80 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-          GIF
-        </div>
-      )
-    }
+
     return (
-      <div className="absolute top-2 right-2 z-30 bg-black bg-opacity-80 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-        {conteudo.mimetype?.split('/')[1]?.toUpperCase() || 'IMG'}
-      </div>
+      null
     )
   }
   const baseStyles = `
