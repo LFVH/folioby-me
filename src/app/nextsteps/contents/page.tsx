@@ -221,7 +221,7 @@ export default function ConteudosPage() {
                     onClick={() => handleDelete(conteudo.id)}
                     className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded transition-colors text-sm"
                   >
-                    Delte
+                    Delete
                   </button>
                 </div>
               </div>

@@ -148,15 +148,8 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
                   </div>
                 )}
               </div>
-              {}
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 border-b-2 border-r-2 border-red-600"></div>
-              <div className="absolute -top-4 -left-4 w-24 h-24 border-t-2 border-l-2 border-red-600"></div>
             </div>
           </div>
-        </div>
-        {}
-        <div className="mt-24 pt-8 border-t border-zinc-800 text-center text-zinc-600 text-sm">
-          <p>© {new Date().getFullYear()} • PORTFOLIO</p>
         </div>
       </div>
     </div>

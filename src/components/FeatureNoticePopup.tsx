@@ -75,7 +75,7 @@ export default function FeatureNoticePopup({
               </button>
             </div>
             <p className="text-gray-700">
-              Desculpe, sessao em desenvolvimento. Envie um email breve para <strong>{email}</strong>.
+              Desculpe, sessao em desenvolvimento. Envie um email breve para <strong>{email}</strong>
             </p>
             <div className="mt-4 flex justify-end">
               <button
