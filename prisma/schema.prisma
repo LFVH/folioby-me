@@ -37,7 +37,7 @@ model Usuario {
 }
 model Conteudo {
   id             Int      @id @default(autoincrement())
-  name           String?  @unique
+  name           String?  
   link           String?  //link do gif
   fonte          String? 
   linkext        String?  //video para redirecionar
