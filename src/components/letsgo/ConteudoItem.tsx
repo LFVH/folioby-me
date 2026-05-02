@@ -59,7 +59,6 @@ export default function ConteudoItem({ conteudo, layout = 'carrossel' }: Conteud
         </div>
       )
     }
-
     return (
       null
     )
@@ -137,7 +136,7 @@ export default function ConteudoItem({ conteudo, layout = 'carrossel' }: Conteud
       <img
         src={currentMediaUrl}
         alt={conteudo.name || conteudo.filename.replace(/\.[^/.]+$/, '')}
-        className={`w-full h-full object-cover transition-transform duration-500 ease-out group-hover/item:scale-110 ${
+        className={`w-full h-full object-contain transition-transform duration-500 ease-out group-hover/item:scale-110 ${
           conteudo.isTrend ? 'brightness-110' : ''
         }`}
         loading="lazy"
