@@ -1,12 +1,21 @@
+function getBaseUrl() {
+  if (process.env.NEXTAUTH_URL) {
+    return process.env.NEXTAUTH_URL
+  }
+
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`
+  }
+
+  return 'http://localhost:3000'
+}
+
 export async function getPortfolioBySlug(slug: string) {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
-      : 'http://localhost:3000'
+    const baseUrl = getBaseUrl()
     
     const response = await fetch(`${baseUrl}/api/letsgo/categorias?slug=${encodeURIComponent(slug)}`, {
-      // para dados frescos no servidor cache: 'no-cache',
-      next: { revalidate: 60 }
+      cache: 'no-store'
     })
     
     if (!response.ok) {
@@ -14,7 +23,8 @@ export async function getPortfolioBySlug(slug: string) {
     }
     
     const result = await response.json()
-    const categoriasProcessadas = result.data.map((categoria: any) => ({
+    const categorias = Array.isArray(result.data) ? result.data : []
+    const categoriasProcessadas = categorias.map((categoria: any) => ({
       ...categoria,
       conteudos: categoria.conteudos.map((conteudo: any) => ({
         ...conteudo,
