@@ -2,12 +2,11 @@
 
 import { Input } from '@/components/signinsignup/input';
 import { Label } from '@/components/signinsignup/label';
-import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { LoginFormSchema } from '@/app/api/auth/auth/definitions';
 import { useRouter, useSearchParams } from 'next/navigation';
-import ForgotPasswordPopup from '@/components/passwd/ForgotPasswordPopup';
+import FeatureNoticePopup from '@/components/FeatureNoticePopup';
 import { contact_mail } from '@/types';
 
 interface LoginFormProps {
@@ -90,7 +89,7 @@ return (
           />
           {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
           <div className="flex items-center justify-between mt-2">
-             <ForgotPasswordPopup email={contact_mail} />
+            <FeatureNoticePopup email={contact_mail} triggerText="Forgot your password?" />
           </div>
         </div>
         {errors.general && (

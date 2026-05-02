@@ -5,9 +5,8 @@ import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import ManageSubscriptionButton from '@/components/letsgo/ManageSubscriptionButton'
 import { toast } from 'react-toastify';
-import AvisoSubscriptionPopup from '@/components/logged/AvisoSubscription';
+import FeatureNoticePopup from '@/components/FeatureNoticePopup';
 import { contact_mail } from '@/types';
 import { getUserSlugValidationError, normalizeUserSlug } from '@/lib/user-slug';
 
@@ -375,7 +374,7 @@ const handleRemoveImage = async () => {
                     Manage your signature
                   </p>
                   <div className="flex items-center justify-between mt-2">
-                      <AvisoSubscriptionPopup email={contact_mail} />
+                    <FeatureNoticePopup email={contact_mail} triggerText="Manage Subscription" />
                   </div>
                 </div>
               </div>
