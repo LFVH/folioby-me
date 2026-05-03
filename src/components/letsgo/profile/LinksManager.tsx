@@ -27,7 +27,7 @@ export default function LinksManager() {
 
   // carregar
   const fetchLinks = async () => {
-    const res = await fetch('/api/links')
+    const res = await fetch('/api/nextsteps/user/links')
     const data = await res.json()
     setLinks(data)
   }
@@ -38,7 +38,7 @@ export default function LinksManager() {
 
   // adicionar
   const addLink = async () => {
-    await fetch('/api/links', {
+    await fetch('/api/nextsteps/user/links', {
       method: 'POST',
       body: JSON.stringify({
         nr_redesocial: rede,
@@ -55,7 +55,7 @@ export default function LinksManager() {
 
   // deletar
   const deleteLink = async (index: number) => {
-    await fetch('/api/links', {
+    await fetch('/api/nextsteps/user/links', {
       method: 'DELETE',
       body: JSON.stringify({ index })
     })
