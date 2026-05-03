@@ -134,14 +134,13 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
           {!isEditing && session?.user?.slug === slug &&  (
               <LinksManager />
             )}
-          
+          {user.image && (
           <div className="relative lg:sticky lg:top-24">
             <div className="relative aspect-[3/4] w-full max-w-md mx-auto lg:mx-0 lg:ml-auto">
               {}
               <div className="absolute -inset-1 bg-gradient-to-t from-red-600 to-transparent opacity-50 blur-sm"></div>
               {}
               <div className="relative h-full w-full overflow-hidden border-2 border-red-600/30">
-                {user.image ? (
                   <Image
                     src={user.image}
                     alt={user.name}
@@ -149,16 +148,10 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
                     className="object-cover object-top"
                     priority
                   />
-                ) : (
-                  <div className="h-full w-full bg-zinc-900 flex items-center justify-center">
-                    <span className="text-8xl text-red-600/30 font-light">
-                      {user.name?.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                )}
               </div>
             </div>
           </div>
+          )}         
         </div>
       </div>
     </div>
