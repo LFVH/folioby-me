@@ -114,10 +114,5 @@ export default function LinksList({ links }: LinksListProps) {
         />
       ))}
     </div>
-    {links.length === 0 && (
-      <div className="text-center text-gray-500">
-        Nenhum link adicionado ainda.
-      </div>
-    )}
   )
 }
