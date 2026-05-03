@@ -11,7 +11,7 @@ export async function GET(
     console.log(slug)
     const user = await prisma.usuario.findUnique({
       where: { slug },
-      select: { name: true, image: true, desc: true }
+      select: { name: true, image: true, desc: true, links: true }
     });
 
     if (!user) {

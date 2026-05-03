@@ -103,6 +103,7 @@ const getIcon = (nr: number) => {
 
 export default function LinksList({ links }: LinksListProps) {
   return (
+
     <div className="flex flex-col gap-3 w-full max-w-md mx-auto">
       {links.map((item, index) => (
         <LinkButton
@@ -113,5 +114,10 @@ export default function LinksList({ links }: LinksListProps) {
         />
       ))}
     </div>
+    {links.length === 0 && (
+      <div className="text-center text-gray-500">
+        Nenhum link adicionado ainda.
+      </div>
+    )}
   )
 }
