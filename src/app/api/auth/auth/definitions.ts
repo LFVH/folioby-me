@@ -37,3 +37,9 @@ export type SessionPayload = {
   userId: string | number;
   expiresAt: Date;
 };
+
+export const linkSchema = z.object({
+  nr_redesocial: z.number().min(0).max(11),
+  link: z.string().url(),
+  titulo: z.string().min(1).max(60)
+})

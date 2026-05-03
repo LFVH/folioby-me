@@ -309,10 +309,10 @@ export type ConteudoOrderByWithRelationInput = {
 
 export type ConteudoWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  name?: string
   AND?: Prisma.ConteudoWhereInput | Prisma.ConteudoWhereInput[]
   OR?: Prisma.ConteudoWhereInput[]
   NOT?: Prisma.ConteudoWhereInput | Prisma.ConteudoWhereInput[]
+  name?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   link?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   fonte?: Prisma.StringNullableFilter<"Conteudo"> | string | null
   linkext?: Prisma.StringNullableFilter<"Conteudo"> | string | null
@@ -327,7 +327,7 @@ export type ConteudoWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Conteudo"> | Date | string
   categorias?: Prisma.CategoriaListRelationFilter
   user?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.UsuarioWhereInput>
-}, "id" | "name">
+}, "id">
 
 export type ConteudoOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

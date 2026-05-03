@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import SearchBarNxt from '@/components/SearchBarNxt'
-import { ToggleStatus } from '@/components/ToggleStatus'
+import SearchBarNxt from '@/components/logged/SearchBarNxt'
+import { ToggleStatus } from '@/components/logged/ToggleStatus'
 
 interface Categoria {
   isTrend: boolean

@@ -2,10 +2,10 @@
 'use client'
 
 import { useGlobalFilter } from '@/hooks/useGlobalFilter'
-import HeroBanner from '@/components/HeroBanner'
 import ConteudosFiltradosComScroll from '@/components/letsgo/ConteudosFiltrados'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import { useCategorias } from '@/hooks/useCategorias' // ✅ SEU HOOK ORIGINAL!
+import HeroBanner from '@/components/letsgo/HeroBanner'
 
 interface FlixClientProps {
   slug: string

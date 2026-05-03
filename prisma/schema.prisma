@@ -14,6 +14,7 @@ model Usuario {
   password     String
   image        String?
   desc         Json?          @db.Json
+  links        Json?          @db.Json
   refreshToken RefreshToken?
   isBlocked    Boolean  @default(false) //block manual
   isPremium    Boolean  @default(false) 

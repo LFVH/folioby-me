@@ -259,11 +259,11 @@ export type CategoriaOrderByWithRelationInput = {
 
 export type CategoriaWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  nome?: string
-  name?: string
   AND?: Prisma.CategoriaWhereInput | Prisma.CategoriaWhereInput[]
   OR?: Prisma.CategoriaWhereInput[]
   NOT?: Prisma.CategoriaWhereInput | Prisma.CategoriaWhereInput[]
+  nome?: Prisma.StringNullableFilter<"Categoria"> | string | null
+  name?: Prisma.StringNullableFilter<"Categoria"> | string | null
   descricao?: Prisma.StringNullableFilter<"Categoria"> | string | null
   isTrend?: Prisma.BoolFilter<"Categoria"> | boolean
   userId?: Prisma.StringFilter<"Categoria"> | string
@@ -271,7 +271,7 @@ export type CategoriaWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Categoria"> | Date | string
   conteudos?: Prisma.ConteudoListRelationFilter
   user?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.UsuarioWhereInput>
-}, "id" | "nome" | "name">
+}, "id">
 
 export type CategoriaOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

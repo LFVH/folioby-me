@@ -83,6 +83,7 @@ export const UsuarioScalarFieldEnum = {
   password: 'password',
   image: 'image',
   desc: 'desc',
+  links: 'links',
   isBlocked: 'isBlocked',
   isPremium: 'isPremium',
   dtIniPremium: 'dtIniPremium',

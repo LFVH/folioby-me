@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import PricingSection from './PricingSection'
-import HeaderIni from '../HeaderIni'
+
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
+import HeaderIni from './HeaderIni'
 
 export default function HeroCTA() {
   const [email, setEmail] = useState('')
@@ -53,7 +54,7 @@ export default function HeroCTA() {
       <div className="absolute inset-0 bg-black/50"></div>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black/80 to-black"></div>
 
-      <HeaderIni />
+      <HeaderIni/>
       
       <div className="relative z-10 max-w-6xl mx-auto text-center pt-32">
         {/* Logo principal */}

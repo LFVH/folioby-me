@@ -1,12 +1,16 @@
 'use client';
 import { useState } from 'react';
 import Image from 'next/image';
-import TipTapEditor from '@/components/TipTapEditor';
+import TipTapEditor from '@/components/logged/TipTapEditor';
 import { useSession } from 'next-auth/react';
+import LinksList from '@/components/letsgo/profile/LinksList';
+import LinksManager from '@/components/letsgo/profile/LinksManager';
+
 interface User {
   name: string;
   image: string | null;
   desc: any;
+  links: [];
 }
 interface ProfileClientProps {
   user: User;
@@ -126,6 +130,11 @@ export default function ProfileClient({ user, slug }: ProfileClientProps) {
             )}
           </div>
           {}
+          <LinksList links={user.links} />
+          {!isEditing && session?.user?.slug === slug &&  (
+              <LinksManager />
+            )}
+          
           <div className="relative lg:sticky lg:top-24">
             <div className="relative aspect-[3/4] w-full max-w-md mx-auto lg:mx-0 lg:ml-auto">
               {}
