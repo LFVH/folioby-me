@@ -105,7 +105,7 @@ export default function LinksList({ links }: LinksListProps) {
   return (
 
     <div className="flex flex-col gap-3 w-full max-w-md mx-auto">
-      {links.map((item, index) => (
+      {links && links.map((item, index) => (
         <LinkButton
           key={index}
           titulo={item.titulo}
