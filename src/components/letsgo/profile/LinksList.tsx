@@ -1,11 +1,7 @@
 'use client'
 import LinkButton from './LinkButton'
 
-interface LinkItem {
-  nr_redesocial: number
-  link: string
-  titulo: string
-}
+type LinkItem = [number, string, string]
 
 interface LinksListProps {
   links: LinkItem[]
@@ -102,15 +98,18 @@ const getIcon = (nr: number) => {
 }
 
 export default function LinksList({ links }: LinksListProps) {
-  return (
+    console.log('data:', links)
+    console.log('typeof:', typeof links)
+    console.log('isArray:', Array.isArray(links))
 
+  return (
     <div className="flex flex-col gap-3 w-full max-w-md mx-auto">
-      {links && links.map((item, index) => (
+      {links && links.map(([nr, link, titulo], index) => (
         <LinkButton
           key={index}
-          titulo={item.titulo}
-          link={item.link}
-          icon={getIcon(item.nr_redesocial)}
+          titulo={titulo}
+          link={link}
+          icon={getIcon(nr)}
         />
       ))}
     </div>

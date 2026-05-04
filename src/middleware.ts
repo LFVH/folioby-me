@@ -62,13 +62,14 @@ export async function middleware(request: NextRequest) {
 
   const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
   const tokenUserId = token?.user?.id
-  const rateLimitKey = getRateLimitKey(request, tokenUserId)
+  if(process.env.NODE_ENV && process.env.NODE_ENV !== "development")
+  {  const rateLimitKey = getRateLimitKey(request, tokenUserId)
   const { success } = await ratelimit.limit(rateLimitKey)
 
   if (!success) {
     return new NextResponse("Too Many Requests", { status: 429 })
   }
-
+}
   if (!tokenUserId) {
     if (isLogginRoutes) {
       return NextResponse.next()

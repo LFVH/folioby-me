@@ -58,10 +58,15 @@ export async function POST(request: NextRequest) {
   const existing = await prisma.usuario.findUnique({
     where: { id: userId }
   })
-
+  if(!existing){
+    return NextResponse.json(
+      { success: false, error: 'Usuário não encontrado' },
+      { status: 404 }
+    )
+  }
   const newItem: [number, string, string] = [nr_redesocial, link, titulo]
 
-  if (!existing) {
+  if (!existing.links) {
     await prisma.usuario.update({
       where: { id: userId },
       data: {

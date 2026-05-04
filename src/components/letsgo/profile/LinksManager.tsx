@@ -25,11 +25,11 @@ export default function LinksManager() {
   const [url, setUrl] = useState('')
   const [rede, setRede] = useState(0)
 
-  // carregar
   const fetchLinks = async () => {
     const res = await fetch('/api/nextsteps/user/links')
     const data = await res.json()
-    setLinks(data)
+    console.log(data)
+    setLinks(JSON.parse(data.links))
   }
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export default function LinksManager() {
 
       {/* LISTA */}
       <div className="space-y-2">
-        {links.map(([nr, link, titulo], i) => (
+        {links && links.map(([nr, link, titulo], i) => (
           <div
             key={i}
             className="flex justify-between items-center bg-zinc-900 p-3 rounded-lg"
