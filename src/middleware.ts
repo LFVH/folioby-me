@@ -79,8 +79,6 @@ export async function middleware(request: NextRequest) {
   }
 
   const authResult = await verifyUserById(tokenUserId)
-  console.log("0")
-
   if (authResult instanceof NextResponse) {
     console.log("1")
     return authResult

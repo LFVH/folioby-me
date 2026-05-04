@@ -98,10 +98,6 @@ const getIcon = (nr: number) => {
 }
 
 export default function LinksList({ links }: LinksListProps) {
-    console.log('data:', links)
-    console.log('typeof:', typeof links)
-    console.log('isArray:', Array.isArray(links))
-
   return (
     <div className="flex flex-col gap-3 w-full max-w-md mx-auto">
       {links && links.map(([nr, link, titulo], index) => (

@@ -28,8 +28,7 @@ export default function LinksManager() {
   const fetchLinks = async () => {
     const res = await fetch('/api/nextsteps/user/links')
     const data = await res.json()
-    console.log(data)
-    setLinks(JSON.parse(data.links))
+    setLinks(data.data || [])
   }
 
   useEffect(() => {

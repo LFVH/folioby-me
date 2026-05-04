@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import {verifyUser } from "@/utils/verifyUserAuth"
-import { BlobService } from '@/lib/blob-service';
 import prisma from '@/prisma';
 import { linkSchema } from '@/app/api/auth/auth/definitions';
 
@@ -13,11 +12,11 @@ export async function GET(request: NextRequest) {
         { success: false, error: '404 Not Found' },
         { status: 403 }
     ) 
-  const data = await prisma.usuario.findUnique({
+  const userDB = await prisma.usuario.findUnique({
     where: { id: userId },
     select: { links: true }
   })
-    if(!data) {
+    if(!userDB) {
       return NextResponse.json(
         { success: false, error: 'Usuário não encontrado' },
         { status: 404 }
@@ -25,7 +24,7 @@ export async function GET(request: NextRequest) {
     }
     return NextResponse.json({
       success: true,
-      data: data?.links ?? []
+      data: userDB?.links ?? []
     })
   } 
    catch (error) {
