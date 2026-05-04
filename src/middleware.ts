@@ -92,7 +92,8 @@ export async function middleware(request: NextRequest) {
     !request.nextUrl.pathname.startsWith("/nextsteps/contents") &&
     !request.nextUrl.pathname.startsWith("/nextsteps/categorias") &&
     !request.nextUrl.pathname.startsWith("/api/nextsteps") &&
-    !request.nextUrl.pathname.startsWith("/nextsteps/profile")
+    !request.nextUrl.pathname.startsWith("/nextsteps/profile") &&
+    !request.nextUrl.pathname.startsWith("/nextsteps/user/profile")
   ) {
     return NextResponse.redirect(new URL("/nextsteps/contents", request.url))
   }

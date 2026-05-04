@@ -8,8 +8,9 @@ import { scrollToTop } from "@/lib/utils";
 
 const links = [
   { href: '/nextsteps/contents', title: 'Page Contents' },
-  { href: '/nextsteps/profile', title: 'Slug and ProfileImage' },
-  { href: '/nextsteps/categorias', title: 'Page Categories' },
+  { href: '/nextsteps/categorias', title: 'Categories' },
+  { href: '/nextsteps/user/profile', title: 'Profile' },
+  { href: '/nextsteps/profile', title: 'Account Settings' },
 ];
 
 export function LoggedBar() {
@@ -38,7 +39,7 @@ export function LoggedBar() {
 
             <Link href={`/${session.user?.status ? session.user?.slug : ""}/profile`} className="flex items-center space-x-2">
               <div className="text-red-600 font-bold tracking-tight">
-                {session.user?.status ? "Profile Description" : ""}
+                {session.user?.status ? "/Profile" : ""}
               </div>
             </Link>
             {/* Desktop Navigation */}

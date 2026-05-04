@@ -98,6 +98,7 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
         emptyEditorClass: 'is-editor-empty',
       }),
     ],
+    immediatelyRender: false,
     content: content,
     editable: editable,
     onUpdate: ({ editor }) => {
@@ -116,20 +117,20 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
   }, [editor, content]);
 
   // Funções de formatação
-  const toggleBold = () => editor.chain().focus().toggleBold().run();
-  const toggleItalic = () => editor.chain().focus().toggleItalic().run();
-  const toggleUnderline = () => editor.chain().focus().toggleUnderline().run();
+  const toggleBold = () => editor?.chain().focus().toggleBold().run();
+  const toggleItalic = () => editor?.chain().focus().toggleItalic().run();
+  const toggleUnderline = () => editor?.chain().focus().toggleUnderline().run();
   
   const setFontSize = (size: string) => {
-    editor.chain().focus().setMark('textStyle', { fontSize: size }).run();
+    editor?.chain().focus().setMark('textStyle', { fontSize: size }).run();
   };
 
   const setFontFamily = (font: string) => {
-    editor.chain().focus().setFontFamily(font).run();
+    editor?.chain().focus().setFontFamily(font).run();
   };
 
   const clearFormatting = () => {
-    editor.chain().focus().clearNodes().unsetAllMarks().run();
+    editor?.chain().focus().clearNodes().unsetAllMarks().run();
   };
 
   // Funções de link
@@ -173,7 +174,7 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
   };
 
   const unsetLink = () => {
-    editor.chain().focus().unsetLink().run();
+    editor?.chain().focus().unsetLink().run();
     closeLinkModal();
   };
 
@@ -185,12 +186,14 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
 
   // Obter atributos atuais do texto selecionado
   const getCurrentFontFamily = () => {
-    const { fontFamily } = editor.getAttributes('textStyle');
+    const attributes = editor?.getAttributes('textStyle') ?? {};
+    const { fontFamily } = attributes as Record<string, any>;
     return fontFamily || 'Arial';
   };
 
   const getCurrentFontSize = () => {
-    const { fontSize } = editor.getAttributes('textStyle');
+    const attributes = editor?.getAttributes('textStyle') ?? {};
+    const { fontSize } = attributes as Record<string, any>;
     return fontSize || '16px';
   };
 
@@ -253,27 +256,6 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
               >
                 <u>U</u>
               </button>
-            </div>
-
-            {/* Botões de link */}
-            <div className="toolbar-group">
-              <button
-                onClick={openLinkModal}
-                className={`toolbar-button ${editor.isActive('link') ? 'is-active' : ''}`}
-                title="Inserir link (Ctrl+K)"
-              >
-                🔗
-              </button>
-              
-              {editor.isActive('link') && (
-                <button
-                  onClick={unsetLink}
-                  className="toolbar-button"
-                  title="Remover link"
-                >
-                  ✕
-                </button>
-              )}
             </div>
 
             {/* Botão limpar formatação */}

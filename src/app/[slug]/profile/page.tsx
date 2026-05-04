@@ -15,7 +15,7 @@ export default async function ProfilePage({ params }: PageProps) {
     }
     
     const user = await res.json();
-    return <ProfileClient user={user} slug={slug} />;
+    return <ProfileClient user={user} />;
   } catch (error) {
 
     console.log("ERRO AO CARREGAR")
