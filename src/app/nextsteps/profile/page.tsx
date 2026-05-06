@@ -249,25 +249,43 @@ export default function UserPage() {
                     <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4">
                       <h4 className="mb-2 flex items-center gap-2 text-sm font-medium text-zinc-300">
                         <span className="h-1.5 w-1.5 rounded-full bg-red-600"></span>
-                        Recomendations:
+                        Recommendations:
                       </h4>
 
                       <ul className="space-y-2 text-sm text-zinc-400">
                         <li className="flex items-start gap-2">
                           <span className="text-lg leading-5 text-red-600">*</span>
-                          <span><strong className="text-zinc-300">Format 3:4</strong> (ex: 1200x1600px, 600x800px)</span>
+                          <span>
+                            <strong className="text-zinc-300">Format 1:1</strong> (square — ex: 512x512px, 800x800px)
+                          </span>
                         </li>
+
                         <li className="flex items-start gap-2">
                           <span className="text-lg leading-5 text-red-600">*</span>
-                          <span><strong className="text-zinc-300">Max Size:</strong> 5MB</span>
+                          <span>
+                            <strong className="text-zinc-300">Recommended size:</strong> at least 512x512px
+                          </span>
                         </li>
+
                         <li className="flex items-start gap-2">
                           <span className="text-lg leading-5 text-red-600">*</span>
-                          <span><strong className="text-zinc-300">Accepted formats:</strong> JPG, PNG, WebP</span>
+                          <span>
+                            <strong className="text-zinc-300">Max Size:</strong> 5MB
+                          </span>
                         </li>
+
+                        <li className="flex items-start gap-2">
+                          <span className="text-lg leading-5 text-red-600">*</span>
+                          <span>
+                            <strong className="text-zinc-300">Accepted formats:</strong> JPG, PNG, WebP
+                          </span>
+                        </li>
+
                         <li className="mt-1 flex items-start gap-2 border-t border-zinc-800 pt-2 text-xs">
                           <span className="text-red-600">i</span>
-                          <span>Images may be adjusted</span>
+                          <span>
+                            Image will be center-cropped into a circular frame
+                          </span>
                         </li>
                       </ul>
                     </div>
