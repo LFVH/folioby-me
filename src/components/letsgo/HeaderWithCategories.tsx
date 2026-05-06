@@ -133,11 +133,7 @@ export default function HeaderWithCategories() {
               Contact
               </Link>
               <Link
-                className={`${
-                  !filtroAtivo
-                    ? 'text-white font-semibold'
-                    : 'text-gray-300 hover:text-white'
-                } transition-colors whitespace-nowrap text-sm px-2 py-1`}
+                className= "text-gray-300 hover:text-white transition-colors duration-200 text-lg font-light tracking-[0.3em]"
                 href={`/${slug}`}
                 key={`${userName}H`}
                 onClick={handleInicioClick}
