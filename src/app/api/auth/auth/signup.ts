@@ -51,9 +51,25 @@ export async function signup(
         name,
         email,
         password: hashedPassword,
-        slug
+        slug,
+        dtIniPremium: new Date(),
+        dtFimPremium: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        statusAss: 6,
+        isPremium: true,
       },
     });
+    await Prisma.categoria.create({
+          data: {
+            name: "My Work",
+            user: {
+              connect: {
+                id: userDB.id,
+              },
+            },
+          },
+        });
+
+
 
     return { data: {
         name: userDB.name,

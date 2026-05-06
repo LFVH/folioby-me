@@ -27,6 +27,7 @@ export async function verifyUserById(userId: string): Promise<VerifiedUser | Nex
         id: true,
         isPremium: true,
         isBlocked: true,
+        dtFimPremium: true,
       },
     });
 
@@ -36,7 +37,15 @@ export async function verifyUserById(userId: string): Promise<VerifiedUser | Nex
         { status: 400 }
       );
     }
-
+    if(userDB.dtFimPremium && userDB.isPremium && new Date() > userDB.dtFimPremium){
+      await prisma.usuario.update({
+        where: { id: userId },
+        data: {
+           isPremium: false,
+        }
+      });
+      userDB.isPremium = false;
+    }
     return {
       userId: userDB.id,
       isPremium: userDB.isBlocked ? !userDB.isBlocked : userDB.isPremium,
@@ -152,20 +161,4 @@ export async function findBySlug(slug: string): Promise<Usuario | NextResponse> 
       { success: false, body: { message: "Not Found" } },
       { status: 400 }
     );
-}
-
-function checkPremiumExpiration(user: Usuario ) {
-  const currentDate = new Date();
-  currentDate.setHours(0, 0, 0, 0);
-  if (!user.dtIniPremium || !user.dtFimPremium) {
-      throw new Error("101 - 1");
-  }
-  const dtIni = new Date(user.dtIniPremium);
-  dtIni.setHours(0, 0, 0, 0);
-  const dtFim = new Date(user.dtFimPremium);
-  dtFim.setHours(0, 0, 0, 0);
-  if (currentDate < dtIni || currentDate >= dtFim) {
-      throw new Error("101 - 2");
-  }
-  return user.id;
 }

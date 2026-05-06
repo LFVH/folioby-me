@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { FaTrash } from 'react-icons/fa6'
 import { toast } from 'react-toastify'
 const redes = [
   'Outros',
@@ -117,9 +118,24 @@ export default function LinksManager() {
             </div>
             <button
               onClick={() => deleteLink(i)}
-              className="text-red-400 hover:text-red-600 text-sm"
+              className="
+                p-2 rounded-lg
+                text-red-400 hover:text-white
+                hover:bg-red-500/20
+                transition-all duration-200
+                group
+              "
             >
-              deletar
+              <FaTrash className="w-4 h-4" />
+
+              <span className="
+                absolute ml-2 px-2 py-1 text-xs
+                bg-black text-white rounded
+                opacity-0 group-hover:opacity-100
+                transition
+              ">
+                Deletar
+              </span>
             </button>
           </div>
         ))}
