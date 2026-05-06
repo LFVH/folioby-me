@@ -7,12 +7,14 @@ import SearchBar from './SearchBar'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { scrollToTop } from '@/lib/utils'
-
+import { useRouter, usePathname } from 'next/navigation'
 
 export default function HeaderWithCategories() {
   const params = useParams()
   const slug = params.slug as string
   const { data, isLoading } = useCategorias(slug)
+  const router = useRouter()
+  const pathname = usePathname()
   const { 
     filtroAtivo, 
     tipoFiltro, 
@@ -51,6 +53,9 @@ export default function HeaderWithCategories() {
   const categoriasRestantes = categorias?.slice(4) || []
 
   const handleCategoriaClick = (categoriaId: string) => {
+    if (pathname !== `/${slug}`) {
+      router.push(`/${slug}`)
+    }
     if (filtroAtivo === categoriaId && tipoFiltro === 'categoria') {
       limparFiltros()
     } else {
@@ -104,11 +109,11 @@ export default function HeaderWithCategories() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         
           <div className="flex items-center gap-4 min-w-0 flex-1">
-          <Link href={`/`} className="flex items-center space-x-2">
-            <div className="text-red-600 font-bold tracking-tight">
-              <h1 className="text-red-600 text-xl sm:text-2xl font-bold truncate">FolioBy</h1>
-            </div>
-          </Link>
+            <Link href={`/`} className="flex items-center space-x-2">
+              <div className="text-red-600 font-bold tracking-tight">
+                <h1 className="text-red-600 text-xl sm:text-2xl font-bold truncate">FolioBy</h1>
+              </div>
+            </Link>
         
             <nav className="hidden md:flex items-center gap-4 flex-wrap min-w-0">
               <Link
@@ -117,10 +122,18 @@ export default function HeaderWithCategories() {
                 key={userName}
                 onClick={handleProfileClick}
               >
-                {userName?.split(' ')[0] + (userName?.split(' ')[1] ? userName?.split(' ')[1] : ' ') + " -  Profile - Contact" || 'Usuário'}
+                {userName?.split(' ')[0] + (userName?.split(' ')[1] ? userName?.split(' ')[1] : '') + "'s  Profile" || 'Usuário'}
               </Link>
               <Link
-              className={`${
+                className="text-gray-300 hover:text-white transition-colors duration-200 font-bold"
+                href={`/${slug}/profile#links`}
+                key={`${userName}+${userName.substring(2)}`}
+                onClick={handleProfileClick}
+              >
+              Contact
+              </Link>
+              <Link
+                className={`${
                   !filtroAtivo
                     ? 'text-white font-semibold'
                     : 'text-gray-300 hover:text-white'
@@ -129,39 +142,35 @@ export default function HeaderWithCategories() {
                 key={`${userName}H`}
                 onClick={handleInicioClick}
               >
-                My Work
+                Portfolio
               </Link>
               {categoriasPrincipais.map((categoria) => (
-        <div key={categoria.id} className="relative">
-          <button
-            onClick={() => handleCategoriaClick(categoria.id)}
-            className={`relative z-10 transition-all duration-300 whitespace-nowrap text-sm px-3 py-1 rounded-full ${
-              filtroAtivo === categoria.id && tipoFiltro === 'categoria'
-                ? 'text-white font-bold bg-red-600 shadow-lg shadow-red-500/30'
-                : categoria.isTrend
-                  ? 'text-white font-semibold bg-gradient-to-r from-orange-500 to-red-500 shadow-lg shadow-orange-500/40 hover:shadow-orange-500/60 hover:scale-105'
-                  : 'text-gray-300 hover:text-white hover:bg-gray-800'
-            }`}
-          >
-            {categoria.name}
-        
-            {/* Badge "TRENDING" para categorias em alta */}
-            {categoria.isTrend && (
-              <span className="absolute -top-2 -right-2">
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
-                </span>
-              </span>
-            )}
-          </button>
-        
-          {/* Efeito de brilho para categorias em alta não selecionadas */}
-          {categoria.isTrend && filtroAtivo !== categoria.id && (
-            <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-full blur-sm animate-pulse-slow" />
-          )}
-        </div>
-            ))}
+              <div key={categoria.id} className="relative">
+                <button
+                  onClick={() => handleCategoriaClick(categoria.id)}
+                  className={`relative z-10 transition-all duration-300 whitespace-nowrap text-sm px-3 py-1 rounded-full ${
+                    filtroAtivo === categoria.id && tipoFiltro === 'categoria'
+                      ? 'text-white font-bold bg-red-600 shadow-lg shadow-red-500/30'
+                      : categoria.isTrend
+                        ? 'text-white font-semibold bg-gradient-to-r from-orange-500 to-red-500 shadow-lg shadow-orange-500/40 hover:shadow-orange-500/60 hover:scale-105'
+                        : 'text-gray-300 hover:text-white hover:bg-gray-800'
+                  }`}
+                >
+                  {categoria.name}
+                  {categoria.isTrend && (
+                    <span className="absolute -top-2 -right-2">
+                      <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+                      </span>
+                    </span>
+                  )}
+                </button>
+                {categoria.isTrend && filtroAtivo !== categoria.id && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-full blur-sm animate-pulse-slow" />
+                )}
+              </div>
+              ))}
               {categoriasRestantes.length > 0 && (
                 <div ref={dropdownRef} className="relative">
                   <button

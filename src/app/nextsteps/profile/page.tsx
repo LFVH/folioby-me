@@ -306,7 +306,7 @@ export default function UserPage() {
                 <div className="space-y-4">
                   <div>
                     <label className="mb-2 block text-sm text-gray-400">
-                      Your unique identifier
+                      Seu identificador único, pública e facilmente compartilhável.
                     </label>
                     <input
                       type="text"
@@ -392,6 +392,10 @@ export default function UserPage() {
                   <div>
                     <p className="text-sm text-gray-400">Slug</p>
                     <p className="text-lg">{session?.user?.slug || 'Nao definido'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-400">Para editar essa sessão ou deletar conta envie email para</p>
+                    <p className="text-sm  text-gray-400">{contact_mail}</p>
                   </div>
                 </div>
               </div>

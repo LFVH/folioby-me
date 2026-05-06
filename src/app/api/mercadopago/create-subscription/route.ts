@@ -47,7 +47,7 @@ export async function POST(req: Request) {
           transaction_amount: planoSelecionado.price,
           currency_id: 'BRL',
         },
-        back_url: 'https://folioby.me/nextsteps/contents',
+        back_url: 'https://folioby.me/?refresh=true',
         payer_email: 'test_user_5727595662563318073@testuser.com',
         status: 'pending',
       },
