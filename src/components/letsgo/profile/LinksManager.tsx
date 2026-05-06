@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 const redes = [
   'Outros',
   'Instagram',
@@ -29,7 +30,15 @@ export default function LinksManager() {
     fetchLinks()
   }, [])
   const addLink = async () => {
-    await fetch('/api/nextsteps/user/links', {
+    if(!url){
+      toast.error("O campo de URL não pode estar vazio.")
+      return;
+    }
+    let urlToParse = url.trim();
+    if (!urlToParse.startsWith('http://') && !urlToParse.startsWith('https://')) {
+      urlToParse = 'https://' + urlToParse;
+    }
+    const response = await fetch('/api/nextsteps/user/links', {
       method: 'POST',
       body: JSON.stringify({
         nr_redesocial: rede,
@@ -37,16 +46,26 @@ export default function LinksManager() {
         titulo
       })
     })
+    if (response.ok) {
+      toast.success('Link adicionado com sucesso!')
+    } else {
+      toast.error('Erro ao adicionar link. Tente novamente.')
+    }
     setTitulo('')
     setUrl('')
     setRede(0)
     fetchLinks()
   }
   const deleteLink = async (index: number) => {
-    await fetch('/api/nextsteps/user/links', {
+    const response = await fetch('/api/nextsteps/user/links', {
       method: 'DELETE',
       body: JSON.stringify({ index })
     })
+    if (response.ok) {
+      toast.success('Link deletado com sucesso!')
+    } else {
+      toast.error('Erro ao deletar link. Tente novamente.')
+    }
     fetchLinks()
   }
   return (
