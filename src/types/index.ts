@@ -47,7 +47,7 @@ export interface CategoriaWithUrls {
   updatedAt: string
 }
 
-export enum StatusCode {
+export enum StatusCode {//statusAss
   // Pré-pagamento
   INATIVO = 1,           // Cadastrado no sistema, nunca interagiu com Stripe
   TRIAL = 2,             // Em período de teste gratuito
@@ -82,9 +82,9 @@ export enum PlanoCode {
 export const planos = [
     {
       id: 1,
-      nome: 'Plano Mensal',
-      preco: 'R$30,00',
-      price: 30.00,
+      nome: 'Plano Mensal Lançamento',
+      preco: 'R$14,00',
+      price: 14.00,
       periodo: '/mês',
       corDestaque: 'red' as const,
       beneficios: [
@@ -97,11 +97,11 @@ export const planos = [
     },
     {
       id: 2,
-      nome: 'Plano Trimestral',
-      preco: 'R$85,00',
-      price: 85.00,
+      nome: 'Plano Trimestral Exclusivo',
+      preco: 'R$40,00',
+      price: 40.00,
       periodo: '/trimestre',
-      economia: '20%',
+      economia: '5%',
       popular: true,
       corDestaque: 'orange' as const,
       beneficios: [
@@ -114,10 +114,10 @@ export const planos = [
     {
       id: 3,
       nome: 'Plano Semestral',
-      preco: 'R$160,00',
-      price: 160.00,
+      preco: 'R$75,70',
+      price: 75.70,
       periodo: '/semestre',
-      economia: '40%',
+      economia: '10%',
       corDestaque: 'green' as const,
       beneficios: [
         'Todos os benefícios do trimestral',
