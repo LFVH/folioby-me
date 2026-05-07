@@ -71,7 +71,12 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
       });
     };
   }, [formData.file, formData.files, formData.isSequence, conteudo]);
-
+  const normalizeUrl = (url: string) => {
+    if (!/^https?:\/\//i.test(url)) {
+      return `https://${url}`;
+    }
+    return url;
+  };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -155,10 +160,12 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
         router.push('/nextsteps/contents');
         router.refresh();
       } else {
-        alert(result.error || 'Erro ao Save conteúdo');
+        alert(result.error || 'Erro ao salvar conteúdo');
+        console.error(result.error || result.message || 'Unknown error');
       }
     } catch (error) {
       alert('Erro ao Save conteúdo');
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -230,6 +237,14 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
               const newUrl = e.target.value;
               setFormData(prev => ({ ...prev, linkext: newUrl }));
               extractAndSetFonteFromUrl(newUrl);
+            }}
+            onBlur={(e) => {
+              const fixedUrl = normalizeUrl(e.target.value);
+
+              setFormData(prev => ({
+                ...prev,
+                linkext: fixedUrl
+              }));
             }}
             className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
             placeholder="https://fonte.com/..."
