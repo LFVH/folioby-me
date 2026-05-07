@@ -111,7 +111,8 @@ const handleSubmit = async (e: React.FormEvent) => {
     if (formData.isSequence && formData.files.length > 0) {
       const uploads = await Promise.all(
         formData.files.map(async (file) => {
-          const blob = await upload(file.name, file, {
+          const uniqueName = `${Date.now()}-${crypto.randomUUID()}-${file.name.replace(/\s+/g, '-')}`;
+          const blob = await upload(uniqueName, file, {
             access: 'public',
             handleUploadUrl: '/api/nextsteps/blob/upload',
           });
@@ -125,7 +126,8 @@ const handleSubmit = async (e: React.FormEvent) => {
 
     // Upload único
     else if (formData.file) {
-      const blob = await upload(formData.file.name, formData.file, {
+      const uniqueName = `${Date.now()}-${crypto.randomUUID()}-${formData.file.name.replace(/\s+/g, '-')}`;
+      const blob = await upload(uniqueName, formData.file, {
         access: 'public',
         handleUploadUrl: '/api/nextsteps/blob/upload',
       });

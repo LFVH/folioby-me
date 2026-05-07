@@ -30,8 +30,34 @@ export async function DELETE(
     }
 
     const accessError = await ensureConteudoAccess(userId, isPremium, id);
-    if (accessError) return accessError;
 
+    if (accessError) return accessError;
+    const conteudoExistente = await prisma.conteudo.findUnique({
+      where: { id }
+    });
+
+    if (!conteudoExistente) {
+      return NextResponse.json(
+        { success: false, error: "Conteudo nao encontrado" },
+        { status: 404 }
+      );
+    }
+    if (conteudoExistente.mediaUrls?.length > 0) {
+      for (const url of conteudoExistente.mediaUrls) {
+        try {
+          if (
+            url?.includes("blob.vercel-storage.com")
+          ) {
+            await BlobService.deleteFile(url);
+          }
+        } catch (deleteError) {
+          console.error(
+            "Erro ao deletar blob antigo:",
+            deleteError
+          );
+        }
+      }
+    }
     await prisma.conteudo.delete({
       where: { id }
     });
