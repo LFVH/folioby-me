@@ -109,113 +109,192 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; }>; }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await verifyUser();
-    if (authResult instanceof NextResponse) return authResult;
+
+    if (authResult instanceof NextResponse) {
+      return authResult;
+    }
 
     const { userId, isPremium } = authResult;
+
     const id = parseInt((await params).id, 10);
 
     if (isNaN(id)) {
-      return NextResponse.json({ message: "id invalido" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "ID inválido" },
+        { status: 400 }
+      );
     }
 
-    const accessError = await ensureConteudoAccess(userId, isPremium, id);
-    if (accessError) return accessError;
+    const accessError = await ensureConteudoAccess(
+      userId,
+      isPremium,
+      id
+    );
 
-    const formData = await request.formData();
+    if (accessError) {
+      return accessError;
+    }
+
     const conteudoExistente = await prisma.conteudo.findUnique({
-      where: { id }
+      where: { id },
     });
 
     if (!conteudoExistente) {
       return NextResponse.json(
-        { success: false, error: "Conteudo nao encontrado" },
-        { status: 404 }
+        {
+          success: false,
+          error: "Conteúdo não encontrado",
+        },
+        {
+          status: 404,
+        }
       );
     }
 
-    const name = formData.get("name") as string;
-    const fonte = formData.get("fonte") as string;
-    const link = formData.get("link") as string;
-    const linkext = formData.get("linkext") as string;
-    const categoriasIds = formData.get("categoriasIds") as string;
-    const newFile = formData.get("file") as File | null;
-    const isSequence = formData.get("isSequence") === "true";
-    const files = formData.getAll("files") as File[];
+    // =========================
+    // BODY JSON
+    // =========================
 
-    let updateData: any = {
+    const body = await request.json();
+
+    const {
+      name,
+      fonte,
+      link,
+      linkext,
+      categoriasIds,
+      isSequence,
+      mediaUrls,
+    } = body;
+
+    // =========================
+    // UPDATE DATA
+    // =========================
+
+    const updateData: any = {
       name,
       fonte,
       linkext,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
-    if (isSequence && files.length > 0) {
+    // =========================
+    // NOVOS ARQUIVOS
+    // =========================
+
+    if (mediaUrls?.length > 0) {
+
+      // remove blobs antigos
       if (conteudoExistente.mediaUrls?.length > 0) {
         for (const url of conteudoExistente.mediaUrls) {
-          await BlobService.deleteFile(url);
+          try {
+            if (
+              url?.includes("blob.vercel-storage.com")
+            ) {
+              await BlobService.deleteFile(url);
+            }
+          } catch (deleteError) {
+            console.error(
+              "Erro ao deletar blob antigo:",
+              deleteError
+            );
+          }
         }
       }
 
-      const uploads = await BlobService.uploadMultiple(files, `nextsteps/sequences/${Date.now()}`);
-      const urls = uploads.map(upload => upload.url);
+      let filename = "";
+      let mimetype = "";
 
-      updateData.link = urls[0];
-      updateData.filename = files[0].name;
-      updateData.mimetype = "image/sequence";
-      updateData.mediaType = "sequence";
-      updateData.mediaUrls = urls;
-      updateData.data = Buffer.from("");
-    } else if (newFile) {
-      if (conteudoExistente.link?.includes("public.blob.vercel-storage.com")) {
-        await BlobService.deleteFile(conteudoExistente.link);
+      const firstUrl = mediaUrls[0];
+
+      filename =
+        firstUrl?.split("/").pop() || "";
+
+      if (filename.endsWith(".mp4")) {
+        mimetype = "video/mp4";
+      } else if (filename.endsWith(".pdf")) {
+        mimetype = "application/pdf";
+      } else if (filename.endsWith(".webp")) {
+        mimetype = "image/webp";
+      } else if (filename.endsWith(".png")) {
+        mimetype = "image/png";
+      } else {
+        mimetype = "image/jpeg";
       }
 
-      const buffer = Buffer.from(await newFile.arrayBuffer());
-      const upload = await BlobService.uploadFromServer(
-        buffer,
-        newFile.name,
-        newFile.type
-      );
+      updateData.link = firstUrl;
 
-      updateData.link = upload.url;
-      updateData.filename = upload.filename;
-      updateData.mimetype = upload.mimetype;
-      updateData.mediaType = "single";
-      updateData.mediaUrls = [upload.url];
+      updateData.filename = filename;
+
+      updateData.mimetype = mimetype;
+
+      updateData.mediaType = isSequence
+        ? "sequence"
+        : "single";
+
+      updateData.mediaUrls = mediaUrls;
+
       updateData.data = Buffer.from("");
-    } else if (link !== undefined) {
+    }
+
+    // =========================
+    // LINK EXTERNO
+    // =========================
+
+    else if (link !== undefined) {
       updateData.link = link;
     }
 
-    if (categoriasIds) {
-      const categoriasConnect = categoriasIds.split(",").map(categoriaId => ({ id: parseInt(categoriaId, 10) }));
+    // =========================
+    // CATEGORIAS
+    // =========================
+
+    if (categoriasIds?.length > 0) {
       updateData.categorias = {
-        set: categoriasConnect
+        set: categoriasIds.map((id: number) => ({
+          id,
+        })),
       };
     }
 
+    // =========================
+    // UPDATE
+    // =========================
+
     const conteudo = await prisma.conteudo.update({
       where: { id },
+
       data: updateData,
+
       include: {
-        categorias: true
-      }
+        categorias: true,
+      },
     });
 
     return NextResponse.json({
       success: true,
       data: conteudo,
-      message: "Conteudo atualizado com sucesso"
+      message: "Conteúdo atualizado com sucesso",
     });
+
   } catch (error) {
-    console.error("Erro ao atualizar conteudo:", error);
+    console.error(
+      "Erro ao atualizar conteúdo:",
+      error
+    );
+
     return NextResponse.json(
-      { success: false, error: "Erro interno do servidor" },
-      { status: 500 }
+      {
+        success: false,
+        error: "Erro interno do servidor",
+      },
+      {
+        status: 500,
+      }
     );
   }
 }

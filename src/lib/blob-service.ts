@@ -57,7 +57,7 @@ export class BlobService {
       'image/webp',
       'image/avif'
     ];
-    const maxSize = 500 * 1024 * 1024;
+    const maxSize = 25 * 1024 * 1024;
     if (!allowedTypes.includes(file.type)) {
       return {
         valid: false,
@@ -67,7 +67,7 @@ export class BlobService {
     if (file.size > maxSize) {
       return {
         valid: false,
-        error: 'Arquivo muito grande. Máximo 500MB.'
+        error: 'Arquivo muito grande. Máximo 25MB.'
       };
     }
     return { valid: true };

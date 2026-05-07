@@ -87,83 +87,104 @@ export async function POST(request: NextRequest) {
     if (authResult instanceof NextResponse) return authResult;
     const { userId, isPremium } = authResult;
     if(!isPremium) return NextResponse.json(
-        { success: false, error: '404 Not Found' },
-        { status: 403 }
-      )
-    const formData = await request.formData()
-    
-    const name = formData.get('name') as string
-    const fonte = formData.get('fonte') as string
-    const link = formData.get('link') as string
-    const linkext = formData.get('linkext') as string
-    const categoriasIds = formData.get('categoriasIds') as string
-    const isSequence = formData.get('isSequence') === 'true';
-    const files = formData.getAll('files') as File[];
-    const singleFile = formData.get('file') as File | null;
+      { success: false, error: '404 Not Found' },
+      { status: 403 }
+    )
+    const body = await request.json();
 
-    let mediaUrls: string[] = [];
+    const {
+      name,
+      fonte,
+      link,
+      linkext,
+      categoriasIds,
+      isSequence,
+      mediaUrls,
+    } = body;
+
     let mediaType = 'single';
     let filename = '';
     let mimetype = '';
-    
-    if (isSequence && files.length > 0) {
+
+    if (isSequence && mediaUrls?.length > 0) {
       mediaType = 'sequence';
-      const uploads = await BlobService.uploadMultiple(files, `nextsteps/sequences/${Date.now()}`);
-      mediaUrls = uploads.map(u => u.url);
-      filename = files[0].name;
+      filename = 'sequence';
       mimetype = 'image/sequence';
-      
-    } else if (singleFile) {
-      const buffer = Buffer.from(await singleFile.arrayBuffer());
-      const upload = await BlobService.uploadFromServer(
-        buffer,
-        singleFile.name,
-        singleFile.type
-      );
-      mediaUrls = [upload.url];
-      filename = upload.filename;
-      mimetype = upload.mimetype;
+
+    } else if (mediaUrls?.length > 0) {
+      mediaType = 'single';
+
+      const fileUrl = mediaUrls[0];
+
+      filename = fileUrl.split('/').pop() || '';
+
+      // opcional
+      if (filename.endsWith('.mp4')) {
+        mimetype = 'video/mp4';
+      } else if (filename.endsWith('.pdf')) {
+        mimetype = 'application/pdf';
+      } else {
+        mimetype = 'image/jpeg';
+      }
     }
 
-    const categoriasConnect = categoriasIds 
-      ? categoriasIds.split(',').map(id => ({ id: parseInt(id) }))
-      : []
+    const categoriasConnect = categoriasIds?.length
+      ? categoriasIds.map((id: number) => ({ id }))
+      : [];
 
     const conteudo = await prisma.conteudo.create({
       data: {
         name,
         fonte,
-        link: mediaUrls[0] || null,
+
+        // primeira mídia
+        link: mediaUrls?.[0] || link || null,
+
         linkext,
+
         filename,
         mimetype,
+
+        // pode manter vazio
         data: Buffer.from(''),
+
         mediaType,
-        mediaUrls,
+
+        // array completo
+        mediaUrls: mediaUrls || [],
+
         categorias: {
-          connect: categoriasConnect
+          connect: categoriasConnect,
         },
+
         user: {
           connect: {
-            id: userId 
-          }
-        }
+            id: userId,
+          },
+        },
       },
+
       include: {
-        categorias: true
-      }
-    })
+        categorias: true,
+      },
+    });
 
     return NextResponse.json({
       success: true,
       data: conteudo,
-      message: 'Conteúdo criado com sucesso'
-    })
+      message: 'Conteúdo criado com sucesso',
+    });
+
   } catch (error) {
-    console.error('Erro ao criar conteúdo:', error)
+    console.error('Erro ao criar conteúdo:', error);
     return NextResponse.json(
-      { success: false, error: 'Erro interno do servidor' },
-      { status: 500 }
-    )
+      {
+        success: false,
+        error: 'Erro interno do servidor',
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }

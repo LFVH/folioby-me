@@ -1,20 +1,17 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { BlobService } from '@/lib/blob-service'
-
+import { upload } from '@vercel/blob/client';
 interface Categoria {
   id: number
   nome: string
   name: string
 }
-
 interface ConteudoFormProps {
   conteudo?: any
   categorias: Categoria[]
 }
-
 interface FormData {
   name: string;
   fonte: string;
@@ -24,13 +21,11 @@ interface FormData {
   files: File[];
   isSequence: boolean;
 }
-
 export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [selectedCategorias, setSelectedCategorias] = useState<number[]>([])
-
   const [formData, setFormData] = useState<FormData>({
     name: conteudo?.name || '',
     fonte: conteudo?.fonte || '',
@@ -45,10 +40,8 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
       setSelectedCategorias(conteudo.categorias.map((c: any) => c.categoriaId));
     }
   }, [conteudo]);
-
   useEffect(() => {
     const urls: string[] = [];
-    
     if (formData.isSequence) {
       formData.files.forEach(file => {
         urls.push(URL.createObjectURL(file));
@@ -60,9 +53,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
     } else if (conteudo?.link) {
       urls.push(conteudo.link);
     }
-    
     setPreviewUrls(urls);
-    
     return () => {
       urls.forEach(url => {
         if (url.startsWith('blob:')) {
@@ -85,7 +76,6 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
         alert(validation.error);
         return;
       }
-      
       setFormData(prev => ({ 
         ...prev, 
         file, 
@@ -94,10 +84,8 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
       }));
     }
   };
-
   const handleMultipleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    
     for (const file of files) {
       const validation = BlobService.validateImage(file);
       if (!validation.valid) {
@@ -105,7 +93,6 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
         return;
       }
     }
-    
     setFormData(prev => ({ 
       ...prev, 
       files, 
@@ -113,90 +100,102 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
       isSequence: true 
     }));
   };
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
 
-  const handleCategoriaToggle = (categoriaId: number) => {
-    setSelectedCategorias(prev =>
-      prev.includes(categoriaId)
-        ? prev.filter(id => id !== categoriaId)
-        : [...prev, categoriaId]
-    )
-  }
+  try {
+    let uploadedUrls: string[] = [];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+    // Upload múltiplo
+    if (formData.isSequence && formData.files.length > 0) {
+      const uploads = await Promise.all(
+        formData.files.map(async (file) => {
+          const blob = await upload(file.name, file, {
+            access: 'public',
+            handleUploadUrl: '/api/nextsteps/blob/upload',
+          });
 
-    try {
-      const submitData = new FormData();
-      submitData.append('name', formData.name);
-      submitData.append('fonte', formData.fonte);
-      submitData.append('link', formData.link);
-      submitData.append('linkext', formData.linkext);
-      submitData.append('categoriasIds', selectedCategorias.join(','));
-      
-      if (formData.isSequence) {
-        submitData.append('isSequence', 'true');
-        formData.files.forEach(file => {
-          submitData.append('files', file);
-        });
-      } else if (formData.file) {
-        submitData.append('file', formData.file);
-      }
+          return blob.url;
+        })
+      );
 
-      const url = conteudo 
-        ? `/api/nextsteps/conteudo/${conteudo.id}`
-        : '/api/nextsteps/conteudo';
+      uploadedUrls = uploads;
+    }
 
-      const method = conteudo ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
-        body: submitData
+    // Upload único
+    else if (formData.file) {
+      const blob = await upload(formData.file.name, formData.file, {
+        access: 'public',
+        handleUploadUrl: '/api/nextsteps/blob/upload',
       });
 
-      const result = await response.json();
-
-      if (result.success) {
-        router.push('/nextsteps/contents');
-        router.refresh();
-      } else {
-        alert(result.error || 'Erro ao salvar conteúdo');
-        console.error(result.error || result.message || 'Unknown error');
-      }
-    } catch (error) {
-      alert('Erro ao Save conteúdo');
-      console.error(error);
-    } finally {
-      setLoading(false);
+      uploadedUrls = [blob.url];
     }
-  };
 
+    const payload = {
+      name: formData.name,
+      fonte: formData.fonte,
+      link: uploadedUrls[0] || formData.link || '',
+      mediaUrls: uploadedUrls,
+      linkext: formData.linkext,
+      categoriasIds: selectedCategorias,
+      isSequence: formData.isSequence,
+    };
+
+    const url = conteudo
+      ? `/api/nextsteps/conteudo/${conteudo.id}`
+      : '/api/nextsteps/conteudo';
+
+    const method = conteudo ? 'PUT' : 'POST';
+
+    const response = await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro HTTP ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.success) {
+      router.push('/nextsteps/contents');
+      router.refresh();
+    } else {
+      alert(result.error || 'Erro ao salvar conteúdo');
+      console.error(result.error || result.message);
+    }
+  } catch (error) {
+    console.error(error);
+
+    if (error instanceof Error) {
+      alert(error.message);
+    } else {
+      alert('Erro ao salvar conteúdo');
+    }
+  } finally {
+    setLoading(false);
+  }
+};
   const extractAndSetFonteFromUrl = (url: string) => {
     try {
-      // Verifica se é uma URL válida 
       if (!url || !url.trim()) {
         setFormData(prev => ({ ...prev, fonte: '' }));
         return;
       }
-
-      // Adiciona protocolo se não tiver para o URL constructor funcionar
       let urlToParse = url.trim();
       if (!urlToParse.startsWith('http://') && !urlToParse.startsWith('https://')) {
         urlToParse = 'https://' + urlToParse;
       }
-
       const urlObj = new URL(urlToParse);
       const hostname = urlObj.hostname;
-      
-      // Remove 'www.' se existir
       let domain = hostname.replace(/^www\./, '');
-      
-      // Pega apenas a primeira parte do domínio (antes do primeiro ponto)
-      // Ex: instagram.com -> instagram
-      // youtube.com.br -> youtube
       domain = domain.split('.')[0];
-      
-      // Capitaliza primeira letra
       if (domain) {
         const capitalizedDomain = domain.charAt(0).toUpperCase() + domain.slice(1).toLowerCase();
         setFormData(prev => ({ ...prev, fonte: capitalizedDomain }));
@@ -204,15 +203,13 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
         setFormData(prev => ({ ...prev, fonte: '' }));
       }
     } catch (error) {
-      // Se não for uma URL válida, mantém o campo fonte vazio
       setFormData(prev => ({ ...prev, fonte: '' }));
     }
   };
-
   return (
     <div className="max-w-4xl mx-auto p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Nome */}
+        {}
         <div>
           <label className="block text-white font-semibold mb-2">
             Nome do Conteúdo *
@@ -225,7 +222,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             required
           />
         </div>
-        {/* Link Externo */}
+        {}
         <div>
           <label className="block text-white font-semibold mb-2">
             Link para Redirecionamento *
@@ -240,7 +237,6 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             }}
             onBlur={(e) => {
               const fixedUrl = normalizeUrl(e.target.value);
-
               setFormData(prev => ({
                 ...prev,
                 linkext: fixedUrl
@@ -251,7 +247,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             required
           />
         </div>
-        {/* Fonte */}
+        {}
         <div>
           <label className="block text-white font-semibold mb-2">
             Fonte
@@ -264,7 +260,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             placeholder="Ex: Instagram, YouTube, Vimeo"
           />
         </div>
-        {/* Tabs para escolher tipo de upload */}
+        {}
         <div className="border-b border-gray-700">
           <div className="flex space-x-4">
             <button
@@ -291,7 +287,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             </button>
           </div>
         </div>
-        {/* Upload de arquivo único (GIF/Imagem) */}
+        {}
         {!formData.isSequence && (
           <div>
             <label className="block text-white font-semibold mb-2">
@@ -308,7 +304,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             </p>
           </div>
         )}
-        {/* Upload de múltiplas imagens */}
+        {}
         {formData.isSequence && (
           <div>
             <label className="block text-white font-semibold mb-2">
@@ -331,7 +327,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             )}
           </div>
         )}
-        {/* Preview das imagens */}
+        {}
         {previewUrls.length > 0 && (
           <div className="bg-gray-800 rounded-lg p-4">
             <h3 className="text-white font-semibold mb-3">
@@ -358,7 +354,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             </div>
           </div>
         )}
-        {/* Categorias */}
+        {}
         <div>
           <label className="block text-white font-semibold mb-2">
             Categorias
@@ -385,7 +381,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             ))}
           </div>
         </div>
-        {/* Botões */}
+        {}
         <div className="flex justify-end space-x-4">
           <button
             type="button"
