@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { normalizeProfileLink, PROFILE_LINK_OPTIONS } from '@/lib/profile-links';
 
 export const SignupFormSchema = z.object({
   name: z
@@ -39,7 +40,29 @@ export type SessionPayload = {
 };
 
 export const linkSchema = z.object({
-  nr_redesocial: z.number().min(0).max(11),
-  link: z.string().url(),
+  nr_redesocial: z.number().int().min(0).max(PROFILE_LINK_OPTIONS.length - 1),
+  link: z.string().min(1),
   titulo: z.string().min(1).max(60)
+}).superRefine((data, ctx) => {
+  const normalizedLink = normalizeProfileLink(data.link, data.nr_redesocial)
+
+  if (!normalizedLink.ok) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['link'],
+      message: normalizedLink.error,
+    })
+  }
+}).transform((data) => {
+  const normalizedLink = normalizeProfileLink(data.link, data.nr_redesocial)
+
+  if (!normalizedLink.ok) {
+    return data
+  }
+
+  return {
+    ...data,
+    titulo: data.titulo.trim(),
+    link: normalizedLink.value,
+  }
 })

@@ -8,11 +8,13 @@ interface LinkButtonProps {
 }
 
 export default function LinkButton({ titulo, link, icon }: LinkButtonProps) {
+  const isEmailLink = link.startsWith('mailto:')
+
   return (
     <a
       href={link}
-      target="_blank"
-      rel="noopener noreferrer"
+      target={isEmailLink ? undefined : '_blank'}
+      rel={isEmailLink ? undefined : 'noopener noreferrer'}
       className="
         flex items-center gap-3
         w-full px-4 py-3

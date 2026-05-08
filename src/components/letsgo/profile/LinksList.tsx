@@ -13,7 +13,8 @@ import {
   FaDiscord,
   FaTwitch,
   FaGithub,
-  FaLink
+  FaLink,
+  FaEnvelope
 } from 'react-icons/fa6'
 
 type LinkItem = [number, string, string]
@@ -34,7 +35,8 @@ const iconsMap: Record<number, ReactNode> = {
   8: <FaTelegram />,
   9: <FaDiscord />,
   10: <FaTwitch />,
-  11: <FaGithub />
+  11: <FaGithub />,
+  12: <FaEnvelope />
 }
 
 const getIcon = (nr: number) => {

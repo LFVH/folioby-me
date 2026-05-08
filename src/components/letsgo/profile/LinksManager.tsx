@@ -1,62 +1,81 @@
 'use client'
+
 import { useEffect, useState } from 'react'
 import { FaTrash } from 'react-icons/fa6'
 import { toast } from 'react-toastify'
-const redes = [
-  'Outros',
-  'Instagram',
-  'TikTok',
-  'YouTube',
-  'X',
-  'Facebook',
-  'LinkedIn',
-  'WhatsApp',
-  'Telegram',
-  'Discord',
-  'Twitch',
-  'GitHub'
-]
+import {
+  normalizeProfileLink,
+  PROFILE_LINK_OPTIONS,
+  PROFILE_LINK_TYPE,
+} from '@/lib/profile-links'
+
 type LinkTuple = [number, string, string]
+
 export default function LinksManager() {
   const [links, setLinks] = useState<LinkTuple[]>([])
   const [titulo, setTitulo] = useState('')
   const [url, setUrl] = useState('')
   const [rede, setRede] = useState(0)
+
+  const isWhatsappSelected = rede === PROFILE_LINK_TYPE.WHATSAPP
+  const isEmailSelected = rede === PROFILE_LINK_TYPE.EMAIL
+
   const fetchLinks = async () => {
     const res = await fetch('/api/nextsteps/user/links')
     const data = await res.json()
     setLinks(data.data || [])
   }
+
   useEffect(() => {
     fetchLinks()
   }, [])
+
+  const handleRedeChange = (nextRede: number) => {
+    setRede(currentRede => {
+      if (nextRede === PROFILE_LINK_TYPE.WHATSAPP && currentRede !== PROFILE_LINK_TYPE.WHATSAPP) {
+        setUrl('wa.me/55')
+      } else if (currentRede === PROFILE_LINK_TYPE.WHATSAPP && nextRede !== PROFILE_LINK_TYPE.WHATSAPP) {
+        setUrl('')
+      }
+
+      return nextRede
+    })
+  }
+
   const addLink = async () => {
-    if(!url){
-      toast.error("O campo de URL não pode estar vazio.")
-      return;
+    if (!url.trim()) {
+      toast.error('O campo de link nao pode estar vazio.')
+      return
     }
-    let urlToParse = url.trim();
-    if (!urlToParse.startsWith('http://') && !urlToParse.startsWith('https://')) {
-      urlToParse = 'https://' + urlToParse;
+
+    const normalizedLink = normalizeProfileLink(url, rede)
+
+    if (!normalizedLink.ok) {
+      toast.error(normalizedLink.error)
+      return
     }
+
     const response = await fetch('/api/nextsteps/user/links', {
       method: 'POST',
       body: JSON.stringify({
         nr_redesocial: rede,
-        link: url,
-        titulo
-      })
+        link: normalizedLink.value,
+        titulo,
+      }),
     })
+
     if (response.ok) {
       toast.success('Link adicionado com sucesso!')
-    } else {
-      toast.error('Erro ao adicionar link. Tente novamente.')
+      setTitulo('')
+      setUrl('')
+      setRede(0)
+      fetchLinks()
+      return
     }
-    setTitulo('')
-    setUrl('')
-    setRede(0)
-    fetchLinks()
+
+    toast.error('Erro ao adicionar link. Tente novamente.')
   }
+
   const deleteLink = async (index: number) => {
     const response = await fetch('/api/nextsteps/user/links', {
       method: 'DELETE',
@@ -69,28 +88,36 @@ export default function LinksManager() {
     }
     fetchLinks()
   }
+
   return (
     <div className="max-w-md mx-auto space-y-4">
-      {}
       <div className="space-y-2 bg-zinc-900 p-4 rounded-xl">
         <input
           value={titulo}
           onChange={e => setTitulo(e.target.value)}
-          placeholder="Título"
+          placeholder="Titulo"
           className="w-full p-2 rounded bg-zinc-800 text-white"
         />
         <input
           value={url}
           onChange={e => setUrl(e.target.value)}
-          placeholder="https://..."
+          type={isEmailSelected ? 'email' : 'text'}
+          inputMode={isEmailSelected ? 'email' : 'url'}
+          placeholder={
+            isEmailSelected
+              ? 'voce@exemplo.com'
+              : isWhatsappSelected
+                ? 'wa.me/55'
+                : 'https://...'
+          }
           className="w-full p-2 rounded bg-zinc-800 text-white"
         />
         <select
           value={rede}
-          onChange={e => setRede(Number(e.target.value))}
+          onChange={e => handleRedeChange(Number(e.target.value))}
           className="w-full p-2 rounded bg-zinc-800 text-white"
         >
-          {redes.map((nome, i) => (
+          {PROFILE_LINK_OPTIONS.map((nome, i) => (
             <option key={i} value={i}>
               {nome}
             </option>
@@ -103,17 +130,16 @@ export default function LinksManager() {
           + Adicionar
         </button>
       </div>
-      {}
       <div className="space-y-2">
-        {links && links.map(([nr, link, titulo], i) => (
+        {links && links.map(([nr, link, itemTitulo], i) => (
           <div
             key={i}
             className="flex justify-between items-center bg-zinc-900 p-3 rounded-lg"
           >
             <div>
-              <p className="text-white text-sm">{titulo}</p>
+              <p className="text-white text-sm">{itemTitulo}</p>
               <p className="text-gray-400 text-xs">
-                {redes[nr]}
+                {PROFILE_LINK_OPTIONS[nr]}
               </p>
             </div>
             <button

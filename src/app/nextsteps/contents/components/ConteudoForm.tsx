@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { BlobService } from '@/lib/blob-service'
+import { extractFonteFromUrl, normalizeExternalUrl } from '@/lib/profile-links'
 import { upload } from '@vercel/blob/client';
 interface Categoria {
   id: number
@@ -62,12 +63,6 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
       });
     };
   }, [formData.file, formData.files, formData.isSequence, conteudo]);
-  const normalizeUrl = (url: string) => {
-    if (!/^https?:\/\//i.test(url)) {
-      return `https://${url}`;
-    }
-    return url;
-  };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -185,28 +180,10 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 };
   const extractAndSetFonteFromUrl = (url: string) => {
-    try {
-      if (!url || !url.trim()) {
-        setFormData(prev => ({ ...prev, fonte: '' }));
-        return;
-      }
-      let urlToParse = url.trim();
-      if (!urlToParse.startsWith('http://') && !urlToParse.startsWith('https://')) {
-        urlToParse = 'https://' + urlToParse;
-      }
-      const urlObj = new URL(urlToParse);
-      const hostname = urlObj.hostname;
-      let domain = hostname.replace(/^www\./, '');
-      domain = domain.split('.')[0];
-      if (domain) {
-        const capitalizedDomain = domain.charAt(0).toUpperCase() + domain.slice(1).toLowerCase();
-        setFormData(prev => ({ ...prev, fonte: capitalizedDomain }));
-      } else {
-        setFormData(prev => ({ ...prev, fonte: '' }));
-      }
-    } catch (error) {
-      setFormData(prev => ({ ...prev, fonte: '' }));
-    }
+    setFormData(prev => ({
+      ...prev,
+      fonte: extractFonteFromUrl(url)
+    }));
   };
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -238,7 +215,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               extractAndSetFonteFromUrl(newUrl);
             }}
             onBlur={(e) => {
-              const fixedUrl = normalizeUrl(e.target.value);
+              const fixedUrl = normalizeExternalUrl(e.target.value);
               setFormData(prev => ({
                 ...prev,
                 linkext: fixedUrl
