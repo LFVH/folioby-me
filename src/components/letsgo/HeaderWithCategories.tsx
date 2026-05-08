@@ -1,5 +1,5 @@
 'use client'
-
+import { Menu } from "lucide-react"
 import { useState, useRef, useEffect } from 'react'
 import { useCategorias } from '@/hooks/useCategorias'
 import { useGlobalFilter } from '@/hooks/useGlobalFilter'
@@ -223,42 +223,76 @@ export default function HeaderWithCategories() {
           </div>
         
         </div>
-        {/* Menu Mobile - Categorias */}
-        {/* <div className="md:hidden mt-3 overflow-x-auto">
-          <nav className="flex gap-3 pb-2 min-w-max">
+        
+
+        <div className="md:hidden mt-3">
+          <div className="flex items-center justify-between gap-2">
+
+            {/* BOTÕES FIXOS */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 flex-1">
+
+              <Link
+                href={`/${slug}/profile`}
+                onClick={handleProfileClick}
+                className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
+              >
+                {userName?.split(' ')[0] +
+                  (userName?.split(' ')[1]
+                    ? userName?.split(' ')[1]
+                    : '') +
+                  "'s Profile" || 'Usuário'}
+              </Link>
+
+              <Link
+                href={`/${slug}/profile#links`}
+                onClick={handleProfileClick}
+                className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
+              >
+                Contact
+              </Link>
+
+              <Link
+                href={`/${slug}`}
+                onClick={handleInicioClick}
+                className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
+              >
+                Portfolio
+              </Link>
+            </div>
+
+            {/* HAMBURGER */}
             <button
-              onClick={handleInicioClick}
-              className={`${
-                !filtroAtivo
-                  ? 'text-white font-semibold bg-red-600'
-                  : 'text-gray-300 bg-gray-800 hover:bg-gray-700'
-              } transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full`}
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="flex items-center justify-center p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
             >
-              Início
+              <Menu size={18} className="text-gray-300" />
             </button>
-            {categorias?.slice(0, 6).map((categoria) => (
-              <button
-                key={categoria.id}
-                onClick={() => handleCategoriaClick(categoria.id)}
-                className={`${
-                  filtroAtivo === categoria.id && tipoFiltro === 'categoria'
-                    ? 'text-white font-semibold bg-red-600'
-                    : 'text-gray-300 bg-gray-800 hover:bg-gray-700'
-                } transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full`}
-              >
-                {categoria.name}
-              </button>
-            ))}
-            {categorias && categorias.length > 6 && (
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors text-sm px-3 py-1 rounded-full"
-              >
-                +
-              </button>
-            )}
-          </nav>
-        </div> */}
+          </div>
+
+          {/* DROPDOWN */}
+          {isDropdownOpen && (
+            <div className="mt-3 flex flex-wrap gap-2">
+
+              {categorias?.map((categoria) => (
+                <button
+                  key={categoria.id}
+                  onClick={() => {
+                    handleCategoriaClick(categoria.id)
+                    setIsDropdownOpen(false)
+                  }}
+                  className={`${
+                    filtroAtivo === categoria.id &&
+                    tipoFiltro === 'categoria'
+                      ? 'text-white font-semibold bg-red-600'
+                      : 'text-gray-300 bg-gray-800 hover:bg-gray-700'
+                  } transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full`}
+                >
+                  {categoria.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         {filtroAtivo && (
           <div className="mt-3 flex items-center gap-2 text-sm text-white">
             <span className="whitespace-nowrap">Filtrando por:</span>

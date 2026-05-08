@@ -12,8 +12,6 @@ interface FlixClientProps {
 }
 
 export default function FlixClient({ slug }: FlixClientProps) {
-  // ✅ USA O HOOK NORMALMENTE!
-  // Os dados já vêm pré-carregados do servidor via HydrationBoundary
   const { data, isLoading } = useCategorias(slug)
   
   const { filtroAtivo, tipoFiltro, termoPesquisa } = useGlobalFilter()
