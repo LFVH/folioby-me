@@ -1,10 +1,10 @@
 'use client'
 
-import Image from 'next/image'
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import TipTapEditor from '@/components/logged/TipTapEditor'
 import LinksList from '@/components/letsgo/profile/LinksList'
+import { Avatar } from '@/components/ui/Avatar'
 
 type LinkItem = [number, string, string]
 
@@ -19,41 +19,17 @@ interface ProfileClientProps {
   user: User
 }
 
-function getInitials(name: string) {
-  const initials = name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join('')
-
-  return initials || 'FLB'
-}
-
 function ProfileAvatar({ image, name, sizeClass }: { image: string | null; name: string; sizeClass: string }) {
-  if (image) {
-    return (
-      <div
-        className={`relative overflow-hidden rounded-full border border-red-600/40 bg-zinc-950 shadow-[0_0_50px_rgba(220,38,38,0.15)] ${sizeClass}`}
-      >
-        <Image
-          src={image}
-          alt={name}
-          fill
-          sizes="(max-width: 1024px) 10rem, 22rem"
-          className="object-cover"
-          priority
-        />
-      </div>
-    )
-  }
-
   return (
-    <div
-      className={`flex items-center justify-center rounded-full border border-red-600/40 bg-gradient-to-br from-zinc-900 via-zinc-950 to-red-950/40 text-3xl font-semibold text-white shadow-[0_0_50px_rgba(220,38,38,0.15)] ${sizeClass}`}
-    >
-      {getInitials(name)}
-    </div>
+    <Avatar
+      src={image}
+      name={name}
+      priority
+      sizes="(max-width: 1024px) 10rem, 22rem"
+      className={`border border-red-600/40 bg-zinc-950 shadow-[0_0_50px_rgba(220,38,38,0.15)] ${sizeClass}`}
+      imageClassName="scale-[1.01]"
+      fallbackClassName="text-3xl"
+    />
   )
 }
 

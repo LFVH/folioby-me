@@ -1,14 +1,23 @@
 'use client'
 
-import Image from 'next/image';
-import Link from 'next/link';
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { toast } from 'react-toastify';
-import FeatureNoticePopup from '@/components/FeatureNoticePopup';
-import { contact_mail } from '@/types';
-import { getUserSlugValidationError, normalizeUserSlug } from '@/lib/user-slug';
+import { toast } from 'react-toastify'
+import FeatureNoticePopup from '@/components/FeatureNoticePopup'
+import { ProfileImageCropper } from '@/components/nextsteps/profile/ProfileImageCropper'
+import { Avatar } from '@/components/ui/Avatar'
+import { getUserSlugValidationError, normalizeUserSlug } from '@/lib/user-slug'
+import { contact_mail } from '@/types'
+
+type ImageMimeType = 'image/jpeg' | 'image/png'
+
+interface PendingImageCrop {
+  src: string
+  name: string
+  outputFormat: ImageMimeType
+}
 
 export default function UserPage() {
   const { data: session, update } = useSession()
@@ -21,6 +30,7 @@ export default function UserPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [uploadingImage, setUploadingImage] = useState(false)
   const [userImage, setUserImage] = useState<string | null>(null)
+  const [pendingImageCrop, setPendingImageCrop] = useState<PendingImageCrop | null>(null)
 
   useEffect(() => {
     if (session?.user) {
@@ -29,7 +39,19 @@ export default function UserPage() {
     }
   }, [session])
 
+  useEffect(() => {
+    return () => {
+      if (pendingImageCrop?.src) {
+        URL.revokeObjectURL(pendingImageCrop.src)
+      }
+    }
+  }, [pendingImageCrop])
+
   const slugError = slug ? getUserSlugValidationError(slug) : null
+
+  const resetPendingImageCrop = () => {
+    setPendingImageCrop(null)
+  }
 
   const handleUpdateSlug = async () => {
     const currentSlugError = getUserSlugValidationError(slug)
@@ -61,7 +83,7 @@ export default function UserPage() {
       } else {
         toast.error(data.error || 'Erro ao atualizar slug')
       }
-    } catch (error) {
+    } catch {
       toast.error('Erro ao atualizar slug')
     } finally {
       setIsLoading(false)
@@ -98,42 +120,63 @@ export default function UserPage() {
       } else {
         toast.error(data.error || 'Erro ao atualizar senha')
       }
-    } catch (error) {
+    } catch {
       toast.error('Erro ao atualizar senha')
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleImageSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
 
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
     if (!validTypes.includes(file.type)) {
-      toast.error('Tipo de arquivo nao suportado. Use JPEG, PNG ou WebP');
-      return;
+      toast.error('Tipo de arquivo nao suportado. Use JPEG, PNG ou WebP')
+      return
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('Arquivo muito grande (max. 5MB)');
-      return;
+      toast.error('Arquivo muito grande (max. 5MB)')
+      return
     }
 
-    setUploadingImage(true);
-    const formData = new FormData();
-    formData.append('file', file);
+    const previewUrl = URL.createObjectURL(file)
+    const outputFormat: ImageMimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg'
+
+    setPendingImageCrop((current) => {
+      if (current?.src) {
+        URL.revokeObjectURL(current.src)
+      }
+
+      return {
+        src: previewUrl,
+        name: file.name,
+        outputFormat,
+      }
+    })
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
+  const handleCroppedImageUpload = async (file: File) => {
+    setUploadingImage(true)
+    const formData = new FormData()
+    formData.append('file', file)
 
     try {
       const uploadResponse = await fetch('/api/nextsteps/user/image', {
         method: 'POST',
         body: formData,
-      });
+      })
 
-      const uploadData = await uploadResponse.json();
+      const uploadData = await uploadResponse.json()
 
       if (!uploadResponse.ok) {
-        throw new Error(uploadData.error || 'Erro ao fazer upload');
+        throw new Error(uploadData.error || 'Erro ao fazer upload')
       }
 
       const updateResponse = await fetch('/api/nextsteps/user/image', {
@@ -143,58 +186,56 @@ export default function UserPage() {
         },
         body: JSON.stringify({
           imageUrl: uploadData.url,
-          oldImageUrl: userImage
+          oldImageUrl: userImage,
         }),
-      });
+      })
 
-      const updateData = await updateResponse.json();
+      const updateData = await updateResponse.json()
 
-      if (updateResponse.ok) {
-        await update({ image: uploadData.url });
-        setUserImage(uploadData.url);
-        toast.success('Foto de perfil atualizada!');
-      } else {
-        throw new Error(updateData.error || 'Erro ao atualizar perfil');
+      if (!updateResponse.ok) {
+        throw new Error(updateData.error || 'Erro ao atualizar perfil')
       }
+
+      await update({ image: uploadData.url })
+      setUserImage(uploadData.url)
+      resetPendingImageCrop()
+      toast.success('Foto de perfil atualizada!')
     } catch (error) {
-      console.error('Erro no upload:', error);
-      toast.error(error instanceof Error ? error.message : 'Erro ao fazer upload');
+      console.error('Erro no upload:', error)
+      toast.error(error instanceof Error ? error.message : 'Erro ao fazer upload')
     } finally {
-      setUploadingImage(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+      setUploadingImage(false)
     }
-  };
+  }
 
   const handleRemoveImage = async () => {
-    if (!userImage) return;
+    if (!userImage) return
 
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const response = await fetch(
         `/api/nextsteps/user/image?url=${encodeURIComponent(userImage)}`,
         {
           method: 'DELETE',
         }
-      );
+      )
 
-      const data = await response.json();
+      const data = await response.json()
 
-      if (response.ok) {
-        await update({ image: null });
-        setUserImage(null);
-        toast.success('Foto de perfil removida!');
-      } else {
-        throw new Error(data.error || 'Erro ao remover foto');
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao remover foto')
       }
+
+      await update({ image: null })
+      setUserImage(null)
+      toast.success('Foto de perfil removida!')
     } catch (error) {
-      console.error('Erro ao remover:', error);
-      toast.error(error instanceof Error ? error.message : 'Erro ao remover foto');
+      console.error('Erro ao remover:', error)
+      toast.error(error instanceof Error ? error.message : 'Erro ao remover foto')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -219,28 +260,19 @@ export default function UserPage() {
 
               <div className="rounded-lg bg-[#141414] p-6">
                 <h2 className="mb-4 text-2xl font-semibold">Profile Photo (/slug/profile)</h2>
-                <div className="flex items-center space-x-6">
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-center">
                   <div className="relative">
-                    <div className="h-32 w-32 overflow-hidden rounded-full bg-gray-800">
-                      {userImage ? (
-                        <Image
-                          src={userImage}
-                          alt={session?.user?.name ?? 'user'}
-                          fill
-                          className="object-cover object-top"
-                          priority
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center">
-                          <span className="text-4xl font-bold">
-                            {session?.user?.name?.charAt(0).toUpperCase()}
-                          </span>
-                        </div>
-                      )}
-                    </div>
+                    <Avatar
+                      src={userImage}
+                      name={session?.user?.name}
+                      priority
+                      sizes="128px"
+                      className="h-32 w-32 border border-white/10 bg-gray-800"
+                      fallbackClassName="text-4xl"
+                    />
                     {uploadingImage && (
-                      <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black bg-opacity-50">
-                        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-white"></div>
+                      <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/55">
+                        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-white" />
                       </div>
                     )}
                   </div>
@@ -248,43 +280,43 @@ export default function UserPage() {
                   <div className="space-y-4">
                     <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4">
                       <h4 className="mb-2 flex items-center gap-2 text-sm font-medium text-zinc-300">
-                        <span className="h-1.5 w-1.5 rounded-full bg-red-600"></span>
-                        Recommendations:
+                        <span className="h-1.5 w-1.5 rounded-full bg-red-600" />
+                        New crop experience:
                       </h4>
 
                       <ul className="space-y-2 text-sm text-zinc-400">
                         <li className="flex items-start gap-2">
                           <span className="text-lg leading-5 text-red-600">*</span>
                           <span>
-                            <strong className="text-zinc-300">Format 1:1</strong> (square — ex: 512x512px, 800x800px)
+                            <strong className="text-zinc-300">Circular crop</strong> com preview em tempo real, igual a apps de mensagem e social
                           </span>
                         </li>
 
                         <li className="flex items-start gap-2">
                           <span className="text-lg leading-5 text-red-600">*</span>
                           <span>
-                            <strong className="text-zinc-300">Recommended size:</strong> at least 512x512px
+                            <strong className="text-zinc-300">Arraste e de zoom</strong> com mouse, scroll, touch e pinca
                           </span>
                         </li>
 
                         <li className="flex items-start gap-2">
                           <span className="text-lg leading-5 text-red-600">*</span>
                           <span>
-                            <strong className="text-zinc-300">Max Size:</strong> 5MB
+                            <strong className="text-zinc-300">Export high quality:</strong> JPG ou PNG prontos para avatar
                           </span>
                         </li>
 
                         <li className="flex items-start gap-2">
                           <span className="text-lg leading-5 text-red-600">*</span>
                           <span>
-                            <strong className="text-zinc-300">Accepted formats:</strong> JPG, PNG, WebP
+                            <strong className="text-zinc-300">Accepted formats:</strong> JPG, PNG, WebP ate 5MB
                           </span>
                         </li>
 
                         <li className="mt-1 flex items-start gap-2 border-t border-zinc-800 pt-2 text-xs">
                           <span className="text-red-600">i</span>
                           <span>
-                            Image will be center-cropped into a circular frame
+                            O recorte salvo passa a ser o mesmo usado no botao do usuario e no perfil publico.
                           </span>
                         </li>
                       </ul>
@@ -294,7 +326,7 @@ export default function UserPage() {
                       <input
                         type="file"
                         ref={fileInputRef}
-                        onChange={handleImageUpload}
+                        onChange={handleImageSelection}
                         accept="image/*"
                         className="hidden"
                       />
@@ -303,7 +335,7 @@ export default function UserPage() {
                         disabled={uploadingImage}
                         className="w-full rounded bg-white px-4 py-2 font-semibold text-black transition hover:bg-gray-200 disabled:opacity-50 sm:w-auto"
                       >
-                        {uploadingImage ? 'Enviando...' : 'Alterar Foto'}
+                        {uploadingImage ? 'Enviando...' : 'Escolher Nova Foto'}
                       </button>
                       {userImage && (
                         <button
@@ -320,16 +352,16 @@ export default function UserPage() {
               </div>
 
               <div className="rounded-lg bg-[#141414] p-6">
-                <h2 className="mb-4 text-2xl font-semibold">Profile's Slug</h2>
+                <h2 className="mb-4 text-2xl font-semibold">Profile&apos;s Slug</h2>
                 <div className="space-y-4">
                   <div>
                     <label className="mb-2 block text-sm text-gray-400">
-                      Seu identificador único, pública e facilmente compartilhável.
+                      Seu identificador unico, publico e facilmente compartilhavel.
                     </label>
                     <input
                       type="text"
                       value={slug}
-                      onChange={(e) => setSlug(e.target.value.toLowerCase())}
+                      onChange={(event) => setSlug(event.target.value.toLowerCase())}
                       className="w-full rounded border border-gray-700 bg-gray-900 px-4 py-3 focus:border-red-600 focus:outline-none"
                       placeholder="seu-slug-aqui"
                     />
@@ -359,7 +391,7 @@ export default function UserPage() {
                     <input
                       type="password"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={(event) => setPassword(event.target.value)}
                       className="w-full rounded border border-gray-700 bg-gray-900 px-4 py-3 focus:border-red-600 focus:outline-none"
                     />
                   </div>
@@ -370,7 +402,7 @@ export default function UserPage() {
                     <input
                       type="password"
                       value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      onChange={(event) => setConfirmPassword(event.target.value)}
                       className="w-full rounded border border-gray-700 bg-gray-900 px-4 py-3 focus:border-red-600 focus:outline-none"
                     />
                   </div>
@@ -412,8 +444,8 @@ export default function UserPage() {
                     <p className="text-lg">{session?.user?.slug || 'Nao definido'}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400">Para editar essa sessão ou deletar conta envie email para</p>
-                    <p className="text-sm  text-gray-400">{contact_mail}</p>
+                    <p className="text-sm text-gray-400">Para editar essa sessao ou deletar conta envie email para</p>
+                    <p className="text-sm text-gray-400">{contact_mail}</p>
                   </div>
                 </div>
               </div>
@@ -421,6 +453,15 @@ export default function UserPage() {
           </div>
         </div>
       </main>
+
+      <ProfileImageCropper
+        isOpen={!!pendingImageCrop}
+        imageSrc={pendingImageCrop?.src ?? null}
+        fileName={pendingImageCrop?.name ?? 'avatar'}
+        outputFormat={pendingImageCrop?.outputFormat ?? 'image/jpeg'}
+        onClose={resetPendingImageCrop}
+        onConfirm={handleCroppedImageUpload}
+      />
     </div>
   )
 }

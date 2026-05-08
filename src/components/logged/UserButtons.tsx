@@ -2,6 +2,7 @@
 
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { Avatar } from '@/components/ui/Avatar';
 
 export function UserButton() {
   const { data: session, status } = useSession();
@@ -13,7 +14,7 @@ export function UserButton() {
 
   if (status === 'loading') {
     return (
-      <div className="w-8 h-8 rounded-full bg-gray-300 animate-pulse" />
+      <div className="h-9 w-9 animate-pulse rounded-full bg-white/10" />
     );
   }
 
@@ -22,30 +23,21 @@ export function UserButton() {
   }
 
   return (
-    <div className=" flex">
+    <div className="flex items-center gap-2">
       <button
         onClick={handleClick}
-        className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="group inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 p-0.5 text-white transition duration-200 hover:border-white/20 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black"
         title="Manage Profile"
+        aria-label="Abrir configuracoes do perfil"
       >
-        {session.user?.image ? (
-        <img
-          src={session.user.image}
-          alt={session.user.name || 'User'}
-          className="w-8 h-8 rounded-full object-cover"
+        <Avatar
+          src={session.user?.image}
+          name={session.user?.name}
+          className="h-full w-full ring-0 shadow-none"
+          imageClassName="group-hover:scale-[1.04]"
+          fallbackClassName="text-xs font-bold"
+          sizes="40px"
         />
-      ) : (
-        <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
-          <span className="text-white text-xs font-bold">
-            {session.user?.name
-              ?.split(' ')
-              .map(word => word[0])
-              .join('')
-              .toUpperCase()
-              .slice(0, 2)}
-          </span>
-        </div>
-      )}
       </button>
       <button
         onClick={() => signOut({ callbackUrl: "/login" })}
@@ -57,23 +49,5 @@ export function UserButton() {
         <span className="hidden sm:inline">Sair</span>
       </button>
     </div>
-  );
-}
-
-function UserIcon() {
-  return (
-    <svg
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      className="w-4 h-4"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-      />
-    </svg>
   );
 }
