@@ -107,7 +107,6 @@ export default function HeaderWithCategories() {
   return (
     <header className="fixed top-7 w-full z-50 bg-gradient-to-b from-black to-transparent">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        
           <div className="flex items-center gap-4 min-w-0 flex-1">
             <Link href={`/`} className="flex items-center space-x-2">
               <div className="text-red-600 font-bold tracking-tight">
@@ -211,88 +210,88 @@ export default function HeaderWithCategories() {
                 </div>
               )}
             </nav>
-          </div>
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-            <div className="flex-1 sm:flex-none min-w-0">
-              <SearchBar
-                onSearch={handleSearch}
-                value={tipoFiltro === 'search' ? termoPesquisa : ''}
-                onClear={handleClearSearch}
-              />
-            </div>
-          </div>
-        
-        </div>
-        
+            <div className="md:hidden mt-3">
+              <div className="flex items-center justify-between gap-2">
 
-        <div className="md:hidden mt-3">
-          <div className="flex items-center justify-between gap-2">
+                {/* BOTÕES FIXOS */}
+                <div className="flex items-center gap-2 overflow-x-auto pb-1 flex-1">
 
-            {/* BOTÕES FIXOS */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 flex-1">
+                  <Link
+                    href={`/${slug}/profile`}
+                    onClick={handleProfileClick}
+                    className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
+                  >
+                    {userName?.split(' ')[0] +
+                      (userName?.split(' ')[1]
+                        ? userName?.split(' ')[1]
+                        : '') +
+                      "'s Profile" || 'Usuário'}
+                  </Link>
 
-              <Link
-                href={`/${slug}/profile`}
-                onClick={handleProfileClick}
-                className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
-              >
-                {userName?.split(' ')[0] +
-                  (userName?.split(' ')[1]
-                    ? userName?.split(' ')[1]
-                    : '') +
-                  "'s Profile" || 'Usuário'}
-              </Link>
+                  <Link
+                    href={`/${slug}/profile#links`}
+                    onClick={handleProfileClick}
+                    className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
+                  >
+                    Contact
+                  </Link>
 
-              <Link
-                href={`/${slug}/profile#links`}
-                onClick={handleProfileClick}
-                className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
-              >
-                Contact
-              </Link>
+                  <Link
+                    href={`/${slug}`}
+                    onClick={handleInicioClick}
+                    className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
+                  >
+                    Portfolio
+                  </Link>
+                </div>
 
-              <Link
-                href={`/${slug}`}
-                onClick={handleInicioClick}
-                className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
-              >
-                Portfolio
-              </Link>
-            </div>
-
-            {/* HAMBURGER */}
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center justify-center p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
-            >
-              <Menu size={18} className="text-gray-300" />
-            </button>
-          </div>
-
-          {/* DROPDOWN */}
-          {isDropdownOpen && (
-            <div className="mt-3 flex flex-wrap gap-2">
-
-              {categorias?.map((categoria) => (
+                {/* HAMBURGER */}
                 <button
-                  key={categoria.id}
-                  onClick={() => {
-                    handleCategoriaClick(categoria.id)
-                    setIsDropdownOpen(false)
-                  }}
-                  className={`${
-                    filtroAtivo === categoria.id &&
-                    tipoFiltro === 'categoria'
-                      ? 'text-white font-semibold bg-red-600'
-                      : 'text-gray-300 bg-gray-800 hover:bg-gray-700'
-                  } transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full`}
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center justify-center p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
                 >
-                  {categoria.name}
+                  <Menu size={18} className="text-gray-300" />
                 </button>
-              ))}
+              </div>
+
+              {/* DROPDOWN */}
+              {isDropdownOpen && (
+                <div className="mt-3 flex flex-wrap gap-2">
+
+                  {categorias?.map((categoria) => (
+                    <button
+                      key={categoria.id}
+                      onClick={() => {
+                        handleCategoriaClick(categoria.id)
+                        setIsDropdownOpen(false)
+                      }}
+                      className={`${
+                        filtroAtivo === categoria.id &&
+                        tipoFiltro === 'categoria'
+                          ? 'text-white font-semibold bg-red-600'
+                          : 'text-gray-300 bg-gray-800 hover:bg-gray-700'
+                      } transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full`}
+                    >
+                      {categoria.name}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
+
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+              <div className="flex-1 sm:flex-none min-w-0">
+                <SearchBar
+                  onSearch={handleSearch}
+                  value={tipoFiltro === 'search' ? termoPesquisa : ''}
+                  onClear={handleClearSearch}
+                />
+              </div>
+            </div>
+          </div>        
         </div>
+        
+
         {filtroAtivo && (
           <div className="mt-3 flex items-center gap-2 text-sm text-white">
             <span className="whitespace-nowrap">Filtrando por:</span>
