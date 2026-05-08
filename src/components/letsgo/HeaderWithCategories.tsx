@@ -131,14 +131,16 @@ export default function HeaderWithCategories() {
               >
               Contact
               </Link>
-              <Link
-                className= "text-gray-300 hover:text-white transition-colors duration-200 text-lg font-light tracking-[0.3em]"
-                href={`/${slug}`}
-                key={`${userName}H`}
-                onClick={handleInicioClick}
-              >
-                Portfolio
-              </Link>
+              { pathname !== `/${slug}` && (
+                <Link
+                  className= "text-gray-300 hover:text-white transition-colors duration-200 text-lg font-light tracking-[0.3em]"
+                  href={`/${slug}`}
+                  key={`${userName}H`}
+                  onClick={handleInicioClick}
+                >
+                  Portfolio
+                </Link>
+              )}
               {categoriasPrincipais.map((categoria) => (
               <div key={categoria.id} className="relative">
                 <button
@@ -235,14 +237,15 @@ export default function HeaderWithCategories() {
                   >
                     Contact
                   </Link>
-
-                  <Link
-                    href={`/${slug}`}
-                    onClick={handleInicioClick}
-                    className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
-                  >
-                    Portfolio
-                  </Link>
+                  { pathname !== `/${slug}` && (
+                    <Link
+                      href={`/${slug}`}
+                      onClick={handleInicioClick}
+                      className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
+                    >
+                      Portfolio
+                    </Link>
+                  )}
                 </div>
 
                 {/* HAMBURGER */}
