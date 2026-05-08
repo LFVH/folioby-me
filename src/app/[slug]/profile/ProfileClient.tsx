@@ -1,80 +1,183 @@
-'use client';
+'use client'
 
-import Image from 'next/image';
-import TipTapEditor from '@/components/logged/TipTapEditor';
-import LinksList from '@/components/letsgo/profile/LinksList';
-import { useEffect } from "react";
-import { usePathname } from 'next/navigation';
+import Image from 'next/image'
+import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
+import TipTapEditor from '@/components/logged/TipTapEditor'
+import LinksList from '@/components/letsgo/profile/LinksList'
+
+type LinkItem = [number, string, string]
+
 interface User {
-  name: string;
-  image: string | null;
-  desc: any;
-  links: [];
+  name: string
+  image: string | null
+  desc: any
+  links: LinkItem[]
 }
 
 interface ProfileClientProps {
-  user: User;
+  user: User
+}
+
+function getInitials(name: string) {
+  const initials = name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('')
+
+  return initials || 'FLB'
+}
+
+function ProfileAvatar({ image, name, sizeClass }: { image: string | null; name: string; sizeClass: string }) {
+  if (image) {
+    return (
+      <div
+        className={`relative overflow-hidden rounded-full border border-red-600/40 bg-zinc-950 shadow-[0_0_50px_rgba(220,38,38,0.15)] ${sizeClass}`}
+      >
+        <Image
+          src={image}
+          alt={name}
+          fill
+          sizes="(max-width: 1024px) 10rem, 22rem"
+          className="object-cover"
+          priority
+        />
+      </div>
+    )
+  }
+
+  return (
+    <div
+      className={`flex items-center justify-center rounded-full border border-red-600/40 bg-gradient-to-br from-zinc-900 via-zinc-950 to-red-950/40 text-3xl font-semibold text-white shadow-[0_0_50px_rgba(220,38,38,0.15)] ${sizeClass}`}
+    >
+      {getInitials(name)}
+    </div>
+  )
+}
+
+function ProfileDescription({ desc }: { desc: User['desc'] }) {
+  return (
+    <div className="prose prose-invert max-w-none">
+      {desc && Object.keys(desc).length > 0 ? (
+        <div className="leading-relaxed text-gray-300">
+          <TipTapEditor
+            content={desc}
+            onChange={() => {}}
+            editable={false}
+          />
+        </div>
+      ) : (
+        <p className="border-l-4 border-red-600 pl-4 italic text-gray-500">
+          Este usuario ainda nao adicionou uma descricao.
+        </p>
+      )}
+    </div>
+  )
+}
+
+function ProfileLinksCard({ links }: { links: LinkItem[] }) {
+  return (
+    <section
+      id="links"
+      className="scroll-mt-32 rounded-[28px] border border-zinc-800 bg-zinc-950/80 p-5 shadow-2xl shadow-black/30 backdrop-blur sm:p-6"
+    >
+      <div className="mb-5 flex items-center justify-between gap-4">
+        <div>
+          <p className="text-xs uppercase tracking-[0.35em] text-red-500">Contact</p>
+          <h2 className="mt-2 text-2xl font-semibold text-white">Links</h2>
+        </div>
+        <div className="h-px flex-1 bg-gradient-to-r from-red-600/70 to-transparent" />
+      </div>
+      <LinksList links={links} />
+    </section>
+  )
+}
+
+function MobileProfileLayout({ user }: { user: User }) {
+  return (
+    <div className="space-y-6 lg:hidden">
+      <section className="relative overflow-hidden rounded-[32px] border border-zinc-800 bg-zinc-950 px-5 py-8 shadow-2xl shadow-black/30">
+        <div className="absolute inset-x-8 top-0 h-24 rounded-full bg-red-600/10 blur-3xl" />
+        <div className="relative flex flex-col items-center text-center">
+          <ProfileAvatar
+            image={user.image}
+            name={user.name}
+            sizeClass="h-36 w-36"
+          />
+          <p className="mt-6 text-xs uppercase tracking-[0.4em] text-red-500">Profile</p>
+          <h1 className="mt-3 text-4xl font-bold text-white">{user.name}</h1>
+          <div className="mt-4 h-1 w-20 rounded-full bg-red-600" />
+        </div>
+
+        <div className="relative mt-8 rounded-[24px] border border-zinc-800 bg-black/40 p-5 text-left">
+          <ProfileDescription desc={user.desc} />
+        </div>
+      </section>
+
+      <ProfileLinksCard links={user.links} />
+    </div>
+  )
+}
+
+function DesktopProfileLayout({ user }: { user: User }) {
+  return (
+    <div className="hidden gap-10 lg:grid lg:grid-cols-[minmax(0,1.2fr)_22rem] lg:items-start">
+      <section className="relative overflow-hidden rounded-[36px] border border-zinc-800 bg-zinc-950 px-10 py-12 shadow-2xl shadow-black/30">
+        <div className="absolute -left-20 top-10 h-48 w-48 rounded-full bg-red-600/10 blur-3xl" />
+        <div className="relative">
+          <p className="text-sm uppercase tracking-[0.45em] text-red-500">Profile</p>
+          <h1 className="mt-5 max-w-3xl text-6xl font-bold leading-tight text-white">
+            {user.name}
+          </h1>
+          <div className="mt-6 h-1 w-28 rounded-full bg-red-600" />
+
+          <div className="mt-10 rounded-[28px] border border-zinc-800 bg-black/30 p-8">
+            <ProfileDescription desc={user.desc} />
+          </div>
+        </div>
+      </section>
+
+      <aside className="sticky top-28 space-y-6">
+        <section className="rounded-[32px] border border-zinc-800 bg-zinc-950/90 p-8 text-center shadow-2xl shadow-black/30">
+          <div className="flex justify-center">
+            <ProfileAvatar
+              image={user.image}
+              name={user.name}
+              sizeClass="h-72 w-72"
+            />
+          </div>
+        </section>
+
+        <ProfileLinksCard links={user.links} />
+      </aside>
+    </div>
+  )
 }
 
 export default function ProfileClient({ user }: ProfileClientProps) {
-  const pathname = usePathname();
-  useEffect(() => {
-    const hash = window.location.hash;
+  const pathname = usePathname()
 
-    if (hash) {
-      const el = document.querySelector(hash);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-      }
+  useEffect(() => {
+    const hash = window.location.hash
+
+    if (!hash) {
+      return
     }
-  }, [pathname]);
+
+    const el = document.querySelector(hash)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [pathname])
+
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="container mx-auto max-w-6xl px-4 py-12">
-        <div className="space-y-8 flex items-start justify-between">
-          <div>
-            <h2 className="mb-2 text-5xl font-bold text-white">
-              {user.name}
-            </h2>
-            <div className="h-0.5 w-32 bg-red-600"></div>
-            <div className="space-y-6">
-              <div className="prose prose-invert max-w-none">
-                {user.desc && Object.keys(user.desc).length > 0 ? (
-                  <div className="leading-relaxed text-gray-300">
-                    <TipTapEditor
-                      content={user.desc}
-                      onChange={() => {}}
-                      editable={false}
-                    />
-                  </div>
-                ) : (
-                  <p className="border-l-4 border-red-600 pl-4 italic text-gray-500">
-                    Este usuario ainda nao adicionou uma descricao.
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-          {user.image && (
-          <div className="flex justify-end">
-            <div className="w-64 h-64 rounded-full overflow-hidden border-2 border-red-600/30">
-              <Image
-                src={user.image}
-                alt={user.name}
-                width={256}
-                height={256}
-                className="object-cover"
-                priority
-              />
-            </div>
-          </div>
-        )}
-        </div>
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+        <MobileProfileLayout user={user} />
+        <DesktopProfileLayout user={user} />
       </div>
-        
-        <div className= "pt-4" id="links">
-          <LinksList links={user.links} />
-        </div>
-      </div>
-  );
+    </div>
+  )
 }
