@@ -52,6 +52,8 @@ export async function middleware(request: NextRequest) {
   console.log(potentialSlug)
 
   const validSlugs = await getValidUserSlugs()
+  console.log(validSlugs)
+  console.log("validSlugs")
   if (validSlugs.includes(potentialSlug)) {
     return NextResponse.next()
   }
