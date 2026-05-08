@@ -50,7 +50,13 @@ export default function UserPage() {
   const slugError = slug ? getUserSlugValidationError(slug) : null
 
   const resetPendingImageCrop = () => {
-    setPendingImageCrop(null)
+    setPendingImageCrop((current) => {
+      if (current?.src) {
+        URL.revokeObjectURL(current.src)
+      }
+
+      return null
+    })
   }
 
   const handleUpdateSlug = async () => {
