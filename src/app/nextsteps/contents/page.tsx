@@ -87,7 +87,12 @@ export default function ConteudosPage() {
       alert('Error on delete')
     }
   }
-
+  const getOriginalFileName = (filename: string) => {
+    return filename.replace(
+      /^\d+-[a-f0-9-]+-/i,
+      ''
+    );
+  };
   const handleStatusChange = (conteudoId: number, newBool: boolean, toggle: string) => {
     setConteudos(prev => 
       prev.map(conteudo => 
@@ -163,7 +168,7 @@ export default function ConteudosPage() {
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1 min-w-0">
                     <h3 className="text-white font-semibold text-lg truncate">
-                      {conteudo.name || 'No name'}
+                      {getOriginalFileName(conteudo.name || 'No name')}
                     </h3>
                   </div>
 
