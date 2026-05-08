@@ -1,5 +1,6 @@
 export const USER_SLUG_MAX_LENGTH = 50
 export const USER_SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+const FILE_LIKE_PATH_REGEX = /\/[^/]+\.[^/]+$/i
 
 export const RESERVED_USER_SLUGS = [
   'api',
@@ -23,6 +24,14 @@ export class UserSlugError extends Error {
 
 export function normalizeUserSlug(slug: string): string {
   return slug.trim().toLowerCase()
+}
+
+export function isFileLikeUserSlug(slug: string): boolean {
+  return normalizeUserSlug(slug).includes('.')
+}
+
+export function isFileLikePathname(pathname: string): boolean {
+  return FILE_LIKE_PATH_REGEX.test(pathname.trim().toLowerCase())
 }
 
 export function truncateUserSlug(slug: string): string {

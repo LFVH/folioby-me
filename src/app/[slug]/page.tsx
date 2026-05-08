@@ -1,9 +1,11 @@
 // app/[slug]/page.tsx
 import { Metadata } from 'next'
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
+import { notFound } from 'next/navigation'
 import Script from 'next/script'
 import FlixClient from './FlixClient'
 import { getPortfolioBySlug } from '@/lib/db/slug-metadata'
+import { isFileLikeUserSlug } from '@/lib/user-slug'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,6 +15,11 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
+
+  if (isFileLikeUserSlug(slug)) {
+    return {}
+  }
+
   const data = await getPortfolioBySlug(slug)
   const userName = data.userName || slug
 
@@ -35,6 +42,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function FlixPage({ params }: PageProps) {
   const { slug } = await params
+
+  if (isFileLikeUserSlug(slug)) {
+    notFound()
+  }
+
   const queryClient = new QueryClient()
   const data = await queryClient.fetchQuery({
     queryKey: ['categorias', slug],

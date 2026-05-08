@@ -4,11 +4,12 @@ import { getToken } from "next-auth/jwt"
 import { verifyUserById } from "./utils/verifyUserAuth"
 import { getValidUserSlugs } from "./lib/db/slug-service"
 import { ratelimit } from "./lib/ratelimit"
+import { isFileLikePathname } from "./lib/user-slug"
 
 export const runtime = "nodejs"
 
 export const config = {
-  matcher: "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  matcher: "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)",
 }
 
 function getRateLimitKey(request: NextRequest, userId?: string) {
@@ -31,11 +32,7 @@ export async function middleware(request: NextRequest) {
   console.log("currentPath")
   console.log(currentPath)
 
-  if (
-    currentPath.startsWith("/_next") ||
-    currentPath.startsWith("/static") ||
-    (currentPath.includes(".") && !currentPath.includes("/api/"))
-  ) {
+  if (currentPath.startsWith("/_next") || currentPath.startsWith("/static") || isFileLikePathname(currentPath)) {
     return NextResponse.next()
   }
 

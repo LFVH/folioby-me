@@ -1,3 +1,5 @@
+import { isFileLikeUserSlug } from '@/lib/user-slug'
+
 function getBaseUrl() {
   if (process.env.NEXTAUTH_URL) {
     return process.env.NEXTAUTH_URL
@@ -12,6 +14,10 @@ function getBaseUrl() {
 
 export async function getPortfolioBySlug(slug: string) {
   try {
+    if (isFileLikeUserSlug(slug)) {
+      return { categorias: [] }
+    }
+
     const baseUrl = getBaseUrl()
     
     const response = await fetch(`${baseUrl}/api/letsgo/categorias?slug=${encodeURIComponent(slug)}`, {

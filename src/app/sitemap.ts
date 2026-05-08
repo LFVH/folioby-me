@@ -1,35 +1,31 @@
 import { MetadataRoute } from 'next'
 import { getValidUserSlugs } from '@/lib/db/slug-service'
+import { getSiteUrl } from '@/lib/site-url'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const siteUrl = getSiteUrl()
   const slugs =  await getValidUserSlugs()
   const staticUrls = [
     {
-      url: 'https://folioby.com',
+      url: siteUrl,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     {
-      url: 'https://folioby.com/sobre',
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    },
-    {
-      url: 'https://folioby.com/termos-de-uso',
+      url: `${siteUrl}/termos`,
       lastModified: new Date(),
       changeFrequency: 'yearly' as const,
       priority: 0.3,
     },
     {
-      url: 'https://folioby.com/politica-privacidade',
+      url: `${siteUrl}/privacidade`,
       lastModified: new Date(),
       changeFrequency: 'yearly' as const,
       priority: 0.3,
     },
   ]
   const portfolioUrls = slugs.map((slug) => ({
-    url: `https://folioby.com/${slug}`,
+    url: `${siteUrl}/${slug}`,
     lastModified: new Date(),
     changeFrequency: 'daily' as const,
     priority: 1,

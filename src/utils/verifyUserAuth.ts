@@ -4,6 +4,7 @@ import authHandler from "@/app/api/nxtHandle/nextAuthHandler";
 import prisma from "../prisma";
 import { Usuario } from "../../generated/prisma/client";
 import { logNow } from "./Logging";
+import { isFileLikeUserSlug } from "@/lib/user-slug";
 
 type VerifiedUser = {
   userId: string;
@@ -150,6 +151,13 @@ export async function userExists(): Promise<Usuario | NextResponse>  {
 }
 
 export async function findBySlug(slug: string): Promise<Usuario | NextResponse>  {
+    if (isFileLikeUserSlug(slug)) {
+      return NextResponse.json(
+        { success: false, body: { message: "Not Found" } },
+        { status: 404 }
+      );
+    }
+
     const userExists = await prisma.usuario.findUnique({
       where: { slug: slug },
     });
