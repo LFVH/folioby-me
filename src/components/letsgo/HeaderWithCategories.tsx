@@ -224,7 +224,7 @@ export default function HeaderWithCategories() {
         
         </div>
         {/* Menu Mobile - Categorias */}
-        <div className="md:hidden mt-3 overflow-x-auto">
+        {/* <div className="md:hidden mt-3 overflow-x-auto">
           <nav className="flex gap-3 pb-2 min-w-max">
             <button
               onClick={handleInicioClick}
@@ -258,7 +258,7 @@ export default function HeaderWithCategories() {
               </button>
             )}
           </nav>
-        </div>
+        </div> */}
         {filtroAtivo && (
           <div className="mt-3 flex items-center gap-2 text-sm text-white">
             <span className="whitespace-nowrap">Filtrando por:</span>
