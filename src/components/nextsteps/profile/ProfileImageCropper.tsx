@@ -40,7 +40,7 @@ export function ProfileImageCropper({
     () => (outputFormat === 'image/png' ? 'PNG' : 'JPG'),
     [outputFormat]
   )
-  const minZoom = 0.8
+  const minZoom = 0.4
   const maxZoom = 4
 
   useEffect(() => {
