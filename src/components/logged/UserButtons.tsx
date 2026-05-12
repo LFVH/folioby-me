@@ -27,8 +27,8 @@ export function UserButton() {
       <button
         onClick={handleClick}
         className="group inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 p-0.5 text-white transition duration-200 hover:border-white/20 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black"
-        title="Manage Profile"
-        aria-label="Abrir configuracoes do perfil"
+        title="Gerenciar perfil"
+        aria-label="Abrir configurações do perfil"
       >
         <Avatar
           src={session.user?.image}

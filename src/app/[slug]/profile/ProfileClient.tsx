@@ -46,7 +46,7 @@ function ProfileDescription({ desc }: { desc: User['desc'] }) {
         </div>
       ) : (
         <p className="border-l-4 border-red-600 pl-4 italic text-gray-500">
-          Este usuario ainda nao adicionou uma descricao.
+          Este usuário ainda não adicionou uma descrição.
         </p>
       )}
     </div>
@@ -61,7 +61,7 @@ function ProfileLinksCard({ links }: { links: LinkItem[] }) {
     >
       <div className="mb-5 flex items-center justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.35em] text-red-500">Contact</p>
+          <p className="text-xs uppercase tracking-[0.35em] text-red-500">Contato</p>
           <h2 className="mt-2 text-2xl font-semibold text-white">Links</h2>
         </div>
         <div className="h-px flex-1 bg-gradient-to-r from-red-600/70 to-transparent" />
@@ -82,7 +82,7 @@ function MobileProfileLayout({ user }: { user: User }) {
             name={user.name}
             sizeClass="h-36 w-36"
           />
-          <p className="mt-6 text-xs uppercase tracking-[0.4em] text-red-500">Profile</p>
+          <p className="mt-6 text-xs uppercase tracking-[0.4em] text-red-500">Perfil</p>
           <h1 className="mt-3 text-4xl font-bold text-white">{user.name}</h1>
           <div className="mt-4 h-1 w-20 rounded-full bg-red-600" />
         </div>
@@ -103,7 +103,7 @@ function DesktopProfileLayout({ user }: { user: User }) {
       <section className="relative overflow-hidden rounded-[36px] border border-zinc-800 bg-zinc-950 px-10 py-12 shadow-2xl shadow-black/30">
         <div className="absolute -left-20 top-10 h-48 w-48 rounded-full bg-red-600/10 blur-3xl" />
         <div className="relative">
-          <p className="text-sm uppercase tracking-[0.45em] text-red-500">Profile</p>
+          <p className="text-sm uppercase tracking-[0.45em] text-red-500">Perfil</p>
           <h1 className="mt-5 max-w-3xl text-6xl font-bold leading-tight text-white">
             {user.name}
           </h1>

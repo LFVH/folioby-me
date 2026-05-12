@@ -1,27 +1,31 @@
 'use client'
 import { useState, useRef, useEffect, useCallback } from 'react'
+
 interface SearchBarProps {
   onSearch: (termo: string) => void
   autoFocus?: boolean
   value?: string
   onClear?: () => void
 }
-export default function SearchBar({ 
-  onSearch, 
-  autoFocus = false, 
+
+export default function SearchBar({
+  onSearch,
+  autoFocus = false,
   value = '',
-  onClear 
+  onClear,
 }: SearchBarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [localQuery, setLocalQuery] = useState(value)
   const inputRef = useRef<HTMLInputElement>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isInitialMount = useRef(true)
-    useEffect(() => {
+
+  useEffect(() => {
     if (!isOpen) {
       setLocalQuery(value)
     }
   }, [value, isOpen])
+
   useEffect(() => {
     if (isOpen && inputRef.current) {
       setTimeout(() => {
@@ -29,43 +33,52 @@ export default function SearchBar({
       }, 100)
     }
   }, [isOpen])
+
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false
       return
     }
+
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
     }
+
     if (localQuery !== value) {
       if (localQuery.length >= 2 || localQuery === '') {
         timeoutRef.current = setTimeout(() => {
-          console.log("🔍 Executando busca:", localQuery)
+          console.log("ðŸ” Executando busca:", localQuery)
           onSearch(localQuery)
         }, 300)
       }
     }
+
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
     }
   }, [localQuery, onSearch, value])
+
   const handleClear = useCallback(() => {
     setLocalQuery('')
     onSearch('')
     onClear?.()
     inputRef.current?.focus()
   }, [onSearch, onClear])
+
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalQuery(e.target.value)
   }, [])
+
   const handleOpen = useCallback(() => {
     setIsOpen(true)
   }, [])
+
   const handleClose = useCallback(() => {
     setIsOpen(false)
   }, [])
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
@@ -75,9 +88,11 @@ export default function SearchBar({
         handleClose()
       }
     }
+
     document.addEventListener('keydown', handleEscape)
     return () => document.removeEventListener('keydown', handleEscape)
-  }, [isOpen, handleClose])
+  }, [isOpen, handleClose, onSearch, onClear])
+
   return (
     <>
       <button
@@ -89,10 +104,10 @@ export default function SearchBar({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </button>
-      
+
       {isOpen && (
         <>
-          <div 
+          <div
             className="fixed inset-0 bg-black bg-opacity-70 z-50 transition-opacity duration-300"
             onClick={handleClose}
           />
@@ -105,7 +120,7 @@ export default function SearchBar({
                     type="text"
                     value={localQuery}
                     onChange={handleChange}
-                    placeholder="Buscar categorias ou conteudos..."
+                    placeholder="Buscar categorias ou conteúdos..."
                     className="w-full px-4 py-4 pl-12 bg-transparent text-white placeholder-gray-400 focus:outline-none text-lg"
                     autoFocus={autoFocus}
                   />
@@ -118,7 +133,7 @@ export default function SearchBar({
                     <button
                       onClick={handleClear}
                       className="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors p-1"
-                      title="Fechar e limpar"
+                      title="Limpar busca"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -128,7 +143,7 @@ export default function SearchBar({
                   <button
                     onClick={handleClose}
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-gray-800"
-                    title="Fechar e seguir"
+                    title="Fechar busca"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -137,7 +152,7 @@ export default function SearchBar({
                 </div>
                 <div className="px-4 pb-2">
                   <p className="text-gray-500 text-sm">
-                    Pressione ESC para limpar e fechar Clique fora para navegar
+                    Pressione Esc para limpar e fechar. Clique fora para continuar.
                   </p>
                 </div>
               </div>

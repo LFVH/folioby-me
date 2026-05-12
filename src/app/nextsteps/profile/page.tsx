@@ -98,7 +98,7 @@ export default function UserPage() {
 
   const handleUpdatePassword = async () => {
     if (password !== confirmPassword) {
-      toast.error('As senhas nao coincidem')
+      toast.error('As senhas não coincidem')
       return
     }
 
@@ -139,12 +139,12 @@ export default function UserPage() {
 
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
     if (!validTypes.includes(file.type)) {
-      toast.error('Tipo de arquivo nao suportado. Use JPEG, PNG ou WebP')
+      toast.error('Tipo de arquivo não suportado. Use JPEG, PNG ou WebP')
       return
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('Arquivo muito grande (max. 5MB)')
+      toast.error('Arquivo muito grande (máx. 5 MB)')
       return
     }
 
@@ -247,14 +247,14 @@ export default function UserPage() {
     <div className="min-h-screen bg-black text-white">
       <main className="px-4 pb-16 pt-32">
         <div className="mx-auto max-w-4xl">
-          <h1 className="mb-10 text-4xl font-bold">Manage Profile</h1>
+          <h1 className="mb-10 text-4xl font-bold">Gerenciar conta</h1>
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             <div className="space-y-8">
               <div className="rounded-lg bg-[#141414] p-6">
-                <h2 className="mb-4 text-2xl font-semibold">Profile Content</h2>
+                <h2 className="mb-4 text-2xl font-semibold">Conteúdo do perfil</h2>
                 <p className="mb-4 text-gray-400">
-                  Edite a descricao e os links do seu perfil publico.
+                  Edite a descrição e os links do seu perfil público.
                 </p>
                 <Link
                   href="/nextsteps/user/profile"
@@ -265,7 +265,7 @@ export default function UserPage() {
               </div>
 
               <div className="rounded-lg bg-[#141414] p-6">
-                <h2 className="mb-4 text-2xl font-semibold">Profile Photo (/slug/profile)</h2>
+                <h2 className="mb-4 text-2xl font-semibold">Foto de perfil (/slug/profile)</h2>
                 <div className="flex flex-col gap-6 lg:flex-row lg:items-center">
                   <div className="relative">
                     <Avatar
@@ -287,42 +287,42 @@ export default function UserPage() {
                     <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4">
                       <h4 className="mb-2 flex items-center gap-2 text-sm font-medium text-zinc-300">
                         <span className="h-1.5 w-1.5 rounded-full bg-red-600" />
-                        New crop experience:
+                        Nova experiência de recorte:
                       </h4>
 
                       <ul className="space-y-2 text-sm text-zinc-400">
                         <li className="flex items-start gap-2">
                           <span className="text-lg leading-5 text-red-600">*</span>
                           <span>
-                            <strong className="text-zinc-300">Circular crop</strong> com preview em tempo real, igual a apps de mensagem e social
+                            <strong className="text-zinc-300">Recorte circular</strong> com prévia em tempo real, no estilo de apps de mensagem e redes sociais
                           </span>
                         </li>
 
                         <li className="flex items-start gap-2">
                           <span className="text-lg leading-5 text-red-600">*</span>
                           <span>
-                            <strong className="text-zinc-300">Arraste e de zoom</strong> com mouse, scroll, touch e pinca
+                            <strong className="text-zinc-300">Arraste e dê zoom</strong> com mouse, scroll, toque e pinça
                           </span>
                         </li>
 
                         <li className="flex items-start gap-2">
                           <span className="text-lg leading-5 text-red-600">*</span>
                           <span>
-                            <strong className="text-zinc-300">Export high quality:</strong> JPG ou PNG prontos para avatar
+                            <strong className="text-zinc-300">Exportação em alta qualidade:</strong> JPG ou PNG prontos para avatar
                           </span>
                         </li>
 
                         <li className="flex items-start gap-2">
                           <span className="text-lg leading-5 text-red-600">*</span>
                           <span>
-                            <strong className="text-zinc-300">Accepted formats:</strong> JPG, PNG, WebP ate 5MB
+                            <strong className="text-zinc-300">Formatos aceitos:</strong> JPG, PNG e WebP até 5 MB
                           </span>
                         </li>
 
                         <li className="mt-1 flex items-start gap-2 border-t border-zinc-800 pt-2 text-xs">
                           <span className="text-red-600">i</span>
                           <span>
-                            O recorte salvo passa a ser o mesmo usado no botao do usuario e no perfil publico.
+                            O recorte salvo passa a ser o mesmo usado no botão do usuário e no perfil público.
                           </span>
                         </li>
                       </ul>
@@ -341,7 +341,7 @@ export default function UserPage() {
                         disabled={uploadingImage}
                         className="w-full rounded bg-white px-4 py-2 font-semibold text-black transition hover:bg-gray-200 disabled:opacity-50 sm:w-auto"
                       >
-                        {uploadingImage ? 'Enviando...' : 'Escolher Nova Foto'}
+                        {uploadingImage ? 'Enviando...' : 'Escolher nova foto'}
                       </button>
                       {userImage && (
                         <button
@@ -349,7 +349,7 @@ export default function UserPage() {
                           disabled={isLoading}
                           className="w-full rounded bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700 disabled:opacity-50 sm:w-auto"
                         >
-                          Remover Foto
+                          Remover foto
                         </button>
                       )}
                     </div>
@@ -358,11 +358,11 @@ export default function UserPage() {
               </div>
 
               <div className="rounded-lg bg-[#141414] p-6">
-                <h2 className="mb-4 text-2xl font-semibold">Profile&apos;s Slug</h2>
+                <h2 className="mb-4 text-2xl font-semibold">Slug do perfil</h2>
                 <div className="space-y-4">
                   <div>
                     <label className="mb-2 block text-sm text-gray-400">
-                      Seu identificador unico, publico e facilmente compartilhavel.
+                      Seu identificador único, público e fácil de compartilhar.
                     </label>
                     <input
                       type="text"
@@ -372,7 +372,7 @@ export default function UserPage() {
                       placeholder="seu-slug-aqui"
                     />
                     <p className={`mt-2 text-sm ${slugError ? 'text-red-500' : 'text-gray-500'}`}>
-                      {slugError ?? 'Use only lowercase letters, numbers and hyphens (max. 50 characters) /name-surname'}
+                      {slugError ?? 'Use apenas letras minúsculas, números e hífens (máx. 50 caracteres). Ex.: /nome-sobrenome'}
                     </p>
                   </div>
                   <button
@@ -380,7 +380,7 @@ export default function UserPage() {
                     disabled={isLoading || !slug || !!slugError}
                     className="rounded bg-red-600 px-6 py-3 font-semibold text-white transition hover:bg-red-700 disabled:opacity-50"
                   >
-                    {isLoading ? 'Saving...' : 'Update Slug'}
+                    {isLoading ? 'Salvando...' : 'Salvar slug'}
                   </button>
                 </div>
               </div>
@@ -388,11 +388,11 @@ export default function UserPage() {
 
             <div className="space-y-8">
               <div className="rounded-lg bg-[#141414] p-6">
-                <h2 className="mb-4 text-2xl font-semibold">Change Password</h2>
+                <h2 className="mb-4 text-2xl font-semibold">Alterar senha</h2>
                 <div className="space-y-4">
                   <div>
                     <label className="mb-2 block text-sm text-gray-400">
-                      New Password
+                      Nova senha
                     </label>
                     <input
                       type="password"
@@ -403,7 +403,7 @@ export default function UserPage() {
                   </div>
                   <div>
                     <label className="mb-2 block text-sm text-gray-400">
-                      Confirm new password
+                      Confirme a nova senha
                     </label>
                     <input
                       type="password"
@@ -417,40 +417,40 @@ export default function UserPage() {
                     disabled={isLoading || password !== confirmPassword || password.length < 6}
                     className="rounded bg-red-600 px-6 py-3 font-semibold text-white transition hover:bg-red-700 disabled:opacity-50"
                   >
-                    {isLoading ? 'Saving...' : 'Alterar Senha'}
+                    {isLoading ? 'Salvando...' : 'Alterar senha'}
                   </button>
                 </div>
               </div>
 
               <div className="rounded-lg bg-[#141414] p-6">
-                <h2 className="mb-4 text-2xl font-semibold">Signature</h2>
+                <h2 className="mb-4 text-2xl font-semibold">Assinatura</h2>
                 <div className="space-y-4">
                   <p className="text-gray-400">
-                    Manage your signature
+                    Gerencie sua assinatura
                   </p>
                   <div className="mt-2 flex items-center justify-between">
-                    <FeatureNoticePopup email={contact_mail} triggerText="Manage Subscription" />
+                    <FeatureNoticePopup email={contact_mail} triggerText="Gerenciar assinatura" />
                   </div>
                 </div>
               </div>
 
               <div className="rounded-lg bg-[#141414] p-6">
-                <h2 className="mb-4 text-2xl font-semibold">Account info</h2>
+                <h2 className="mb-4 text-2xl font-semibold">Informações da conta</h2>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm text-gray-400">Name</p>
+                    <p className="text-sm text-gray-400">Nome</p>
                     <p className="text-lg">{session?.user?.name}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400">Email</p>
+                    <p className="text-sm text-gray-400">E-mail</p>
                     <p className="text-lg">{session?.user?.email}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Slug</p>
-                    <p className="text-lg">{session?.user?.slug || 'Nao definido'}</p>
+                    <p className="text-lg">{session?.user?.slug || 'Não definido'}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400">Para editar essa sessao ou deletar conta envie email para</p>
+                    <p className="text-sm text-gray-400">Para editar esta sessão ou excluir a conta, envie um e-mail para</p>
                     <p className="text-sm text-gray-400">{contact_mail}</p>
                   </div>
                 </div>

@@ -10,47 +10,47 @@ import PricingSection from './PricingSection'
 
 const currentFeatures = [
   {
-    title: 'Portfolio por categorias',
+    title: 'Portfólio por categorias',
     description:
-      'Organize seu portfolio em categorias e deixe cada area do seu trabalho mais facil de entender, navegar e valorizar.',
+      'Organize seu portfólio por categorias e facilite a leitura do seu trabalho. Fica mais simples apresentar estilos, serviços e áreas de atuação com clareza.',
   },
   {
-    title: 'Conteudos com imagem e GIF',
+    title: 'Conteúdos com imagem e GIF',
     description:
-      'Dentro de cada categoria, voce pode publicar conteudos visuais em imagem e GIF para mostrar pecas, processos, animacoes e resultados.',
+      'Publique imagens e GIFs dentro de cada categoria para mostrar peças, processos, animações e resultados de um jeito muito mais visual.',
   },
   {
-    title: 'Perfil com descricao profissional',
+    title: 'Perfil com descrição profissional',
     description:
-      'Apresente quem voce e, o que faz e como trabalha em um texto que ajuda seu perfil a parecer mais claro, forte e confiavel.',
+      'Explique quem você é, o que faz e como trabalha em uma apresentação curta, direta e profissional, que passa mais segurança para quem visita seu perfil.',
   },
   {
-    title: 'Links centralizados em um so lugar',
+    title: 'Links centralizados em um só lugar',
     description:
-      'Reuna contatos, redes e canais importantes em uma pagina que tambem pode funcionar como um Linktree do seu trabalho.',
+      'Reúna contatos, redes e canais importantes em uma única página. Na prática, seu perfil também pode funcionar como um hub de links do seu trabalho.',
   },
 ]
 
 const futureModules = [
   {
-    title: 'Customizacao de layout',
+    title: 'Customização de layout',
     description:
-      'Expandir o que ja existe com liberdade para ajustar cores e posicoes do layout, deixando cada pagina mais pessoal.',
+      'Expandir o que já existe com liberdade para ajustar cores e posições do layout, deixando cada página mais alinhada com a identidade de quem usa.',
   },
   {
-    title: 'Modulo secretaria',
+    title: 'Módulo secretaria',
     description:
       'Uma frente para gerenciar agenda, compromissos e rotina de atendimento sem espalhar tudo em outras ferramentas.',
   },
   {
-    title: 'Modulo planejamento',
+    title: 'Módulo planejamento',
     description:
-      'Um espaco para organizar projetos, acompanhar etapas e tornar o planejamento mais visivel no dia a dia.',
+      'Um espaço para organizar projetos, acompanhar etapas e tornar o planejamento mais visível no dia a dia.',
   },
   {
-    title: 'Modulo contabil',
+    title: 'Módulo contábil',
     description:
-      'Uma area para registrar entradas e melhorar o controle financeiro ligado aos trabalhos e atendimentos.',
+      'Uma área para registrar entradas e melhorar o controle financeiro ligado aos trabalhos e atendimentos.',
   },
 ]
 
@@ -93,13 +93,13 @@ export default function HeroCTA() {
             </h1>
 
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
-              Seu <span className="text-purple-500">portfolio em formato Netflix*</span>
+              Seu <span className="text-purple-500">portfólio em formato Netflix*</span>
             </h2>
 
             <p className="text-xl md:text-2xl text-gray-300 mb-2 max-w-3xl mx-auto leading-relaxed">
-              Apresente suas producoes de design e edicao
+              Apresente suas produções de design e edição
               <span className="text-green-500 font-semibold"> profissionais</span>.
-              Mostre seu trabalho com mais impacto, organizacao e valor percebido.
+              Mostre seu trabalho com mais impacto, organização e valor percebido desde o primeiro clique.
             </p>
 
             <div className="w-24 h-1 bg-gradient-to-r from-purple-600 to-pink-600 mx-auto"></div>
@@ -108,46 +108,46 @@ export default function HeroCTA() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 max-w-4xl mx-auto">
               <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-gray-800 hover:border-pink-500 transition-all duration-300">
-                <div className="text-pink-500 text-sm font-semibold uppercase tracking-[0.2em] mb-3">Portfolio</div>
+                <div className="text-pink-500 text-sm font-semibold uppercase tracking-[0.2em] mb-3">Portfólio</div>
                 <h3 className="text-white font-bold text-lg mb-2">Visual de alto impacto</h3>
                 <p className="text-gray-400 text-sm">
-                  Uma apresentacao forte para valorizar cada projeto e ajudar seu portfolio a se destacar logo no primeiro olhar.
+                  Uma apresentação mais forte para valorizar cada projeto e fazer seu portfólio chamar atenção logo no primeiro olhar.
                 </p>
               </div>
 
               <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-gray-800 hover:border-blue-500 transition-all duration-300">
                 <div className="text-blue-500 text-sm font-semibold uppercase tracking-[0.2em] mb-3">Categorias</div>
-                <h3 className="text-white font-bold text-lg mb-2">Organizacao que vende melhor</h3>
+                <h3 className="text-white font-bold text-lg mb-2">Organização que vende melhor</h3>
                 <p className="text-gray-400 text-sm">
-                  Separe servicos, estilos e tipos de entrega em categorias para facilitar a leitura e reforcar seu posicionamento.
+                  Separe serviços, estilos e tipos de entrega em categorias para facilitar a navegação e reforçar seu posicionamento profissional.
                 </p>
               </div>
 
               <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-gray-800 hover:border-green-500 transition-all duration-300">
                 <div className="text-green-500 text-sm font-semibold uppercase tracking-[0.2em] mb-3">Perfil</div>
-                <h3 className="text-white font-bold text-lg mb-2">Descricao e links</h3>
+                <h3 className="text-white font-bold text-lg mb-2">Descrição e links</h3>
                 <p className="text-gray-400 text-sm">
-                  Tenha um perfil que resume sua proposta de valor e centraliza seus links mais importantes em um so lugar.
+                  Tenha um perfil que resume sua proposta de valor e centraliza seus links mais importantes em um só lugar.
                 </p>
               </div>
             </div>
 
             <p className="text-gray-400 text-xs">
-              *FolioBy nao possui relacao com a plataforma citada
+              *FolioBy não possui relação com a plataforma citada
             </p>
 
             <div className="mb-20">
               <h3 className="text-3xl font-bold text-white mb-4">
-                Veja o <span className="text-purple-500">FolioBy</span> em acao
+                Veja o <span className="text-purple-500">FolioBy</span> em ação
               </h3>
               <p className="text-gray-300 mb-10 max-w-2xl mx-auto">
-                Uma estrutura pensada para criativos que querem mostrar portfolio, perfil e links de forma mais bonita e profissional.
+                Uma estrutura pensada para criativos que querem mostrar portfólio, perfil e links de um jeito mais bonito, organizado e profissional.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 <div className="relative group overflow-hidden rounded-xl aspect-video bg-gradient-to-br from-purple-800 to-pink-800 cursor-pointer">
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="text-white font-semibold">Portfolio por nicho</span>
+                    <span className="text-white font-semibold">Portfólio por nicho</span>
                   </div>
                   <div className="absolute bottom-4 left-4 text-white font-medium">Galerias visuais</div>
                 </div>
@@ -156,7 +156,7 @@ export default function HeroCTA() {
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <span className="text-white font-semibold">Imagens e GIFs</span>
                   </div>
-                  <div className="absolute bottom-4 left-4 text-white font-medium">Conteudo dinamico</div>
+                  <div className="absolute bottom-4 left-4 text-white font-medium">Conteúdo dinâmico</div>
                 </div>
 
                 <div className="relative group overflow-hidden rounded-xl aspect-video bg-gradient-to-br from-green-800 to-teal-800 cursor-pointer">
@@ -174,7 +174,7 @@ export default function HeroCTA() {
                       <div className="w-20 h-20 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                         <span className="text-4xl">{'>'}</span>
                       </div>
-                      <p className="text-white text-lg font-medium">Assista a demonstracao</p>
+                      <p className="text-white text-lg font-medium">Assista à demonstração</p>
                       <p className="text-gray-400 text-sm">2:30 min</p>
                     </div>
                   </div>
@@ -185,26 +185,26 @@ export default function HeroCTA() {
                 </div>
 
                 <p className="text-gray-400 text-sm mt-3">
-                  Veja como o FolioBy ajuda a transformar apresentacao visual em percepcao de valor.
+                  Veja como o FolioBy ajuda a transformar apresentação visual em mais percepção de valor.
                 </p>
               </div>
             </div>
 
             <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 max-w-2xl mx-auto mt-12">
               <h3 className="text-2xl font-bold text-white mb-4">
-                Comece a mostrar seu portfolio como um profissional
+                Comece a mostrar seu portfólio como um profissional
               </h3>
               {!session && (
                 <Link
                   href="/signup"
                   className="px-5 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors font-medium shadow-lg hover:shadow-purple-500/25"
                 >
-                  Criar meu portfolio gratis
+                  Criar meu portfólio grátis
                 </Link>
               )}
 
               <p className="text-gray-400 text-sm mt-4">
-                Seus dados ficam protegidos e voce pode comecar sem complicacao.
+                Seus dados ficam protegidos e você pode começar sem complicação.
               </p>
             </div>
 
@@ -227,10 +227,10 @@ export default function HeroCTA() {
                 Sobre o sistema
               </span>
               <h3 className="mt-5 text-3xl md:text-5xl font-bold text-white leading-tight">
-                Um portfolio visual com perfil estrategico para criativos venderem melhor o proprio trabalho
+                Um portfólio visual com perfil estratégico para criativos venderem melhor o próprio trabalho
               </h3>
               <p className="mt-5 text-lg text-gray-300 leading-relaxed">
-                O FolioBy foi pensado para juntar apresentacao visual e posicionamento profissional em uma experiencia simples. Em vez de espalhar portfolio, descricao e links em varios lugares, voce concentra tudo em uma pagina que comunica melhor o que entrega.
+                O FolioBy foi pensado para reunir vitrine visual e posicionamento profissional em uma experiência simples. Em vez de espalhar portfólio, descrição e links em lugares diferentes, você concentra tudo em uma página que comunica melhor o que faz.
               </p>
             </div>
 
@@ -257,13 +257,13 @@ export default function HeroCTA() {
                   Ideias futuras
                 </p>
                 <h4 className="mt-3 text-2xl md:text-3xl font-bold text-white">
-                  A evolucao do FolioBy pode transformar a plataforma em um centro de operacao para profissionais independentes
+                  A evolução do FolioBy pode transformar a plataforma em um centro de operação para profissionais independentes
                 </h4>
                 <p className="mt-4 text-gray-300 leading-relaxed">
-                  A proxima etapa é ampliar o que ja existe, permitindo customizacao de layout com cores e posicoes, e depois expandir a experiencia com modulos praticos para rotina, projetos e controle de entradas.
+                  A próxima etapa é ampliar o que já existe, permitindo customização de layout com cores e posições, e depois expandir a experiência com módulos práticos para rotina, projetos e organização do negócio.
                 </p>
                 <p className="mt-4 text-gray-300 leading-relaxed">
-                  Conto com sua participação para priorizar o que vem primeiro e ajudar a construir as ideias de forma que sejam realmente uteis para você!
+                  Conto com sua participação para priorizar o que vem primeiro e ajudar a construir as ideias de forma que sejam realmente úteis para você!
                 </p>
               </div>
 

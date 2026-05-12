@@ -178,7 +178,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
                 title={
                   currentBanner.linkext
                     ? `Abrir ${currentBanner.linkext}`
-                    : 'Link externo nao disponivel'
+                    : 'Link externo não disponível'
                 }
               >
                 <span>Assistir</span>

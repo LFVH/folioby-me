@@ -167,19 +167,19 @@ export function ProfileImageCropper({
           <div className="shrink-0 border-b border-white/10 px-5 py-4 sm:px-6">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.35em] text-red-400">Profile Photo</p>
+                <p className="text-[11px] uppercase tracking-[0.35em] text-red-400">Foto de perfil</p>
                 <h2 id={titleId} className="mt-2 text-2xl font-semibold sm:text-[2rem]">
                   Ajuste sua foto como no WhatsApp
                 </h2>
                 <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-                  Arraste para reposicionar, use scroll ou gesto de pinca para dar zoom e confirme quando o enquadramento estiver perfeito.
+                  Arraste para reposicionar, use o scroll ou o gesto de pinça para dar zoom e confirme quando o enquadramento estiver do jeito que você quer.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={onClose}
                 disabled={isExporting}
-                aria-label="Fechar cropper"
+                aria-label="Fechar recorte"
                 className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Fechar
@@ -270,27 +270,27 @@ export function ProfileImageCropper({
                     </button>
                   </div>
                   <p id={`${zoomId}-help`} className="mt-3 text-xs text-zinc-500">
-                    Scroll, touch e pinca para zoom estao habilitados.
+                    Rolagem, toque e pinça para zoom estão habilitados.
                   </p>
                 </div>
               </div>
 
               <aside className="space-y-4 pb-2">
                 <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5">
-                  <p className="text-[11px] uppercase tracking-[0.35em] text-red-400">Preview</p>
+                  <p className="text-[11px] uppercase tracking-[0.35em] text-red-400">Prévia</p>
                   <div className="mt-4 flex items-center justify-center">
                     <div className="rounded-full border border-white/10 bg-zinc-950 p-2 shadow-[0_15px_45px_rgba(0,0,0,0.45)]">
                       <canvas
                         ref={previewCanvasRef}
                         className="h-40 w-40 rounded-full object-cover sm:h-44 sm:w-44"
-                        aria-label="Pre-visualizacao da foto de perfil"
+                        aria-label="Pré-visualização da foto de perfil"
                       />
                     </div>
                   </div>
                   <div className="mt-5 rounded-2xl border border-white/10 bg-black/30 p-4">
-                    <p className="text-sm font-medium text-zinc-100">Saida final em {formatLabel}</p>
+                    <p className="text-sm font-medium text-zinc-100">Saída final em {formatLabel}</p>
                     <p className="mt-2 text-sm text-zinc-400">
-                      Exportacao quadrada em alta qualidade para manter nitidez no avatar pequeno e no perfil publico.
+                      Exportação quadrada em alta qualidade para manter boa nitidez no avatar pequeno e no perfil público.
                     </p>
                   </div>
                 </div>
@@ -299,8 +299,8 @@ export function ProfileImageCropper({
                   <p className="text-sm font-medium text-zinc-100">Dicas de enquadramento</p>
                   <ul className="mt-3 space-y-2 text-sm text-zinc-400">
                     <li>Mantenha o rosto um pouco acima do centro para o avatar parecer mais vivo.</li>
-                    <li>Agora o zoom minimo permite abrir mais a foto antes de cortar.</li>
-                    <li>O circulo mostra exatamente a area visivel no perfil e nos botoes.</li>
+                    <li>O zoom mínimo permite abrir mais a foto antes de cortar.</li>
+                    <li>O círculo mostra exatamente a área visível no perfil e nos botões.</li>
                   </ul>
                 </div>
               </aside>

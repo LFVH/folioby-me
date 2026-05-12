@@ -16,7 +16,7 @@ export default function UserProfileContentManager() {
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => { 
+  useEffect(() => {
     if (!slug) {
       setIsLoadingProfile(false);
       return;
@@ -57,7 +57,7 @@ export default function UserProfileContentManager() {
 
   const handleSave = async () => {
     if (!slug) {
-      toast.error('Slug do usuario nao encontrado');
+      toast.error('Slug do usuário não encontrado');
       return;
     }
 
@@ -75,14 +75,14 @@ export default function UserProfileContentManager() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Erro ao salvar descricao');
+        throw new Error(data.error || 'Erro ao salvar descrição');
       }
 
       setDesc(data.desc ?? null);
       setSavedDesc(data.desc ?? null);
-      toast.success('Descricao atualizada com sucesso!');
+      toast.success('Descrição atualizada com sucesso!');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erro ao salvar descricao');
+      toast.error(error instanceof Error ? error.message : 'Erro ao salvar descrição');
     } finally {
       setIsSaving(false);
     }
@@ -100,9 +100,9 @@ export default function UserProfileContentManager() {
             <p className="text-sm uppercase tracking-[0.3em] text-red-600">
               Next Steps
             </p>
-            <h1 className="mt-3 text-4xl font-bold">Profile Content</h1>
+            <h1 className="mt-3 text-4xl font-bold">Conteúdo do perfil</h1>
             <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-              Edite a descricao e os links exibidos na sua pagina publica.
+              Edite a descrição e os links exibidos na sua página pública.
             </p>
           </div>
 
@@ -111,7 +111,7 @@ export default function UserProfileContentManager() {
               href={`/${slug}/profile`}
               className="inline-flex items-center justify-center rounded border border-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600/10"
             >
-              Ver perfil publico
+              Ver perfil público
             </Link>
           )}
         </div>
@@ -119,7 +119,7 @@ export default function UserProfileContentManager() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.2fr_0.8fr]">
           <section className="rounded-xl border border-zinc-800 bg-[#141414] p-6">
             <div className="mb-5">
-              <h2 className="text-2xl font-semibold">Profile Description</h2>
+              <h2 className="text-2xl font-semibold">Descrição do perfil</h2>
               <p className="mt-2 text-sm text-zinc-400">
                 Esse texto aparece no bloco principal de `/{slug}/profile`.
               </p>
@@ -127,7 +127,7 @@ export default function UserProfileContentManager() {
 
             {isLoadingProfile ? (
               <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-6 text-sm text-zinc-400">
-                Carregando descricao...
+                Carregando descrição...
               </div>
             ) : (
               <div className="space-y-4">
@@ -150,7 +150,7 @@ export default function UserProfileContentManager() {
                     disabled={isSaving}
                     className="rounded bg-red-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-50"
                   >
-                    {isSaving ? 'Salvando...' : 'Salvar descricao'}
+                    {isSaving ? 'Salvando...' : 'Salvar descrição'}
                   </button>
                 </div>
               </div>
@@ -159,7 +159,7 @@ export default function UserProfileContentManager() {
 
           <section className="space-y-8">
             <div className="rounded-xl border border-zinc-800 bg-[#141414] p-6">
-              <h2 className="text-2xl font-semibold">Public Links</h2>
+              <h2 className="text-2xl font-semibold">Links públicos</h2>
               <p className="mt-2 text-sm text-zinc-400">
                 Adicione os links sociais e profissionais que aparecem no seu perfil.
               </p>

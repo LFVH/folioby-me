@@ -31,7 +31,7 @@ export default function LinksManager() {
   }, [])
 
   const handleRedeChange = (nextRede: number) => {
-    setRede(currentRede => {
+    setRede((currentRede) => {
       if (nextRede === PROFILE_LINK_TYPE.WHATSAPP && currentRede !== PROFILE_LINK_TYPE.WHATSAPP) {
         setUrl('wa.me/55')
       } else if (currentRede === PROFILE_LINK_TYPE.WHATSAPP && nextRede !== PROFILE_LINK_TYPE.WHATSAPP) {
@@ -44,7 +44,7 @@ export default function LinksManager() {
 
   const addLink = async () => {
     if (!url.trim()) {
-      toast.error('O campo de link nao pode estar vazio.')
+      toast.error('O campo de link não pode ficar vazio.')
       return
     }
 
@@ -79,12 +79,12 @@ export default function LinksManager() {
   const deleteLink = async (index: number) => {
     const response = await fetch('/api/nextsteps/user/links', {
       method: 'DELETE',
-      body: JSON.stringify({ index })
+      body: JSON.stringify({ index }),
     })
     if (response.ok) {
-      toast.success('Link deletado com sucesso!')
+      toast.success('Link excluído com sucesso!')
     } else {
-      toast.error('Erro ao deletar link. Tente novamente.')
+      toast.error('Erro ao excluir link. Tente novamente.')
     }
     fetchLinks()
   }
@@ -94,18 +94,18 @@ export default function LinksManager() {
       <div className="space-y-2 bg-zinc-900 p-4 rounded-xl">
         <input
           value={titulo}
-          onChange={e => setTitulo(e.target.value)}
-          placeholder="Titulo"
+          onChange={(e) => setTitulo(e.target.value)}
+          placeholder="Título"
           className="w-full p-2 rounded bg-zinc-800 text-white"
         />
         <input
           value={url}
-          onChange={e => setUrl(e.target.value)}
+          onChange={(e) => setUrl(e.target.value)}
           type={isEmailSelected ? 'email' : 'text'}
           inputMode={isEmailSelected ? 'email' : 'url'}
           placeholder={
             isEmailSelected
-              ? 'voce@exemplo.com'
+              ? 'você@exemplo.com'
               : isWhatsappSelected
                 ? 'wa.me/55'
                 : 'https://...'
@@ -114,7 +114,7 @@ export default function LinksManager() {
         />
         <select
           value={rede}
-          onChange={e => handleRedeChange(Number(e.target.value))}
+          onChange={(e) => handleRedeChange(Number(e.target.value))}
           className="w-full p-2 rounded bg-zinc-800 text-white"
         >
           {PROFILE_LINK_OPTIONS.map((nome, i) => (
@@ -160,7 +160,7 @@ export default function LinksManager() {
                 opacity-0 group-hover:opacity-100
                 transition
               ">
-                Deletar
+                Excluir
               </span>
             </button>
           </div>
