@@ -38,7 +38,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
   })
   useEffect(() => {
     if (conteudo?.categorias) {
-      setSelectedCategorias(conteudo.categorias.map((c: any) => c.categoriaId));
+      setSelectedCategorias(conteudo.categorias.map((c: any) => c.id));
     }
   }, [conteudo]);
   useEffect(() => {

@@ -279,7 +279,8 @@ export async function PUT(
     // CATEGORIAS
     // =========================
 
-    if (categoriasIds?.length > 0) {
+    updateData.categorias = conteudoExistente.categorias
+    if (categoriasIds && categoriasIds?.length > 0) {
       updateData.categorias = {
         set: categoriasIds.map((id: number) => ({
           id,
