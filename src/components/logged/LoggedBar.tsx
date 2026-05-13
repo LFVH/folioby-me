@@ -28,7 +28,7 @@ export function LoggedBar() {
     <header className="fixed top-0 w-full z-50 bg-gradient-to-b from-black to-transparent">
     <div className="bg-black">
       {/* Netflix-style Header */}
-      <div className="folio-text-pattern w-full rounded-lg overflow-hidden border border-gray-800">
+      <div className="bg-gray-900 w-full rounded-lg overflow-hidden border border-gray-800">
           <div className="container mx-auto flex max-w-7xl items-center justify-between md:px-6">
             {/* Logo */}
             <Link href={`/${session.user?.status ? session.user?.slug : ""}`} className="flex items-center space-x-2">
