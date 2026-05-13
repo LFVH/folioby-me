@@ -1,17 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from "../../../../prisma"
-import {verifyUser } from "@/utils/verifyUserAuth"
-import { BlobService } from '@/lib/blob-service';
+import { verifyUser } from "@/utils/verifyUserAuth"
+
+const normalizeOptionalText = (value: unknown) => {
+  if (typeof value !== 'string') return null
+
+  const normalizedValue = value.trim()
+
+  return normalizedValue.length > 0 ? normalizedValue : null
+}
+
+const normalizeCategoriaIds = (value: unknown) => {
+  if (!Array.isArray(value)) return []
+
+  return [
+    ...new Set(
+      value
+        .map((item) => Number(item))
+        .filter((item) => Number.isInteger(item) && item > 0)
+    ),
+  ]
+}
+
+const normalizeMediaUrls = (value: unknown) => {
+  if (!Array.isArray(value)) return []
+
+  return value
+    .filter((item): item is string => typeof item === 'string')
+    .map((item) => item.trim())
+    .filter(Boolean)
+}
 
 export async function GET(request: NextRequest) {
   try {
-    const authResult = await verifyUser();
-    if (authResult instanceof NextResponse) return authResult;
-    const { userId, isPremium } = authResult;
-    if(!isPremium) return NextResponse.json(
+    const authResult = await verifyUser()
+    if (authResult instanceof NextResponse) return authResult
+
+    const { userId, isPremium } = authResult
+    if (!isPremium) {
+      return NextResponse.json(
         { success: false, error: '404 Not Found' },
         { status: 403 }
-    ) 
+      )
+    }
+
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '12')
@@ -19,13 +51,13 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit
 
     const where: any = {
-      userId: userId
+      userId,
     }
 
     if (search) {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },
-        { filename: { contains: search, mode: 'insensitive' } }
+        { filename: { contains: search, mode: 'insensitive' } },
       ]
     }
 
@@ -36,23 +68,23 @@ export async function GET(request: NextRequest) {
             select: {
               id: true,
               nome: true,
-              name: true
-            }
-          }
+              name: true,
+            },
+          },
         },
         where,
         orderBy: [
           {
-            isTrend: 'desc'
+            isTrend: 'desc',
           },
           {
-            updatedAt: 'desc'
-          }
+            updatedAt: 'desc',
+          },
         ],
         skip,
-        take: limit
+        take: limit,
       }),
-      prisma.conteudo.count({ where })
+      prisma.conteudo.count({ where }),
     ])
 
     const totalPages = Math.ceil(total / limit)
@@ -69,11 +101,11 @@ export async function GET(request: NextRequest) {
         hasNextPage,
         hasPrevPage,
         nextPage: hasNextPage ? page + 1 : null,
-        prevPage: hasPrevPage ? page - 1 : null
-      }
+        prevPage: hasPrevPage ? page - 1 : null,
+      },
     })
   } catch (error) {
-    console.error('Erro ao buscar conteúdos:', error)
+    console.error('Erro ao buscar conteudos:', error)
     return NextResponse.json(
       { success: false, error: 'Erro interno do servidor' },
       { status: 500 }
@@ -83,15 +115,18 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const authResult = await verifyUser();
-    if (authResult instanceof NextResponse) return authResult;
-    const { userId, isPremium } = authResult;
-    if(!isPremium) return NextResponse.json(
-      { success: false, error: '404 Not Found' },
-      { status: 403 }
-    )
-    const body = await request.json();
+    const authResult = await verifyUser()
+    if (authResult instanceof NextResponse) return authResult
 
+    const { userId, isPremium } = authResult
+    if (!isPremium) {
+      return NextResponse.json(
+        { success: false, error: '404 Not Found' },
+        { status: 403 }
+      )
+    }
+
+    const body = await request.json()
     const {
       name,
       fonte,
@@ -100,83 +135,110 @@ export async function POST(request: NextRequest) {
       categoriasIds,
       isSequence,
       mediaUrls,
-    } = body;
+    } = body
 
-    let mediaType = 'single';
-    let filename = '';
-    let mimetype = '';
+    const normalizedName = normalizeOptionalText(name)
+    const normalizedFonte = normalizeOptionalText(fonte)
+    const normalizedLink = normalizeOptionalText(link)
+    const normalizedLinkext = normalizeOptionalText(linkext)
+    const normalizedCategoriasIds = normalizeCategoriaIds(categoriasIds)
+    const normalizedMediaUrls = normalizeMediaUrls(mediaUrls)
 
-    if (isSequence && mediaUrls?.length > 0) {
-      mediaType = 'sequence';
-      filename = 'sequence';
-      mimetype = 'image/sequence';
+    if (!normalizedName) {
+      return NextResponse.json(
+        { success: false, error: 'Informe o nome do conteudo.' },
+        { status: 400 }
+      )
+    }
 
-    } else if (mediaUrls?.length > 0) {
-      mediaType = 'single';
+    if (normalizedCategoriasIds.length === 0) {
+      return NextResponse.json(
+        { success: false, error: 'Selecione pelo menos uma categoria.' },
+        { status: 400 }
+      )
+    }
 
-      const fileUrl = mediaUrls[0];
+    if (!normalizedLink && normalizedMediaUrls.length === 0) {
+      return NextResponse.json(
+        { success: false, error: 'Envie um arquivo antes de salvar o conteudo.' },
+        { status: 400 }
+      )
+    }
 
-      filename = fileUrl.split('/').pop() || '';
+    const categoriasValidas = await prisma.categoria.findMany({
+      where: {
+        id: {
+          in: normalizedCategoriasIds,
+        },
+        userId,
+      },
+      select: {
+        id: true,
+      },
+    })
 
-      // opcional
+    if (categoriasValidas.length !== normalizedCategoriasIds.length) {
+      return NextResponse.json(
+        { success: false, error: 'Uma ou mais categorias selecionadas sao invalidas.' },
+        { status: 400 }
+      )
+    }
+
+    let mediaType = 'single'
+    let filename = ''
+    let mimetype = ''
+
+    if (isSequence && normalizedMediaUrls.length > 0) {
+      mediaType = 'sequence'
+      filename = 'sequence'
+      mimetype = 'image/sequence'
+    } else if (normalizedMediaUrls.length > 0) {
+      mediaType = 'single'
+
+      const fileUrl = normalizedMediaUrls[0]
+      filename = fileUrl.split('/').pop() || ''
+
       if (filename.endsWith('.mp4')) {
-        mimetype = 'video/mp4';
+        mimetype = 'video/mp4'
       } else if (filename.endsWith('.pdf')) {
-        mimetype = 'application/pdf';
+        mimetype = 'application/pdf'
       } else {
-        mimetype = 'image/jpeg';
+        mimetype = 'image/jpeg'
       }
     }
 
-    const categoriasConnect = categoriasIds?.length
-      ? categoriasIds.map((id: number) => ({ id }))
-      : [];
-
     const conteudo = await prisma.conteudo.create({
       data: {
-        name,
-        fonte,
-
-        // primeira mídia
-        link: mediaUrls?.[0] || link || null,
-
-        linkext,
-
+        name: normalizedName,
+        fonte: normalizedFonte,
+        link: normalizedMediaUrls[0] || normalizedLink,
+        linkext: normalizedLinkext,
         filename,
         mimetype,
-
-        // pode manter vazio
         data: Buffer.from(''),
-
         mediaType,
-
-        // array completo
-        mediaUrls: mediaUrls || [],
-
+        mediaUrls: normalizedMediaUrls,
         categorias: {
-          connect: categoriasConnect,
+          connect: categoriasValidas.map(({ id }) => ({ id })),
         },
-
         user: {
           connect: {
             id: userId,
           },
         },
       },
-
       include: {
         categorias: true,
       },
-    });
+    })
 
     return NextResponse.json({
       success: true,
       data: conteudo,
-      message: 'Conteúdo criado com sucesso',
-    });
-
+      message: 'Conteudo criado com sucesso',
+    })
   } catch (error) {
-    console.error('Erro ao criar conteúdo:', error);
+    console.error('Erro ao criar conteudo:', error)
     return NextResponse.json(
       {
         success: false,
@@ -185,6 +247,6 @@ export async function POST(request: NextRequest) {
       {
         status: 500,
       }
-    );
+    )
   }
 }

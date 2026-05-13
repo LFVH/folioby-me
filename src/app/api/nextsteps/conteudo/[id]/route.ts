@@ -3,6 +3,35 @@ import prisma from "../../../../../prisma";
 import { isHis, verifyUser } from "@/utils/verifyUserAuth";
 import { BlobService } from "@/lib/blob-service";
 
+const normalizeOptionalText = (value: unknown) => {
+  if (typeof value !== "string") return null;
+
+  const normalizedValue = value.trim();
+
+  return normalizedValue.length > 0 ? normalizedValue : null;
+};
+
+const normalizeCategoriaIds = (value: unknown) => {
+  if (!Array.isArray(value)) return [];
+
+  return [
+    ...new Set(
+      value
+        .map((item) => Number(item))
+        .filter((item) => Number.isInteger(item) && item > 0)
+    ),
+  ];
+};
+
+const normalizeMediaUrls = (value: unknown) => {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .filter((item): item is string => typeof item === "string")
+    .map((item) => item.trim())
+    .filter(Boolean);
+};
+
 async function ensureConteudoAccess(userId: string, isPremium: boolean, id: number) {
   if (!isPremium || !(await isHis(userId, id))) {
     return NextResponse.json(
@@ -16,7 +45,7 @@ async function ensureConteudoAccess(userId: string, isPremium: boolean, id: numb
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; }>; }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await verifyUser();
@@ -30,10 +59,10 @@ export async function DELETE(
     }
 
     const accessError = await ensureConteudoAccess(userId, isPremium, id);
-
     if (accessError) return accessError;
+
     const conteudoExistente = await prisma.conteudo.findUnique({
-      where: { id }
+      where: { id },
     });
 
     if (!conteudoExistente) {
@@ -42,29 +71,26 @@ export async function DELETE(
         { status: 404 }
       );
     }
+
     if (conteudoExistente.mediaUrls?.length > 0) {
       for (const url of conteudoExistente.mediaUrls) {
         try {
-          if (
-            url?.includes("blob.vercel-storage.com")
-          ) {
+          if (url?.includes("blob.vercel-storage.com")) {
             await BlobService.deleteFile(url);
           }
         } catch (deleteError) {
-          console.error(
-            "Erro ao deletar blob antigo:",
-            deleteError
-          );
+          console.error("Erro ao deletar blob antigo:", deleteError);
         }
       }
     }
+
     await prisma.conteudo.delete({
-      where: { id }
+      where: { id },
     });
 
     return NextResponse.json({
       success: true,
-      message: "Conteudo excluido com sucesso"
+      message: "Conteudo excluido com sucesso",
     });
   } catch (error) {
     console.error("Erro ao excluir conteudo:", error);
@@ -77,7 +103,7 @@ export async function DELETE(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; }>; }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await verifyUser();
@@ -94,7 +120,7 @@ export async function GET(
     if (accessError) return accessError;
 
     const conteudo = await prisma.conteudo.findUnique({
-      where: { id }
+      where: { id },
     });
 
     if (!conteudo) {
@@ -139,28 +165,21 @@ export async function PUT(
 ) {
   try {
     const authResult = await verifyUser();
-
     if (authResult instanceof NextResponse) {
       return authResult;
     }
 
     const { userId, isPremium } = authResult;
-
     const id = parseInt((await params).id, 10);
 
     if (isNaN(id)) {
       return NextResponse.json(
-        { success: false, error: "ID inválido" },
+        { success: false, error: "ID invalido" },
         { status: 400 }
       );
     }
 
-    const accessError = await ensureConteudoAccess(
-      userId,
-      isPremium,
-      id
-    );
-
+    const accessError = await ensureConteudoAccess(userId, isPremium, id);
     if (accessError) {
       return accessError;
     }
@@ -174,7 +193,7 @@ export async function PUT(
       return NextResponse.json(
         {
           success: false,
-          error: "Conteúdo não encontrado",
+          error: "Conteudo nao encontrado",
         },
         {
           status: 404,
@@ -182,12 +201,7 @@ export async function PUT(
       );
     }
 
-    // =========================
-    // BODY JSON
-    // =========================
-
     const body = await request.json();
-
     const {
       name,
       fonte,
@@ -198,48 +212,76 @@ export async function PUT(
       mediaUrls,
     } = body;
 
-    // =========================
-    // UPDATE DATA
-    // =========================
+    const normalizedName = normalizeOptionalText(name);
+    const normalizedFonte = normalizeOptionalText(fonte);
+    const normalizedLink = normalizeOptionalText(link);
+    const normalizedLinkext = normalizeOptionalText(linkext);
+    const normalizedCategoriasIds = normalizeCategoriaIds(categoriasIds);
+    const normalizedMediaUrls = normalizeMediaUrls(mediaUrls);
+
+    if (!normalizedName) {
+      return NextResponse.json(
+        { success: false, error: "Informe o nome do conteudo." },
+        { status: 400 }
+      );
+    }
+
+    if (normalizedCategoriasIds.length === 0) {
+      return NextResponse.json(
+        { success: false, error: "Selecione pelo menos uma categoria." },
+        { status: 400 }
+      );
+    }
+
+    const categoriasValidas = await prisma.categoria.findMany({
+      where: {
+        id: {
+          in: normalizedCategoriasIds,
+        },
+        userId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (categoriasValidas.length !== normalizedCategoriasIds.length) {
+      return NextResponse.json(
+        { success: false, error: "Uma ou mais categorias selecionadas sao invalidas." },
+        { status: 400 }
+      );
+    }
 
     const updateData: any = {
-      name,
-      fonte,
-      linkext,
+      name: normalizedName,
+      fonte: normalizedFonte,
+      linkext: normalizedLinkext,
       updatedAt: new Date(),
+      categorias: {
+        set: categoriasValidas.map(({ id: categoriaId }) => ({
+          id: categoriaId,
+        })),
+      },
     };
 
-    // =========================
-    // NOVOS ARQUIVOS
-    // =========================
-
-    if (mediaUrls?.length > 0) {
-
-      // remove blobs antigos
+    if (normalizedMediaUrls.length > 0) {
       if (conteudoExistente.mediaUrls?.length > 0) {
         for (const url of conteudoExistente.mediaUrls) {
           try {
-            if (
-              url?.includes("blob.vercel-storage.com")
-            ) {
+            if (url?.includes("blob.vercel-storage.com")) {
               await BlobService.deleteFile(url);
             }
           } catch (deleteError) {
-            console.error(
-              "Erro ao deletar blob antigo:",
-              deleteError
-            );
+            console.error("Erro ao deletar blob antigo:", deleteError);
           }
         }
       }
 
       let filename = "";
       let mimetype = "";
+      const firstUrl = normalizedMediaUrls[0];
 
-      const firstUrl = mediaUrls[0];
-
-      filename =
-        firstUrl?.split("/").pop() || "";
+      filename = firstUrl?.split("/").pop() || "";
 
       if (filename.endsWith(".mp4")) {
         mimetype = "video/mp4";
@@ -254,50 +296,23 @@ export async function PUT(
       }
 
       updateData.link = firstUrl;
-
       updateData.filename = filename;
-
       updateData.mimetype = mimetype;
-
-      updateData.mediaType = isSequence
-        ? "sequence"
-        : "single";
-
-      updateData.mediaUrls = mediaUrls;
-
+      updateData.mediaType = isSequence ? "sequence" : "single";
+      updateData.mediaUrls = normalizedMediaUrls;
       updateData.data = Buffer.from("");
+    } else if (normalizedLink) {
+      updateData.link = normalizedLink;
+    } else if (!conteudoExistente.link) {
+      return NextResponse.json(
+        { success: false, error: "Envie um arquivo antes de salvar o conteudo." },
+        { status: 400 }
+      );
     }
-
-    // =========================
-    // LINK EXTERNO
-    // =========================
-
-    else if (link !== undefined) {
-      updateData.link = link;
-    }
-
-    // =========================
-    // CATEGORIAS
-    // =========================
-
-    updateData.categorias = conteudoExistente.categorias;
-    if (categoriasIds && categoriasIds?.length > 0) {
-      updateData.categorias = {
-        set: categoriasIds.map((id: number) => ({
-          id,
-        })),
-      };
-    }
-
-    // =========================
-    // UPDATE
-    // =========================
 
     const conteudo = await prisma.conteudo.update({
       where: { id },
-
       data: updateData,
-
       include: {
         categorias: true,
       },
@@ -306,14 +321,10 @@ export async function PUT(
     return NextResponse.json({
       success: true,
       data: conteudo,
-      message: "Conteúdo atualizado com sucesso",
+      message: "Conteudo atualizado com sucesso",
     });
-
   } catch (error) {
-    console.error(
-      "Erro ao atualizar conteúdo:",
-      error
-    );
+    console.error("Erro ao atualizar conteudo:", error);
 
     return NextResponse.json(
       {
@@ -329,7 +340,7 @@ export async function PUT(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; }>; }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await verifyUser();
@@ -346,7 +357,7 @@ export async function PATCH(
     if (accessError) return accessError;
 
     const conteudoExistente = await prisma.conteudo.findUnique({
-      where: { id }
+      where: { id },
     });
 
     if (!conteudoExistente) {
@@ -372,7 +383,7 @@ export async function PATCH(
       conteudo = await prisma.conteudo.update({
         where: { id },
         data: {
-          isTrend: !conteudoExistente.isTrend
+          isTrend: !conteudoExistente.isTrend,
         },
       });
     }
@@ -380,7 +391,7 @@ export async function PATCH(
     return NextResponse.json({
       success: true,
       data: conteudo,
-      message: "Atualizada com sucesso"
+      message: "Atualizada com sucesso",
     });
   } catch (error: any) {
     console.error("Erro ao atualizar conteudo:", error);

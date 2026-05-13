@@ -2,15 +2,27 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from "../../../../prisma"
 import { verifyUser } from "@/utils/verifyUserAuth"
 
+const normalizeOptionalText = (value: unknown) => {
+  if (typeof value !== 'string') return null
+
+  const normalizedValue = value.trim()
+
+  return normalizedValue.length > 0 ? normalizedValue : null
+}
+
 export async function GET(request: NextRequest) {
   try {
-    const authResult = await verifyUser();
-    if (authResult instanceof NextResponse) return authResult;
-    const { userId, isPremium } = authResult;
-    if(!isPremium) return NextResponse.json(
+    const authResult = await verifyUser()
+    if (authResult instanceof NextResponse) return authResult
+
+    const { userId, isPremium } = authResult
+    if (!isPremium) {
+      return NextResponse.json(
         { success: false, error: '404 Not Found' },
         { status: 403 }
-    ) 
+      )
+    }
+
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '99')
@@ -20,6 +32,7 @@ export async function GET(request: NextRequest) {
     const where: any = {
       userId
     }
+
     if (search) {
       where.OR = [
         { nome: { contains: search, mode: 'insensitive' } },
@@ -75,31 +88,37 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const authResult = await verifyUser();
-    if (authResult instanceof NextResponse) return authResult;
-    const { userId, isPremium } = authResult;
-    if(!isPremium) return NextResponse.json(
+    const authResult = await verifyUser()
+    if (authResult instanceof NextResponse) return authResult
+
+    const { userId, isPremium } = authResult
+    if (!isPremium) {
+      return NextResponse.json(
         { success: false, error: '404 Not Found' },
         { status: 403 }
       )
+    }
+
     const body = await request.json()
-    const { nome, name, descricao } = body
-    
+    const nome = normalizeOptionalText(body?.nome)
+    const name = normalizeOptionalText(body?.name)
+    const descricao = normalizeOptionalText(body?.descricao)
+
     if (!nome && !name) {
       return NextResponse.json(
-        { success: false, error: 'Nome (PT) ou Name (EN) é obrigatório' },
+        { success: false, error: 'Informe o nome da categoria em portugues ou em ingles.' },
         { status: 400 }
       )
     }
 
     const categoria = await prisma.categoria.create({
       data: {
-        nome: nome || null,
-        name: name || null,
-        descricao: descricao || null,
+        nome,
+        name,
+        descricao,
         user: {
           connect: {
-            id: userId 
+            id: userId
           }
         }
       },
@@ -112,10 +131,10 @@ export async function POST(request: NextRequest) {
     })
   } catch (error: any) {
     console.error('Erro ao criar categoria:', error)
-    
+
     if (error.code === 'P2002') {
       return NextResponse.json(
-        { success: false, error: error },
+        { success: false, error: 'Ja existe uma categoria com este nome.' },
         { status: 400 }
       )
     }

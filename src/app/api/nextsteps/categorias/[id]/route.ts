@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../prisma";
 import { verifyUser } from "@/utils/verifyUserAuth";
 
+const normalizeOptionalText = (value: unknown) => {
+  if (typeof value !== "string") return null;
+
+  const normalizedValue = value.trim();
+
+  return normalizedValue.length > 0 ? normalizedValue : null;
+};
+
 async function ensureCategoriaAccess(isPremium: boolean) {
   if (!isPremium) {
     return NextResponse.json(
@@ -15,7 +23,7 @@ async function ensureCategoriaAccess(isPremium: boolean) {
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; }>; }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await verifyUser();
@@ -32,10 +40,8 @@ export async function PUT(
     if (accessError) return accessError;
 
     const body = await request.json();
-    const { nome, name, descricao } = body;
-
     const categoriaExistente = await prisma.categoria.findFirst({
-      where: { id, userId }
+      where: { id, userId },
     });
 
     if (!categoriaExistente) {
@@ -45,13 +51,36 @@ export async function PUT(
       );
     }
 
-    await prisma.categoria.updateMany({
-      where: { id, userId },
+    const nome =
+      body?.nome !== undefined
+        ? normalizeOptionalText(body.nome)
+        : categoriaExistente.nome;
+    const name =
+      body?.name !== undefined
+        ? normalizeOptionalText(body.name)
+        : categoriaExistente.name;
+    const descricao =
+      body?.descricao !== undefined
+        ? normalizeOptionalText(body.descricao)
+        : categoriaExistente.descricao;
+
+    if (!nome && !name) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "A categoria precisa ter nome em portugues ou em ingles.",
+        },
+        { status: 400 }
+      );
+    }
+
+    await prisma.categoria.update({
+      where: { id },
       data: {
-        nome: nome !== undefined ? nome : categoriaExistente.nome,
-        name: name !== undefined ? name : categoriaExistente.name,
-        descricao: descricao !== undefined ? descricao : categoriaExistente.descricao
-      }
+        nome,
+        name,
+        descricao,
+      },
     });
 
     const categoria = await prisma.categoria.findFirst({
@@ -59,16 +88,16 @@ export async function PUT(
       include: {
         _count: {
           select: {
-            conteudos: true
-          }
-        }
-      }
+            conteudos: true,
+          },
+        },
+      },
     });
 
     return NextResponse.json({
       success: true,
       data: categoria,
-      message: "Categoria atualizada com sucesso"
+      message: "Categoria atualizada com sucesso",
     });
   } catch (error: any) {
     console.error("Erro ao atualizar categoria:", error);
@@ -89,7 +118,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; }>; }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await verifyUser();
@@ -110,10 +139,10 @@ export async function DELETE(
       include: {
         _count: {
           select: {
-            conteudos: true
-          }
-        }
-      }
+            conteudos: true,
+          },
+        },
+      },
     });
 
     if (!categoria) {
@@ -127,19 +156,19 @@ export async function DELETE(
       return NextResponse.json(
         {
           success: false,
-          error: "Nao e possivel excluir categoria com conteudos associados"
+          error: "Nao e possivel excluir categoria com conteudos associados",
         },
         { status: 400 }
       );
     }
 
     await prisma.categoria.deleteMany({
-      where: { id, userId }
+      where: { id, userId },
     });
 
     return NextResponse.json({
       success: true,
-      message: "Categoria excluida com sucesso"
+      message: "Categoria excluida com sucesso",
     });
   } catch (error) {
     console.error("Erro ao excluir categoria:", error);
@@ -152,7 +181,7 @@ export async function DELETE(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; }>; }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await verifyUser();
@@ -173,10 +202,10 @@ export async function GET(
       include: {
         _count: {
           select: {
-            conteudos: true
-          }
-        }
-      }
+            conteudos: true,
+          },
+        },
+      },
     });
 
     if (!categoria) {
@@ -188,7 +217,7 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
-      data: categoria
+      data: categoria,
     });
   } catch (error) {
     console.error("Erro ao buscar categoria:", error);
@@ -201,7 +230,7 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; }>; }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await verifyUser();
@@ -218,7 +247,7 @@ export async function PATCH(
     if (accessError) return accessError;
 
     const categoriaExistente = await prisma.categoria.findFirst({
-      where: { id, userId }
+      where: { id, userId },
     });
 
     if (!categoriaExistente) {
@@ -244,19 +273,19 @@ export async function PATCH(
       await prisma.categoria.updateMany({
         where: { id, userId },
         data: {
-          isTrend: !categoriaExistente.isTrend
-        }
+          isTrend: !categoriaExistente.isTrend,
+        },
       });
 
       categoria = await prisma.categoria.findFirst({
-        where: { id, userId }
+        where: { id, userId },
       });
     }
 
     return NextResponse.json({
       success: true,
       data: categoria,
-      message: "Atualizada com sucesso"
+      message: "Atualizada com sucesso",
     });
   } catch (error: any) {
     console.error("Erro ao atualizar categoria:", error);
