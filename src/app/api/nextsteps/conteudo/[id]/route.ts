@@ -167,6 +167,7 @@ export async function PUT(
 
     const conteudoExistente = await prisma.conteudo.findUnique({
       where: { id },
+      include: { categorias: true },
     });
 
     if (!conteudoExistente) {
@@ -279,7 +280,7 @@ export async function PUT(
     // CATEGORIAS
     // =========================
 
-    updateData.categorias = conteudoExistente.categorias
+    updateData.categorias = conteudoExistente.categorias;
     if (categoriasIds && categoriasIds?.length > 0) {
       updateData.categorias = {
         set: categoriasIds.map((id: number) => ({
