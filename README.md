@@ -1,68 +1,109 @@
-FolioBy
+# FolioBy
 
+> Uma plataforma SaaS para profissionais criativos exibirem trabalhos, perfil e links em uma experiência visual inspirada em catálogos de streaming.
+
+O **FolioBy** transforma o portfólio profissional em uma vitrine organizada, com página pública personalizada e painel de gerenciamento. A proposta é centralizar projetos, posicionamento e canais de contato em um só lugar, facilitando a apresentação de designers, editores, motion designers e outros profissionais visuais.
+
+## Problema que resolve
+
+Profissionais criativos costumam dividir seu trabalho entre redes sociais, drives, sites e links de contato. O FolioBy reúne esses elementos em uma experiência coerente e navegável, para que cada pessoa possa apresentar sua produção com mais contexto e valor percebido.
+
+## Funcionalidades
+
+- **Portfólio público por URL personalizada:** cada usuário possui um *slug* exclusivo para compartilhar seu trabalho.
+- **Galerias organizadas por categorias:** crie e edite categorias para separar estilos, serviços ou tipos de entrega.
+- **Gestão de conteúdo:** cadastre, edite, busque e remova trabalhos; associe-os a uma ou mais categorias.
+- **Suporte a mídias visuais:** publicação de imagens, GIFs e sequências de imagens, com preview antes do envio.
+- **Perfil profissional:** edição de descrição rica e centralização de links importantes em uma página pública.
+- **Autenticação e área protegida:** cadastro, login e controle de acesso ao painel do usuário.
+- **Planos e assinaturas:** estrutura para checkout e gestão de assinaturas via Stripe e Mercado Pago, com processamento de webhooks do Mercado Pago.
+- **Uploads escaláveis:** armazenamento de arquivos usando Vercel Blob.
+- **Segurança de navegação:** middleware para permissões, proteção de rotas e limitação de requisições em produção.
+
+## Tecnologias utilizadas
+
+| Camada | Tecnologias |
+| --- | --- |
+| Front-end | Next.js 16, React 18, TypeScript e Tailwind CSS |
+| Interface | Headless UI, Radix UI, Lucide e React Icons |
+| Estado e formulários | TanStack Query, Zustand, React Hook Form e Zod |
+| Editor de texto | TipTap |
+| Back-end | Route Handlers do Next.js e NextAuth |
+| Banco de dados | PostgreSQL e Prisma ORM |
+| Arquivos | Vercel Blob |
+| Pagamentos | Stripe e Mercado Pago |
+| Proteção | Upstash Redis / Ratelimit, JWT, bcrypt e validação de webhook com HMAC |
+
+## Arquitetura em alto nível
+
+```text
+Visitante
+   └── Página pública /{slug} e /{slug}/profile
+
+Usuário autenticado
+   └── Painel /nextsteps
+          ├── Conteúdos e categorias
+          ├── Perfil e links
+          └── Assinatura
+
+Next.js API + NextAuth
+   ├── Prisma + PostgreSQL
+   ├── Vercel Blob
+   ├── Stripe
+   └── Mercado Pago + webhooks
+```
+
+## Execução local
+
+### Pré-requisitos
+
+- Node.js 20 ou superior
+- PostgreSQL acessível
+- Conta/configuração dos serviços opcionais usados pelo projeto (Vercel Blob, Stripe, Mercado Pago e Upstash)
+
+### Instalação
+
+```bash
 npm install
+```
+
+Crie um arquivo `.env.local` com as variáveis necessárias. As principais são:
+
+```env
+DATABASE_URL=
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=
+
+# Pagamentos (conforme integrações usadas)
+STRIPE_SECRET_KEY=
+NEXT_PUBLIC_STRIPE_PUB_KEY=
+MERCADO_PAGO_ACCESS_TOKEN=
+MERCADO_PAGO_WEBHOOK_SECRET=
+
+# Serviços opcionais
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+```
+
+Gere o cliente do Prisma e inicie a aplicação:
+
+```bash
+npm run prisma:generate
 npm run dev
+```
 
-- ajustar script prd
-- ajustar package produção 
+Depois, acesse `http://localhost:3000`.
 
-folioby.me
-folioby-me
-folioby_db
-TODO
-- revisar middleware - permissoes e redirects - ok testado 1d
-- alterar front página principal traz conteudos do usuario pelo LINK -> testado 2dias
-- ajustar header - ok
-- exibir e alterar slug no front - ok
-- pagina user - slug ok senha ok falta teste imagem
-- pagina conteudos traz apenas coisas do usuario - testar com outros usuarios
-- entender o que fica melhor de deixar o usuario inserir, é gif mesmo? só imagens? outros objetos? ele entrnado com link ou video tenho como trabalhar isso?
-- testar tudo 
-- iniciar vercel, banco neon
-- revisar pagamento e testar  
-- email (esqueci minha senha pelo menos) 
+> O comando `npm run dev` sincroniza o schema do Prisma com o banco. Utilize um banco de desenvolvimento dedicado antes de executá-lo.
 
-(não faço ideia)
-- google auth
-- TERMOS de serviço - termos legais em geral -
-- estatisticas google SEO
-- estatisticas internas
-- pixseg
-________________________________________________________________________________________________________________
-luhkeepgoing@gmail.com
-stripe listen --forward-to https://directorflix-project.vercel.app/api/webhook
-https://directorflix-project.vercel.app/api/webhook
-mercy-eases-merry-master
-The Stripe CLI is configured for your account with account id acct_1Q9PhmKwBrvWS04k
-__________________________________________________________________________________________________
-TESTE
-UPDATE public."Usuario"
-	SET "dtIniPremium"='2025-10-24 23:42:39.122', "dtFimPremium"='2999-10-24 23:42:39.122', "statusAss"='ativo', "updatedAt"=NOW()'
+## Destaques para apresentação em portfólio
 
-dsadas@d.com cred 424242424242
-___________________________________________________________________________________________________
- Para produção
-- domínio, nome?
-- pagamento->domínio-producao
-NAO ESQUECER:  
-- atualizar ADMIN_USER_IDS
-- ATUALIZAR ENVS - PRODUTO - ROTAS - KEYS ETC
-mercy-eases-merry-master
-Configuração no Stripe
-No Dashboard do Stripe:
+- Construção de uma aplicação full-stack com experiência pública e área autenticada.
+- Modelagem relacional para usuários, conteúdos, categorias, assinaturas e histórico.
+- Integração de pagamentos recorrentes e tratamento seguro de eventos assíncronos por webhook.
+- Implementação de uma experiência de gerenciamento de mídia com upload, preview, filtros e paginação.
+- Atenção a segurança com autenticação, controle de rotas, rate limiting e verificação criptográfica de requisições externas.
 
-Vá em Settings > Billing > Customer Portal
+## Status
 
-Configure quais informações os clientes podem gerenciar
-
-Ative os recursos desejados (atualizar método de pagamento, cancelar assinatura, etc.)
-Stripe portal error: Error: No configuration provided and your test
- mode default configuration has not been created. Provide a configuration or create
- your default by saving your customer portal settings in test mode at https://dashboard.stripe.com/test/settings/billing/portal.
-_____________________________________________________________________________________________________________________
-
-
-DADOS FUTURO
--DRE
--espelho de vendas
--rentabilidade X produto x canal x cliente 
+Projeto em evolução. O repositório demonstra a base funcional da plataforma e suas integrações principais.
