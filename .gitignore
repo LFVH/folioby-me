@@ -40,3 +40,5 @@ next-env.d.ts
 # prisma
 /generated/
 /generated
+gitleaks-report.sarif
+.routes.env
