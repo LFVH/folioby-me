@@ -1,50 +1,50 @@
 # FolioBy
 
-> Uma plataforma SaaS para profissionais criativos exibirem trabalhos, perfil e links em uma experiência visual inspirada em catálogos de streaming.
+> A SaaS platform for creative professionals to showcase their work, profile, and links in a visual experience inspired by streaming catalogs.
 
-O **FolioBy** transforma o portfólio profissional em uma vitrine organizada, com página pública personalizada e painel de gerenciamento. A proposta é centralizar projetos, posicionamento e canais de contato em um só lugar, facilitando a apresentação de designers, editores, motion designers e outros profissionais visuais.
+**FolioBy** turns a professional portfolio into an organized showcase, combining a customized public page with a management dashboard. Its purpose is to bring projects, personal positioning, and contact channels together in one place, making it easier for designers, editors, motion designers, and other visual professionals to present their work.
 
-## Problema que resolve
+## The problem it solves
 
-Profissionais criativos costumam dividir seu trabalho entre redes sociais, drives, sites e links de contato. O FolioBy reúne esses elementos em uma experiência coerente e navegável, para que cada pessoa possa apresentar sua produção com mais contexto e valor percebido.
+Creative professionals often spread their work across social media, cloud drives, websites, and contact links. FolioBy brings these elements together in a consistent, easy-to-navigate experience so users can present their work with more context and perceived value.
 
-## Funcionalidades
+## Features
 
-- **Portfólio público por URL personalizada:** cada usuário possui um *slug* exclusivo para compartilhar seu trabalho.
-- **Galerias organizadas por categorias:** crie e edite categorias para separar estilos, serviços ou tipos de entrega.
-- **Gestão de conteúdo:** cadastre, edite, busque e remova trabalhos; associe-os a uma ou mais categorias.
-- **Suporte a mídias visuais:** publicação de imagens, GIFs e sequências de imagens, com preview antes do envio.
-- **Perfil profissional:** edição de descrição rica e centralização de links importantes em uma página pública.
-- **Autenticação e área protegida:** cadastro, login e controle de acesso ao painel do usuário.
-- **Planos e assinaturas:** estrutura para checkout e gestão de assinaturas via Stripe e Mercado Pago, com processamento de webhooks do Mercado Pago.
-- **Uploads escaláveis:** armazenamento de arquivos usando Vercel Blob.
-- **Segurança de navegação:** middleware para permissões, proteção de rotas e limitação de requisições em produção.
+- **Public portfolio with a custom URL:** each user has a unique *slug* to share their work.
+- **Category-based galleries:** create and edit categories to organize styles, services, or deliverable types.
+- **Content management:** create, edit, search, and delete projects; assign them to one or more categories.
+- **Visual media support:** publish images, GIFs, and image sequences, with a preview before upload.
+- **Professional profile:** edit rich-text descriptions and centralize important links on a public page.
+- **Authentication and protected workspace:** sign-up, sign-in, and access control for the user dashboard.
+- **Plans and subscriptions:** checkout and subscription-management infrastructure with Stripe and Mercado Pago, including Mercado Pago webhook processing.
+- **Scalable uploads:** file storage powered by Vercel Blob.
+- **Navigation security:** middleware for permissions, route protection, and production request rate limiting.
 
-## Tecnologias utilizadas
+## Technology stack
 
-| Camada | Tecnologias |
+| Layer | Technologies |
 | --- | --- |
-| Front-end | Next.js 16, React 18, TypeScript e Tailwind CSS |
-| Interface | Headless UI, Radix UI, Lucide e React Icons |
-| Estado e formulários | TanStack Query, Zustand, React Hook Form e Zod |
-| Editor de texto | TipTap |
-| Back-end | Route Handlers do Next.js e NextAuth |
-| Banco de dados | PostgreSQL e Prisma ORM |
-| Arquivos | Vercel Blob |
-| Pagamentos | Stripe e Mercado Pago |
-| Proteção | Upstash Redis / Ratelimit, JWT, bcrypt e validação de webhook com HMAC |
+| Front end | Next.js 16, React 18, TypeScript, and Tailwind CSS |
+| UI | Headless UI, Radix UI, Lucide, and React Icons |
+| State and forms | TanStack Query, Zustand, React Hook Form, and Zod |
+| Rich-text editor | TipTap |
+| Back end | Next.js Route Handlers and NextAuth |
+| Database | PostgreSQL and Prisma ORM |
+| File storage | Vercel Blob |
+| Payments | Stripe and Mercado Pago |
+| Protection | Upstash Redis / Ratelimit, JWT, bcrypt, and HMAC webhook validation |
 
-## Arquitetura em alto nível
+## High-level architecture
 
 ```text
-Visitante
-   └── Página pública /{slug} e /{slug}/profile
+Visitor
+   └── Public pages: /{slug} and /{slug}/profile
 
-Usuário autenticado
-   └── Painel /nextsteps
-          ├── Conteúdos e categorias
-          ├── Perfil e links
-          └── Assinatura
+Authenticated user
+   └── Dashboard: /nextsteps
+          ├── Content and categories
+          ├── Profile and links
+          └── Subscription
 
 Next.js API + NextAuth
    ├── Prisma + PostgreSQL
@@ -53,57 +53,57 @@ Next.js API + NextAuth
    └── Mercado Pago + webhooks
 ```
 
-## Execução local
+## Running locally
 
-### Pré-requisitos
+### Prerequisites
 
-- Node.js 20 ou superior
-- PostgreSQL acessível
-- Conta/configuração dos serviços opcionais usados pelo projeto (Vercel Blob, Stripe, Mercado Pago e Upstash)
+- Node.js 20 or later
+- An accessible PostgreSQL database
+- Accounts and configuration for the optional services used by the project: Vercel Blob, Stripe, Mercado Pago, and Upstash
 
-### Instalação
+### Installation
 
 ```bash
 npm install
 ```
 
-Crie um arquivo `.env.local` com as variáveis necessárias. As principais são:
+Create a `.env.local` file with the required variables. The main ones are:
 
 ```env
 DATABASE_URL=
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=
 
-# Pagamentos (conforme integrações usadas)
+# Payments (depending on the integrations in use)
 STRIPE_SECRET_KEY=
 NEXT_PUBLIC_STRIPE_PUB_KEY=
 MERCADO_PAGO_ACCESS_TOKEN=
 MERCADO_PAGO_WEBHOOK_SECRET=
 
-# Serviços opcionais
+# Optional services
 UPSTASH_REDIS_REST_URL=
 UPSTASH_REDIS_REST_TOKEN=
 ```
 
-Gere o cliente do Prisma e inicie a aplicação:
+Generate the Prisma client and start the application:
 
 ```bash
 npm run prisma:generate
 npm run dev
 ```
 
-Depois, acesse `http://localhost:3000`.
+Then open `http://localhost:3000`.
 
-> O comando `npm run dev` sincroniza o schema do Prisma com o banco. Utilize um banco de desenvolvimento dedicado antes de executá-lo.
+> `npm run dev` synchronizes the Prisma schema with the database. Use a dedicated development database before running it.
 
-## Destaques para apresentação em portfólio
+## Portfolio highlights
 
-- Construção de uma aplicação full-stack com experiência pública e área autenticada.
-- Modelagem relacional para usuários, conteúdos, categorias, assinaturas e histórico.
-- Integração de pagamentos recorrentes e tratamento seguro de eventos assíncronos por webhook.
-- Implementação de uma experiência de gerenciamento de mídia com upload, preview, filtros e paginação.
-- Atenção a segurança com autenticação, controle de rotas, rate limiting e verificação criptográfica de requisições externas.
+- Built a full-stack application with both public-facing and authenticated experiences.
+- Designed a relational data model for users, content, categories, subscriptions, and history.
+- Integrated recurring payments and secure asynchronous webhook-event handling.
+- Implemented a media management experience with uploads, previews, filters, and pagination.
+- Prioritized security with authentication, route control, rate limiting, and cryptographic validation of external requests.
 
 ## Status
 
-Projeto em evolução. O repositório demonstra a base funcional da plataforma e suas integrações principais.
+This project is under active development. The repository demonstrates the platform's functional foundation and its main integrations.
