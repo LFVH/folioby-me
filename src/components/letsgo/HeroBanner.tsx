@@ -124,7 +124,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
                   alt={getBannerTitle(conteudo)}
                   loading={index === 0 ? 'eager' : 'lazy'}
                   decoding="async"
-                  className="h-[82%] w-full object-contain object-right drop-shadow-[0_20px_65px_rgba(0,0,0,0.55)]"
+                  className="h-[82%] w-full object-contain object-left drop-shadow-[0_20px_65px_rgba(0,0,0,0.55)]"
                   onError={(e) => handleImgError(e)}
                 />
               </div>
