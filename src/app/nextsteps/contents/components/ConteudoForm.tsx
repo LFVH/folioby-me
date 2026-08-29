@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { handleImgError } from '@/utils/imageFallback'
 import { useRouter } from 'next/navigation'
 import { BlobService } from '@/lib/blob-service'
 import { extractFonteFromUrl, normalizeExternalUrl } from '@/lib/profile-links'
@@ -363,6 +364,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
                         ? 'w-full h-24 object-cover rounded border border-gray-600'
                         : 'max-w-xs max-h-48 rounded-lg border border-gray-600'
                     }
+                    onError={(e) => handleImgError(e)}
                   />
                   {formData.isSequence && (
                     <span className="absolute top-1 left-1 bg-black bg-opacity-70 text-white text-xs px-1.5 py-0.5 rounded">

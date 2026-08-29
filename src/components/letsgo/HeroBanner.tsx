@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { handleImgError } from '@/utils/imageFallback'
 import { CategoriaWithUrls } from '@/types'
 
 interface HeroBannerProps {
@@ -92,6 +93,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
                 className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ease-out ${
                   index === currentBannerIndex ? 'opacity-40' : 'opacity-0'
                 }`}
+                onError={(e) => handleImgError(e)}
               />
             )
           })}
@@ -108,7 +110,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
               return null
             }
 
-            return (
+                return (
               <div
                 key={`hero-${conteudo.id}`}
                 className={`absolute inset-0 flex items-center justify-end transition-all duration-700 ease-out ${
@@ -123,6 +125,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
                   loading={index === 0 ? 'eager' : 'lazy'}
                   decoding="async"
                   className="h-[82%] w-full object-contain object-right drop-shadow-[0_20px_65px_rgba(0,0,0,0.55)]"
+                  onError={(e) => handleImgError(e)}
                 />
               </div>
             )
@@ -137,7 +140,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
               return null
             }
 
-            return (
+              return (
               <img
                 key={`mobile-${conteudo.id}`}
                 src={imageUrl}
@@ -149,6 +152,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
                     ? 'opacity-100 translate-y-0 scale-100'
                     : 'pointer-events-none opacity-0 translate-y-3 scale-[1.02]'
                 }`}
+                onError={(e) => handleImgError(e)}
               />
             )
           })}

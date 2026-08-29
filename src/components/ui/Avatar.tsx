@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
+import { useImageFallback } from '@/utils/imageFallback'
 
 interface AvatarProps {
   src?: string | null
@@ -30,7 +31,7 @@ function getAvatarInitials(name?: string | null) {
 }
 
 export function Avatar({
-  src,
+  src: srcProp,
   name,
   alt,
   className,
@@ -40,6 +41,7 @@ export function Avatar({
   sizes = '128px',
 }: AvatarProps) {
   const label = alt ?? name ?? 'Avatar'
+  const { src: imageSrc, onError } = useImageFallback(srcProp ?? null)
 
   return (
     <div
@@ -48,13 +50,14 @@ export function Avatar({
         className
       )}
     >
-      {src ? (
+      {imageSrc ? (
         <Image
-          src={src}
+          src={imageSrc}
           alt={label}
           fill
           priority={priority}
           sizes={sizes}
+          onError={onError}
           className={cn(
             'object-cover object-center transition-transform duration-500 ease-out',
             imageClassName

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { handleImgError } from '@/utils/imageFallback'
 import Link from 'next/link'
 import SearchBarNxt from '@/components/logged/SearchBarNxt'
 import { ToggleStatus } from '@/components/logged/ToggleStatus'
@@ -164,6 +165,7 @@ export default function ConteudosPage() {
                   src={conteudo.link || `/api/nextsteps/conteudo/${conteudo.id}`}
                   alt={conteudo.name}
                   className="max-h-full max-w-full object-contain"
+                  onError={(e) => handleImgError(e)}
                 />
               </div>
 
