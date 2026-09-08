@@ -44,8 +44,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const path = `nextsteps/users/${userId}/profile/${Date.now()}-${file.name}`;
-    
+    const path = BlobService.buildShortUniquePath(`nextsteps/users/${userId}/profile`, file.name);
+
     // Upload para o blob
     const uploaded = await BlobService.uploadFromClient(file, path);
 
