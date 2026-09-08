@@ -7,7 +7,7 @@ export default function Header() {
   const { data: session } = useSession();
 
   return (
-    <header className="absolute top-0 left-0 right-0 z-20 p-6">
+    <header className="fixed top-0 left-0 right-0 z-20 p-6">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
         <div className="text-2xl font-bold text-red-700">
           FolioBy
@@ -20,6 +20,12 @@ export default function Header() {
           >
             Sobre
           </Link>
+          <a
+            href="https://www.folioby.me/luizfvierah/profile#links"
+            className="px-5 py-2 text-white bg-transparent border border-white/30 hover:bg-white/10 rounded-lg transition-colors font-medium backdrop-blur-sm"
+          >
+            Contato
+          </a>
           {!session ? (
             <>
               <Link 
