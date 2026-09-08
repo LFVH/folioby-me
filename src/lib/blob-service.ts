@@ -6,6 +6,15 @@ export interface UploadedFile {
   size: number;
 }
 export class BlobService {
+  static buildShortUniquePath(basePath: string, originalName: string): string {
+    const extension = originalName.includes('.')
+      ? originalName.slice(originalName.lastIndexOf('.'))
+      : '';
+
+    const uniqueId = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+    return `${basePath}/${uniqueId}${extension}`.toLowerCase();
+  }
+
   static async uploadFromClient(file: File, path: string): Promise<UploadedFile> {
     const blob = await put(path, file, {
       access: 'public',
@@ -19,7 +28,7 @@ export class BlobService {
     };
   }
   static async uploadFromServer(buffer: Buffer, filename: string, mimetype: string): Promise<UploadedFile> {
-    const path = `nextsteps/${Date.now()}-${filename}`;
+    const path = this.buildShortUniquePath('nextsteps', filename);
     const blob = await put(path, buffer, {
       access: 'public',
       addRandomSuffix: false,

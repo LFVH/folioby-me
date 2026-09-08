@@ -5,6 +5,7 @@ import { UserButton } from "./UserButtons"
 import Link from "next/link";
 import { MenuIcon } from "../signinsignup/icons";
 import { scrollToTop } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 const links = [
   { href: '/nextsteps/contents', title: 'Page Contents' },
@@ -15,6 +16,7 @@ const links = [
 
 export function LoggedBar() {
   const { data: session, status } = useSession();
+  const pathname = usePathname();
   if (status === 'loading') {
       return (
       <div className="w-8 h-8 rounded-full bg-gray-300 animate-pulse" />
@@ -24,6 +26,13 @@ export function LoggedBar() {
   if (!session || !session.user.status) {
     return null; 
   }
+
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const activeLinkClass = (href: string) =>
+    isActive(href)
+      ? 'text-white underline decoration-2 decoration-red-600 underline-offset-4'
+      : 'text-gray-300 hover:text-white';
+
   return (
     <header className="fixed top-0 w-full z-50 bg-gradient-to-b from-black to-transparent">
     <div className="bg-black">
@@ -38,7 +47,7 @@ export function LoggedBar() {
             </Link>
 
             <Link href={`/${session.user?.status ? session.user?.slug : ""}/profile`} className="flex items-center space-x-2">
-              <div className="text-red-600 font-bold tracking-tight">
+              <div className={`${pathname === `/${session.user?.slug}/profile` ? 'text-white underline decoration-2 decoration-red-600 underline-offset-4' : 'text-red-600'} font-bold tracking-tight`}>
                 {session.user?.status ? "/Profile" : ""}
               </div>
             </Link>
@@ -47,7 +56,7 @@ export function LoggedBar() {
           
               {links.map((link) => (
                 <Link
-                  className="text-gray-300 hover:text-white transition-colors duration-200 font-bold"
+                  className={`${activeLinkClass(link.href)} transition-colors duration-200 font-bold`}
                   href={link.href}
                   key={link.title}
                   onClick={scrollToTop}

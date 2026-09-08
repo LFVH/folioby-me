@@ -147,7 +147,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
       if (formData.isSequence && formData.files.length > 0) {
         const uploads = await Promise.all(
           formData.files.map(async (file) => {
-            const uniqueName = `nextsteps/sequences/${Date.now()}-${crypto.randomUUID()}-${file.name}`
+            const uniqueName = BlobService.buildShortUniquePath('nextsteps/sequences', file.name)
             const blob = await upload(uniqueName, file, {
               access: 'public',
               handleUploadUrl: '/api/nextsteps/blob/upload',
@@ -159,7 +159,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
 
         uploadedUrls = uploads
       } else if (formData.file) {
-        const uniqueName = `nextsteps/${Date.now()}-${crypto.randomUUID()}-${formData.file.name}`
+        const uniqueName = BlobService.buildShortUniquePath('nextsteps', formData.file.name)
         const blob = await upload(uniqueName, formData.file, {
           access: 'public',
           handleUploadUrl: '/api/nextsteps/blob/upload',

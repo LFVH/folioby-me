@@ -34,6 +34,7 @@ export default function HeaderWithCategories() {
         .join(' ')
     : ''
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [activeProfileSection, setActiveProfileSection] = useState<'profile' | 'contact' | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -57,6 +58,21 @@ export default function HeaderWithCategories() {
     return () => document.removeEventListener('keydown', handleEscape)
   }, [filtroAtivo, limparFiltros])
 
+  useEffect(() => {
+    const updateActiveSection = () => {
+      if (pathname !== `/${slug}/profile`) {
+        setActiveProfileSection(null)
+        return
+      }
+
+      setActiveProfileSection(window.location.hash === '#links' ? 'contact' : 'profile')
+    }
+
+    updateActiveSection()
+    window.addEventListener('hashchange', updateActiveSection)
+    return () => window.removeEventListener('hashchange', updateActiveSection)
+  }, [pathname, slug])
+
   const categoriasPrincipais = categorias?.slice(0, 4) || []
   const categoriasRestantes = categorias?.slice(4) || []
 
@@ -79,7 +95,19 @@ export default function HeaderWithCategories() {
 
   const handleProfileClick = () => {
     limparFiltros()
+    scrollToTop()
   }
+
+  const handleContactClick = () => {
+    limparFiltros()
+  }
+
+  const profileLinkClass = (section: 'profile' | 'contact') =>
+    `transition-colors duration-200 font-bold ${
+      activeProfileSection === section
+        ? 'text-white underline decoration-2 decoration-red-600 underline-offset-4'
+        : 'text-gray-300 hover:text-white'
+    }`
 
   const handleSearch = (termo: string) => {
     setFiltroPesquisa(termo)
@@ -127,7 +155,7 @@ export default function HeaderWithCategories() {
 
           <nav className="hidden md:flex items-center gap-4 flex-wrap min-w-0">
             <Link
-              className="text-gray-300 hover:text-white transition-colors duration-200 font-bold"
+              className={profileLinkClass('profile')}
               href={`/${slug}/profile`}
               key={userName}
               onClick={handleProfileClick}
@@ -135,10 +163,10 @@ export default function HeaderWithCategories() {
               {firstNames ? `Perfil de ${firstNames}` : 'Perfil'}
             </Link>
             <Link
-              className="text-gray-300 hover:text-white transition-colors duration-200 font-bold"
+              className={profileLinkClass('contact')}
               href={`/${slug}/profile#links`}
               key={`${userName}+${userName.substring(2)}`}
-              onClick={handleProfileClick}
+              onClick={handleContactClick}
             >
               Contato
             </Link>
@@ -229,15 +257,15 @@ export default function HeaderWithCategories() {
                 <Link
                   href={`/${slug}/profile`}
                   onClick={handleProfileClick}
-                  className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
+                  className={`${activeProfileSection === 'profile' ? 'text-white bg-red-600' : 'text-gray-300 bg-gray-800 hover:bg-gray-700'} transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full`}
                 >
                   {firstNames ? `Perfil de ${firstNames}` : 'Perfil'}
                 </Link>
 
                 <Link
                   href={`/${slug}/profile#links`}
-                  onClick={handleProfileClick}
-                  className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
+                  onClick={handleContactClick}
+                  className={`${activeProfileSection === 'contact' ? 'text-white bg-red-600' : 'text-gray-300 bg-gray-800 hover:bg-gray-700'} transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full`}
                 >
                   Contato
                 </Link>
