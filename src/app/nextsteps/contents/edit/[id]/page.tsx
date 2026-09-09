@@ -16,30 +16,38 @@ export default function EditarConteudoPage() {
   const [categorias, setCategorias] = useState<Categoria[]>([])
 
   useEffect(() => {
-    fetchData()
-  }, [params.id])
+    let isMounted = true
 
-  const fetchData = async () => {
-    try {
-      const [conteudoResponse, categoriasResponse] = await Promise.all([
-        fetch(`/api/nextsteps/conteudos/${params.id}`),
-        fetch('/api/nextsteps/categorias')
-      ])
+    const loadData = async () => {
+      try {
+        const [conteudoResponse, categoriasResponse] = await Promise.all([
+          fetch(`/api/nextsteps/conteudos/${params.id}`),
+          fetch('/api/nextsteps/categorias')
+        ])
 
-      const conteudoResult = await conteudoResponse.json()
-      const categoriasResult = await categoriasResponse.json()
+        const conteudoResult = await conteudoResponse.json()
+        const categoriasResult = await categoriasResponse.json()
 
-      if (conteudoResult.success) {
-        setConteudo(conteudoResult.data)
+        if (!isMounted) return
+
+        if (conteudoResult.success) {
+          setConteudo(conteudoResult.data)
+        }
+
+        if (categoriasResult.success) {
+          setCategorias(categoriasResult.data)
+        }
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error)
       }
-
-      if (categoriasResult.success) {
-        setCategorias(categoriasResult.data)
-      }
-    } catch (error) {
-      console.error('Erro ao carregar dados:', error)
     }
-  }
+
+    void loadData()
+
+    return () => {
+      isMounted = false
+    }
+  }, [params.id])
 
   if (!conteudo) {
     return (

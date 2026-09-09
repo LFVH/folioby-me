@@ -6,9 +6,9 @@ import TipTapEditor from '@/components/logged/TipTapEditor'
 import LinksList from '@/components/letsgo/profile/LinksList'
 import { Avatar } from '@/components/ui/Avatar'
 
-type LinkItem = [number, string, string]
+export type LinkItem = [number, string, string]
 
-interface User {
+export interface User {
   name: string
   image: string | null
   desc: any

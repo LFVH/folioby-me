@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { CategoriaWithUrls } from '@/types'
 
 interface UseConteudosFiltradosProps {
@@ -23,15 +23,15 @@ export const useConteudosFiltrados = ({
 
   
 
-const getCategoriasPaginadas = (categoriasParaFiltrar: CategoriaWithUrls[], pageNum: number = 1) => {
+  const getCategoriasPaginadas = useCallback((categoriasParaFiltrar: CategoriaWithUrls[], pageNum: number = 1) => {
     if (!filtroAtivo) {
       const limit = 3
-      const startIndex = 0 
+      const startIndex = 0
       const endIndex = pageNum * limit
-            
+
       const categoriasPaginas = categoriasParaFiltrar.slice(0, endIndex)
       const temMais = endIndex < categoriasParaFiltrar.length
-      
+
       return {
         categorias: categoriasPaginas,
         hasMore: temMais
@@ -39,7 +39,7 @@ const getCategoriasPaginadas = (categoriasParaFiltrar: CategoriaWithUrls[], page
     }
 
     if (tipoFiltro === 'categoria') {
-      const categoriaFiltrada = categoriasParaFiltrar.find(c => c.id === filtroAtivo)    
+      const categoriaFiltrada = categoriasParaFiltrar.find((c) => c.id === filtroAtivo)
       return {
         categorias: categoriaFiltrada ? [categoriaFiltrada] : [],
         hasMore: false
@@ -48,16 +48,19 @@ const getCategoriasPaginadas = (categoriasParaFiltrar: CategoriaWithUrls[], page
 
     if (tipoFiltro === 'search') {
       const termoLower = termoPesquisa.toLowerCase()
-      
-      const categoriasComBusca = categoriasParaFiltrar.map(categoria => ({
-        ...categoria,
-        conteudos: categoria.conteudos.filter(conteudo => 
-          conteudo.name?.toLowerCase().includes(termoLower) ||
-          conteudo.filename.toLowerCase().includes(termoLower) ||
-          categoria.nome?.toLowerCase().includes(termoLower) ||
-          categoria.name?.toLowerCase().includes(termoLower)
-        )
-      })).filter(categoria => categoria.conteudos.length > 0)
+
+      const categoriasComBusca = categoriasParaFiltrar
+        .map((categoria) => ({
+          ...categoria,
+          conteudos: categoria.conteudos.filter(
+            (conteudo) =>
+              conteudo.name?.toLowerCase().includes(termoLower) ||
+              conteudo.filename.toLowerCase().includes(termoLower) ||
+              categoria.nome?.toLowerCase().includes(termoLower) ||
+              categoria.name?.toLowerCase().includes(termoLower)
+          )
+        }))
+        .filter((categoria) => categoria.conteudos.length > 0)
 
       return {
         categorias: categoriasComBusca,
@@ -69,7 +72,7 @@ const getCategoriasPaginadas = (categoriasParaFiltrar: CategoriaWithUrls[], page
       categorias: categoriasParaFiltrar,
       hasMore: false
     }
-  }
+  }, [filtroAtivo, termoPesquisa, tipoFiltro])
 
   const loadMore = async () => {
     if (loading || !hasMore || filtroAtivo) {
@@ -91,7 +94,7 @@ const getCategoriasPaginadas = (categoriasParaFiltrar: CategoriaWithUrls[], page
   }
 
   useEffect(() => {
-    const filtersChanged = 
+    const filtersChanged =
       lastFilterRef.current.filtroAtivo !== filtroAtivo ||
       lastFilterRef.current.tipoFiltro !== tipoFiltro ||
       lastFilterRef.current.termoPesquisa !== termoPesquisa
@@ -101,15 +104,19 @@ const getCategoriasPaginadas = (categoriasParaFiltrar: CategoriaWithUrls[], page
     }
 
     lastFilterRef.current = { filtroAtivo, tipoFiltro, termoPesquisa }
-    
-    setLoading(true)
-    setPage(1)
 
-    const result = getCategoriasPaginadas(categorias, 1)
-    setCategoriasFiltradas(result.categorias)
-    setHasMore(result.hasMore)
-    setLoading(false)
-  }, [categorias, filtroAtivo, tipoFiltro, termoPesquisa])
+    const timer = setTimeout(() => {
+      setLoading(true)
+      setPage(1)
+
+      const result = getCategoriasPaginadas(categorias, 1)
+      setCategoriasFiltradas(result.categorias)
+      setHasMore(result.hasMore)
+      setLoading(false)
+    }, 0)
+
+    return () => clearTimeout(timer)
+  }, [categorias, categoriasFiltradas.length, filtroAtivo, getCategoriasPaginadas, tipoFiltro, termoPesquisa])
 
   return { 
     categoriasFiltradas, 

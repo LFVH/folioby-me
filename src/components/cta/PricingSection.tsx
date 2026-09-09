@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { loadStripe } from "@stripe/stripe-js";
@@ -25,82 +25,46 @@ export default function PricingSection({
   const searchParams = useSearchParams();
   const assinaturaFromUrl = searchParams.get('plan');
 
+  const handlePayment = useCallback(async (assinatura: number) => {
+    try {
+      const response = await fetch('/api/mercadopago/create-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          planType: assinatura,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.initPoint) {
+        window.location.href = data.initPoint;
+      } else {
+        console.error('Erro ao criar assinatura:', data.error);
+        alert('Erro ao processar assinatura. Tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+      alert('Erro de conexão. Tente novamente.');
+    }
+  }, []);
+
   useEffect(() => {
     if (session && assinatura) {
-      handlePayment(assinatura);
-    } 
+      void handlePayment(assinatura);
+    }
     if (!session && assinatura) {
       router.push(`/auth?plan=${assinatura}`);
-    } 
-  }, [status, assinatura]);
+    }
+  }, [session, assinatura, handlePayment, router]);
 
   useEffect(() => {
     if (assinaturaFromUrl && session && status === 'authenticated') {
-      handlePayment(Number(assinaturaFromUrl));
+      void handlePayment(Number(assinaturaFromUrl));
     }
-  }, [session, status, assinaturaFromUrl]);
-
-  // const handlePayment = async (assinatura: number) => {
-  //   if (isProcessing) return;
-    
-  //   setIsProcessing(true);
-  //   try {
-  //     const checkoutResponse = await fetch("/api/create-checkout", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ assinatura }),
-  //     });
-
-  //     const stripeClient = await loadStripe(
-  //       process.env.NEXT_PUBLIC_STRIPE_PUB_KEY as string
-  //     );
-
-  //     if (!stripeClient) throw new Error("Stripe failed to initialize.");
-
-  //     const { sessionId } = await checkoutResponse.json();
-  //     const { error } =  await stripeClient.redirectToCheckout({ sessionId });
-      
-  //     if (error) {
-  //       console.error("Stripe checkout error:", error);
-  //     } else {
-  //       onSuccess?.();
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setIsProcessing(false);
-  //   }
-  // };
-
-const handlePayment = async (assinatura: number) => {
-  try {
-    const response = await fetch('/api/mercadopago/create-subscription', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        planType: assinatura,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok && data.initPoint) {
-      // Redireciona para o checkout do Mercado Pago
-      window.location.href = data.initPoint;
-    } else {
-      console.error('Erro ao criar assinatura:', data.error);
-      // Mostrar mensagem de erro para o usuário
-      alert('Erro ao processar assinatura. Tente novamente.');
-    }
-  } catch (error) {
-    console.error('Erro:', error);
-    alert('Erro de conexão. Tente novamente.');
-  }
-};
+  }, [session, status, assinaturaFromUrl, handlePayment]);
 
 
   if (isProcessing) {

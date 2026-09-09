@@ -21,6 +21,14 @@ export default function CarrosselCategoria({
   const [isScrolling, setIsScrolling] = useState(false)
   const scrollRequestRef = useRef<number>(0)
 
+  const updateArrows = () => {
+    if (!carrosselRef.current) return
+
+    const { scrollLeft, scrollWidth, clientWidth } = carrosselRef.current
+    setShowLeftArrow(true)
+    setShowRightArrow(true)
+  }
+
   useEffect(() => {
     return () => {
       if (scrollRequestRef.current) {
@@ -31,14 +39,19 @@ export default function CarrosselCategoria({
 
   useEffect(() => {
     if (layout === 'carrossel') {
-      updateArrows()
-      
+      const frame = requestAnimationFrame(() => {
+        updateArrows()
+      })
+
       const handleResize = () => {
         setTimeout(updateArrows, 100)
       }
 
       window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
+      return () => {
+        cancelAnimationFrame(frame)
+        window.removeEventListener('resize', handleResize)
+      }
     }
   }, [categoria.conteudos.length, layout])
 
@@ -161,14 +174,6 @@ export default function CarrosselCategoria({
     }
 
     smoothScroll(targetScroll)
-  }
-
-  const updateArrows = () => {
-    if (!carrosselRef.current) return
-
-    const { scrollLeft, scrollWidth, clientWidth } = carrosselRef.current
-    setShowLeftArrow(true)
-    setShowRightArrow(true)
   }
 
   const handleScroll = () => {

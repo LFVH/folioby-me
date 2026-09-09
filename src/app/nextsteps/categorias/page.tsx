@@ -144,7 +144,7 @@ export default function CategoriasPage() {
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-white">
-                  Resultados para: <strong>"{searchTerm}"</strong>
+                  Resultados para: <strong>&quot;{searchTerm}&quot;</strong>
                 </span>
                 <span className="text-gray-400 ml-4">
                   {pagination.totalItems} categoria(s) encontrada(s)

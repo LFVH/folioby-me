@@ -62,11 +62,11 @@ export default function ConteudosFiltradosComScroll({
     return (
       <div className="text-center py-16">
         <p className="text-gray-400 text-xl mb-4">
-          {tipoFiltro === 'search' 
-            ? `Nenhum resultado encontrado para "${termoPesquisa}"`
+          {tipoFiltro === 'search'
+            ? `Nenhum resultado encontrado para &quot;${termoPesquisa}&quot;`
             : tipoFiltro === 'categoria'
-            ? 'Nenhum conteúdo encontrado nesta categoria.'
-            : 'Nenhum conteúdo encontrado.'
+              ? 'Nenhum conteúdo encontrado nesta categoria.'
+              : 'Nenhum conteúdo encontrado.'
           }
         </p>
         {filtroAtivo && (
@@ -110,7 +110,7 @@ export default function ConteudosFiltradosComScroll({
       {tipoFiltro === 'search' && categoriasFiltradas.length > 0 && (
         <div className="px-8">
           <h2 className="text-2xl font-bold text-white mb-2">
-            Resultados para "{termoPesquisa}"
+            Resultados para &quot;{termoPesquisa}&quot;
           </h2>
           <p className="text-gray-400">
             {categoriasFiltradas.reduce((total, cat) => total + cat.conteudos.length, 0)} 
@@ -151,7 +151,7 @@ export default function ConteudosFiltradosComScroll({
       {!hasMore && categoriasFiltradas.length > 0 && !filtroAtivo && (
         <div className="text-center py-8">
           <p className="text-gray-400">
-            OK Let's go.
+            OK Let&apos;s go.
           </p>
         </div>
       )}

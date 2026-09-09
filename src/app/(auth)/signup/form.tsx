@@ -30,17 +30,10 @@ export function SignupForm({ onLoginSuccess }: SignupFormProps) {
     confirmPassword: ''
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [passwordsMatch, setPasswordsMatch] = useState(true);
   const router = useRouter();
   const searchParams = useSearchParams();
   const assinaturaId = searchParams.get('plan');
-  useEffect(() => {
-    if (formState.password && formState.confirmPassword) {
-      setPasswordsMatch(formState.password === formState.confirmPassword);
-    } else {
-      setPasswordsMatch(true);
-    }
-  }, [formState.password, formState.confirmPassword]);
+  const passwordsMatch = !formState.confirmPassword || formState.password === formState.confirmPassword;
   const handleInputChange = (field: keyof FormState) => 
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setFormState(prev => ({

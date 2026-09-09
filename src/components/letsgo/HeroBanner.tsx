@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { handleImgError } from '@/utils/imageFallback'
 import { CategoriaWithUrls } from '@/types'
@@ -31,13 +32,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
     .filter((conteudo) => Boolean(getBannerMediaUrl(conteudo)))
     .slice(0, 5)
 
-  useEffect(() => {
-    if (currentBannerIndex < bannerConteudos.length) {
-      return
-    }
-
-    setCurrentBannerIndex(0)
-  }, [bannerConteudos.length, currentBannerIndex])
+  const safeBannerIndex = Math.min(currentBannerIndex, Math.max(bannerConteudos.length - 1, 0))
 
   useEffect(() => {
     if (bannerConteudos.length <= 1) {
@@ -57,7 +52,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
     return null
   }
 
-  const currentBanner = bannerConteudos[currentBannerIndex]
+  const currentBanner = bannerConteudos[safeBannerIndex]
 
   if (!currentBanner) {
     return null
@@ -83,18 +78,23 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
             }
 
             return (
-              <img
+              <div
                 key={`bg-${conteudo.id}`}
-                src={imageUrl}
-                alt=""
-                aria-hidden="true"
-                loading={index === 0 ? 'eager' : 'lazy'}
-                decoding="async"
-                className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ease-out ${
+                className={`absolute inset-0 transition-opacity duration-700 ease-out ${
                   index === currentBannerIndex ? 'opacity-40' : 'opacity-0'
                 }`}
-                onError={(e) => handleImgError(e)}
-              />
+              >
+                <Image
+                  src={imageUrl}
+                  alt=""
+                  aria-hidden="true"
+                  fill
+                  sizes="100vw"
+                  className="object-cover object-center"
+                  unoptimized
+                  onError={(e) => handleImgError(e)}
+                />
+              </div>
             )
           })}
 
@@ -119,14 +119,17 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
                     : 'pointer-events-none opacity-0 translate-x-6 scale-[1.02]'
                 }`}
               >
-                <img
-                  src={imageUrl}
-                  alt={getBannerTitle(conteudo)}
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                  decoding="async"
-                  className="h-[82%] w-full object-contain object-left drop-shadow-[0_20px_65px_rgba(0,0,0,0.55)]"
-                  onError={(e) => handleImgError(e)}
-                />
+                <div className="relative h-[82%] w-full">
+                  <Image
+                    src={imageUrl}
+                    alt={getBannerTitle(conteudo)}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-contain object-left drop-shadow-[0_20px_65px_rgba(0,0,0,0.55)]"
+                    unoptimized
+                    onError={(e) => handleImgError(e)}
+                  />
+                </div>
               </div>
             )
           })}
@@ -141,19 +144,24 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
             }
 
               return (
-              <img
+              <div
                 key={`mobile-${conteudo.id}`}
-                src={imageUrl}
-                alt={getBannerTitle(conteudo)}
-                loading={index === 0 ? 'eager' : 'lazy'}
-                decoding="async"
-                className={`absolute top-8 h-[44vh] w-[92vw] max-w-xl object-contain transition-all duration-700 ease-out ${
+                className={`absolute top-8 h-[44vh] w-[92vw] max-w-xl transition-all duration-700 ease-out ${
                   index === currentBannerIndex
                     ? 'opacity-100 translate-y-0 scale-100'
                     : 'pointer-events-none opacity-0 translate-y-3 scale-[1.02]'
                 }`}
-                onError={(e) => handleImgError(e)}
-              />
+              >
+                <Image
+                  src={imageUrl}
+                  alt={getBannerTitle(conteudo)}
+                  fill
+                  sizes="92vw"
+                  className="object-contain"
+                  unoptimized
+                  onError={(e) => handleImgError(e)}
+                />
+              </div>
             )
           })}
         </div>
