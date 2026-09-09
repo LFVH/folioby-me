@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
 import { handleImgError } from '@/utils/imageFallback'
 import { ConteudoWithUrl } from '@/types'
@@ -27,14 +28,6 @@ export default function ConteudoItem({ conteudo, layout = 'carrossel' }: Conteud
       }
     }
   }, [isHovered, isSequence, mediaUrls.length])
-  useEffect(() => {
-    if (!isHovered) {
-      setCurrentImageIndex(0)
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-      }
-    }
-  }, [isHovered])
   const handleClick = () => {
     if (conteudo.linkext) {
       window.open(conteudo.linkext, '_blank', 'noopener,noreferrer')
@@ -45,6 +38,10 @@ export default function ConteudoItem({ conteudo, layout = 'carrossel' }: Conteud
   }
   const handleMouseLeave = () => {
     setIsHovered(false)
+    setCurrentImageIndex(0)
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+    }
   }
   const currentMediaUrl = isSequence && isHovered
     ? mediaUrls[currentImageIndex]
@@ -134,13 +131,16 @@ export default function ConteudoItem({ conteudo, layout = 'carrossel' }: Conteud
           ))}
         </div>
       )}
-      <img
+      <Image
         src={currentMediaUrl}
         alt={conteudo.name || conteudo.filename.replace(/\.[^/.]+$/, '')}
+        width={640}
+        height={360}
         className={`w-full h-full object-contain transition-transform duration-500 ease-out group-hover/item:scale-110 ${
           conteudo.isTrend ? 'brightness-110' : ''
         }`}
         loading="lazy"
+        unoptimized
         onError={(e) => handleImgError(e)}
       />
       

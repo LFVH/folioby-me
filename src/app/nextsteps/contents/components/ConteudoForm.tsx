@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { handleImgError } from '@/utils/imageFallback'
 import { useRouter } from 'next/navigation'
@@ -356,14 +357,17 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             <div className={formData.isSequence ? 'grid grid-cols-4 gap-2' : ''}>
               {previewUrls.map((url, index) => (
                 <div key={index} className="relative">
-                  <img
+                  <Image
                     src={url}
                     alt={`Preview ${index + 1}`}
+                    width={formData.isSequence ? 200 : 320}
+                    height={formData.isSequence ? 96 : 192}
                     className={
                       formData.isSequence
                         ? 'w-full h-24 object-cover rounded border border-gray-600'
                         : 'max-w-xs max-h-48 rounded-lg border border-gray-600'
                     }
+                    unoptimized
                     onError={(e) => handleImgError(e)}
                   />
                   {formData.isSequence && (

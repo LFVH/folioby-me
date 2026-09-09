@@ -27,7 +27,22 @@ export default function LinksManager() {
   }
 
   useEffect(() => {
-    fetchLinks()
+    let active = true
+
+    const loadLinks = async () => {
+      const res = await fetch('/api/nextsteps/user/links')
+      const data = await res.json()
+
+      if (active) {
+        setLinks(data.data || [])
+      }
+    }
+
+    void loadLinks()
+
+    return () => {
+      active = false
+    }
   }, [])
 
   const handleRedeChange = (nextRede: number) => {

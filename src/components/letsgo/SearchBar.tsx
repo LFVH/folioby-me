@@ -22,8 +22,14 @@ export default function SearchBar({
 
   useEffect(() => {
     if (!isOpen) {
-      setLocalQuery(value)
+      const timer = setTimeout(() => {
+        setLocalQuery(value)
+      }, 0)
+
+      return () => clearTimeout(timer)
     }
+
+    return undefined
   }, [value, isOpen])
 
   useEffect(() => {
@@ -75,6 +81,8 @@ export default function SearchBar({
     setIsOpen(true)
   }, [])
 
+  const inputValue = isOpen ? localQuery : value
+
   const handleClose = useCallback(() => {
     setIsOpen(false)
   }, [])
@@ -118,7 +126,7 @@ export default function SearchBar({
                   <input
                     ref={inputRef}
                     type="text"
-                    value={localQuery}
+                    value={inputValue}
                     onChange={handleChange}
                     placeholder="Buscar categorias ou conteúdos..."
                     className="w-full px-4 py-4 pl-12 bg-transparent text-white placeholder-gray-400 focus:outline-none text-lg"

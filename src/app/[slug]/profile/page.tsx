@@ -12,19 +12,26 @@ export default async function ProfilePage({ params }: PageProps) {
   if (isFileLikeUserSlug(slug)) {
     notFound();
   }
-  
-  try {
-    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/letsgo/user/${slug}`    );
-    if (!res.ok) {
-      return <div>Usuário não encontrado</div>;
-    }
-    
-    const user = await res.json();
-    return <ProfileClient user={user} />;
-  } catch (error) {
 
-    console.log("ERRO AO CARREGAR")
-    console.error(error)
+  let user: unknown = null;
+
+  try {
+    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/letsgo/user/${slug}`);
+
+    if (!res.ok) {
+      notFound();
+    }
+
+    user = await res.json();
+  } catch (error) {
+    console.log('ERRO AO CARREGAR');
+    console.error(error);
     return <div>Erro ao carregar perfil</div>;
   }
+
+  if (!user) {
+    return <div>Usuário não encontrado</div>;
+  }
+
+  return <ProfileClient user={user} />;
 }

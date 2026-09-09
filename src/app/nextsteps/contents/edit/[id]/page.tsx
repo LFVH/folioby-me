@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import ConteudoForm from '../../components/ConteudoForm'
 
@@ -15,11 +15,7 @@ export default function EditarConteudoPage() {
   const [conteudo, setConteudo] = useState<any>(null)
   const [categorias, setCategorias] = useState<Categoria[]>([])
 
-  useEffect(() => {
-    fetchData()
-  }, [params.id])
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const [conteudoResponse, categoriasResponse] = await Promise.all([
         fetch(`/api/nextsteps/conteudos/${params.id}`),
@@ -39,7 +35,11 @@ export default function EditarConteudoPage() {
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
     }
-  }
+  }, [params.id])
+
+  useEffect(() => {
+    void fetchData()
+  }, [fetchData])
 
   if (!conteudo) {
     return (

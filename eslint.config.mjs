@@ -6,7 +6,7 @@ import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-export default [
+const config = [
   {
     ignores: [".next/**", "node_modules/**", "generated/**", "next-env.d.ts"],
   },
@@ -70,3 +70,5 @@ export default [
     },
   },
 ];
+
+export default config;

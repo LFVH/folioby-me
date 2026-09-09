@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 
 interface Categoria {
@@ -21,11 +21,7 @@ export default function EditarCategoriaPage() {
     descricao: ''
   })
 
-  useEffect(() => {
-    fetchCategoria()
-  }, [params.id])
-
-  const fetchCategoria = async () => {
+  const fetchCategoria = useCallback(async () => {
     try {
       const response = await fetch(`/api/nextsteps/categorias/${params.id}`)
       const result = await response.json()
@@ -46,7 +42,11 @@ export default function EditarCategoriaPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [params.id, router])
+
+  useEffect(() => {
+    void fetchCategoria()
+  }, [fetchCategoria])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

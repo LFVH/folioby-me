@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { handleImgError } from '@/utils/imageFallback'
 import Link from 'next/link'
@@ -139,7 +140,7 @@ export default function ConteudosPage() {
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-white">
-                  Resultados para: <strong>"{searchTerm}"</strong>
+                  Resultados para: <strong>&quot;{searchTerm}&quot;</strong>
                 </span>
                 <span className="text-gray-400 ml-4">
                   {pagination.totalItems} conteúdo(s) encontrado(s)
@@ -161,10 +162,13 @@ export default function ConteudosPage() {
           {conteudos.map((conteudo) => (
             <div key={conteudo.id} className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-gray-600 transition-colors">
               <div className="h-48 bg-gray-900 flex items-center justify-center">
-                <img
+                <Image
                   src={conteudo.link || `/api/nextsteps/conteudo/${conteudo.id}`}
                   alt={conteudo.name}
+                  width={600}
+                  height={300}
                   className="max-h-full max-w-full object-contain"
+                  unoptimized
                   onError={(e) => handleImgError(e)}
                 />
               </div>
