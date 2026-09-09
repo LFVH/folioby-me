@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import ProfileClient from './ProfileClient';
+import ProfileClient, { type User } from './ProfileClient';
 import { isFileLikeUserSlug } from '@/lib/user-slug';
 
 interface PageProps {
@@ -13,7 +13,7 @@ export default async function ProfilePage({ params }: PageProps) {
     notFound();
   }
 
-  let user: unknown = null;
+  let user: User | null = null;
 
   try {
     const res = await fetch(`${process.env.NEXTAUTH_URL}/api/letsgo/user/${slug}`);

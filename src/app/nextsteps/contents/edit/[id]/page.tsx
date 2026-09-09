@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import ConteudoForm from '../../components/ConteudoForm'
 
@@ -15,31 +15,39 @@ export default function EditarConteudoPage() {
   const [conteudo, setConteudo] = useState<any>(null)
   const [categorias, setCategorias] = useState<Categoria[]>([])
 
-  const fetchData = useCallback(async () => {
-    try {
-      const [conteudoResponse, categoriasResponse] = await Promise.all([
-        fetch(`/api/nextsteps/conteudos/${params.id}`),
-        fetch('/api/nextsteps/categorias')
-      ])
+  useEffect(() => {
+    let isMounted = true
 
-      const conteudoResult = await conteudoResponse.json()
-      const categoriasResult = await categoriasResponse.json()
+    const loadData = async () => {
+      try {
+        const [conteudoResponse, categoriasResponse] = await Promise.all([
+          fetch(`/api/nextsteps/conteudos/${params.id}`),
+          fetch('/api/nextsteps/categorias')
+        ])
 
-      if (conteudoResult.success) {
-        setConteudo(conteudoResult.data)
+        const conteudoResult = await conteudoResponse.json()
+        const categoriasResult = await categoriasResponse.json()
+
+        if (!isMounted) return
+
+        if (conteudoResult.success) {
+          setConteudo(conteudoResult.data)
+        }
+
+        if (categoriasResult.success) {
+          setCategorias(categoriasResult.data)
+        }
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error)
       }
+    }
 
-      if (categoriasResult.success) {
-        setCategorias(categoriasResult.data)
-      }
-    } catch (error) {
-      console.error('Erro ao carregar dados:', error)
+    void loadData()
+
+    return () => {
+      isMounted = false
     }
   }, [params.id])
-
-  useEffect(() => {
-    void fetchData()
-  }, [fetchData])
 
   if (!conteudo) {
     return (
