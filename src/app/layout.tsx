@@ -4,6 +4,7 @@ import ClientProviders from "@/components/Providers"
 import { Inter, Poppins, Bebas_Neue } from 'next/font/google';
 import './globals.css';
 import { LoggedBar } from '@/components/logged/LoggedBar';
+import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
 
 const inter = Inter({ subsets: ['latin'] });
 const poppins = Poppins({
@@ -39,7 +40,8 @@ export default function RootLayout({
             <Suspense fallback={<div>Carregando página...</div>}>
                 {children}
             </Suspense>
-            </main>        
+            </main>
+            <ScrollToTopButton />
           </ClientProviders>
         </div>
       </body>
