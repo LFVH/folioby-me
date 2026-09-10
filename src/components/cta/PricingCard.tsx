@@ -2,9 +2,11 @@ interface PricingCardProps {
   plano: {
     id: number;
     nome: string;
+    precoAntigo?: string;
     preco: string;
     periodo: string;
     economia?: string;
+    faixaGratis?: string;
     popular?: boolean;
     beneficios: string[];
     corDestaque: 'red' | 'orange' | 'green';
@@ -64,9 +66,20 @@ export function PricingCard({ plano, assinaturaSelecionada, onSelecionar }: Pric
         <h3 className="text-2xl font-bold text-center">{plano.nome}</h3>
         
         <div className="mt-4 flex justify-center items-baseline">
+          {plano.precoAntigo && (
+            <span className="text-lg font-medium line-through opacity-80 mr-3">{plano.precoAntigo}</span>
+          )}
           <span className="text-4xl font-extrabold">{plano.preco}</span>
           <span className="text-lg font-medium opacity-90 ml-2">{plano.periodo}</span>
         </div>
+
+        {plano.faixaGratis && (
+          <div className="mt-3 text-center">
+            <span className="bg-white/15 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold tracking-wide uppercase">
+              {plano.faixaGratis}
+            </span>
+          </div>
+        )}
         
         {plano.economia && (
           <div className="mt-2 text-center">

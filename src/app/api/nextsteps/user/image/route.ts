@@ -1,6 +1,7 @@
 // app/api/nextsteps/user/image/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { BlobService } from '@/lib/blob-service';
+import { checkUserStorageQuotaByDelta, MAX_PROFILE_IMAGE_BYTES, MAX_USER_STORAGE_BYTES, removeUserStorageBytes, applyUserStorageDelta } from '@/lib/storage-quota';
 import { verifyUser } from '@/utils/verifyUserAuth';
 import prisma from '@/prisma';
 
@@ -36,10 +37,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verificar tamanho (5MB max)
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > MAX_PROFILE_IMAGE_BYTES) {
       return NextResponse.json(
-        { error: 'Arquivo muito grande. Máximo 5MB.' },
+        { error: 'Arquivo muito grande. Máximo 5MB para foto de perfil.' },
+        { status: 400 }
+      );
+    }
+
+    if (file.size > MAX_USER_STORAGE_BYTES) {
+      return NextResponse.json(
+        { error: 'Não é possivel inserir esse arquivo pois excede 2GB de armazenamento por usuario' },
+        { status: 400 }
+      );
+    }
+
+    const quota = await checkUserStorageQuotaByDelta(userId, file.size);
+    if (!quota.allowed) {
+      return NextResponse.json(
+        { error: quota.message },
         { status: 400 }
       );
     }
@@ -48,6 +63,7 @@ export async function POST(request: NextRequest) {
 
     // Upload para o blob
     const uploaded = await BlobService.uploadFromClient(file, path);
+    await applyUserStorageDelta(userId, uploaded.size);
 
     return NextResponse.json({
       url: uploaded.url,
@@ -77,7 +93,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const { imageUrl, oldImageUrl } = await request.json();
+    const { imageUrl, oldImageUrl, oldImageSizeBytes } = await request.json();
 
     if (!imageUrl) {
       return NextResponse.json(
@@ -85,6 +101,12 @@ export async function PUT(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    const oldSize = Number(oldImageSizeBytes || 0);
+    if (oldSize > 0) {
+      await removeUserStorageBytes(userId, oldSize);
+    }
+
     await prisma.usuario.update({
       where: { id: userId },
       data: { image: imageUrl }
@@ -129,6 +151,7 @@ export async function DELETE(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const imageUrl = searchParams.get('url');
+    const sizeBytes = Number(searchParams.get('sizeBytes') ?? '0');
 
     if (!imageUrl) {
       return NextResponse.json(
@@ -139,6 +162,7 @@ export async function DELETE(request: NextRequest) {
 
     // Deletar do blob
     await BlobService.deleteFile(imageUrl);
+    await removeUserStorageBytes(userId, sizeBytes || 0);
 
      await prisma.usuario.update({
        where: { id: userId },

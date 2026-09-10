@@ -15,6 +15,7 @@ model Usuario {
   image        String?
   desc         Json?          @db.Json
   links        Json?          @db.Json
+  storageUsedBytes BigInt @default(0)
   refreshToken RefreshToken?
   isBlocked    Boolean  @default(false) //block manual
   isPremium    Boolean  @default(false) 
@@ -47,6 +48,7 @@ model Conteudo {
   data           Bytes?
   mediaType      String   @default("single") // 'single', 'sequence'
   mediaUrls      String[] // Array de URLs para múltiplas imagens
+  storageBytes   BigInt   @default(0)
   isTrend        Boolean  @default(false)
   categorias     Categoria[]
   userId         String

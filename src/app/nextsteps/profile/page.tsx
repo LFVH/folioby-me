@@ -30,6 +30,7 @@ export default function UserPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [uploadingImage, setUploadingImage] = useState(false)
   const [userImage, setUserImage] = useState<string | null>(null)
+  const [userImageSizeBytes, setUserImageSizeBytes] = useState(0)
   const [pendingImageCrop, setPendingImageCrop] = useState<PendingImageCrop | null>(null)
 
   useEffect(() => {
@@ -144,7 +145,7 @@ export default function UserPage() {
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('Arquivo muito grande (máx. 5 MB)')
+      toast.error('Arquivo muito grande. Máximo 5MB para foto de perfil.')
       return
     }
 
@@ -193,6 +194,7 @@ export default function UserPage() {
         body: JSON.stringify({
           imageUrl: uploadData.url,
           oldImageUrl: userImage,
+          oldImageSizeBytes: userImageSizeBytes,
         }),
       })
 
@@ -204,6 +206,7 @@ export default function UserPage() {
 
       await update({ image: uploadData.url })
       setUserImage(uploadData.url)
+      setUserImageSizeBytes(uploadData.size || 0)
       resetPendingImageCrop()
       toast.success('Foto de perfil atualizada!')
     } catch (error) {
@@ -220,7 +223,7 @@ export default function UserPage() {
     setIsLoading(true)
     try {
       const response = await fetch(
-        `/api/nextsteps/user/image?url=${encodeURIComponent(userImage)}`,
+        `/api/nextsteps/user/image?url=${encodeURIComponent(userImage)}&sizeBytes=${userImageSizeBytes}`,
         {
           method: 'DELETE',
         }
@@ -234,6 +237,7 @@ export default function UserPage() {
 
       await update({ image: null })
       setUserImage(null)
+      setUserImageSizeBytes(0)
       toast.success('Foto de perfil removida!')
     } catch (error) {
       console.error('Erro ao remover:', error)
