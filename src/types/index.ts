@@ -83,9 +83,11 @@ export const planos = [
     {
       id: 1,
       nome: 'Plano Mensal Lançamento',
-      preco: 'R$14,00',
-      price: 14.00,
+      precoAntigo: 'R$14,00',
+      preco: 'R$0,00',
+      price: 0,
       periodo: '/mês',
+      faixaGratis: 'Cadastre-se e use grátis',
       corDestaque: 'red' as const,
       beneficios: [
         'Acesso a todas as funções',
@@ -98,10 +100,12 @@ export const planos = [
     {
       id: 2,
       nome: 'Plano Trimestral Exclusivo',
-      preco: 'R$40,00',
-      price: 40.00,
+      precoAntigo: 'R$40,00',
+      preco: 'R$0,00',
+      price: 0,
       periodo: '/trimestre',
       economia: '5%',
+      faixaGratis: 'Cadastre-se e use grátis',
       popular: true,
       corDestaque: 'orange' as const,
       beneficios: [
@@ -114,10 +118,12 @@ export const planos = [
     {
       id: 3,
       nome: 'Plano Semestral',
-      preco: 'R$75,70',
-      price: 75.70,
+      precoAntigo: 'R$75,70',
+      preco: 'R$0,00',
+      price: 0,
       periodo: '/semestre',
       economia: '10%',
+      faixaGratis: 'Cadastre-se e use grátis',
       corDestaque: 'green' as const,
       beneficios: [
         'Todos os benefícios do trimestral',

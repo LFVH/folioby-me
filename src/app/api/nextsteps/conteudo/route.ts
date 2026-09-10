@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from "../../../../prisma"
 import { verifyUser } from "@/utils/verifyUserAuth"
+import { applyUserStorageDelta, checkUserStorageQuotaByDelta, removeUserStorageBytes } from '@/lib/storage-quota'
 
 const normalizeOptionalText = (value: unknown) => {
   if (typeof value !== 'string') return null
@@ -135,6 +136,7 @@ export async function POST(request: NextRequest) {
       categoriasIds,
       isSequence,
       mediaUrls,
+      storageBytes,
     } = body
 
     const normalizedName = normalizeOptionalText(name)
@@ -184,6 +186,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const requestedStorageBytes = Number(storageBytes || 0)
+    if (requestedStorageBytes > 0) {
+      const quota = await checkUserStorageQuotaByDelta(userId, requestedStorageBytes)
+      if (!quota.allowed) {
+        return NextResponse.json(
+          { success: false, error: quota.message },
+          { status: 400 }
+        )
+      }
+    }
+
     let mediaType = 'single'
     let filename = ''
     let mimetype = ''
@@ -218,6 +231,7 @@ export async function POST(request: NextRequest) {
         data: Buffer.from(''),
         mediaType,
         mediaUrls: normalizedMediaUrls,
+        storageBytes: BigInt(requestedStorageBytes > 0 ? requestedStorageBytes : 0),
         categorias: {
           connect: categoriasValidas.map(({ id }) => ({ id })),
         },
@@ -231,6 +245,10 @@ export async function POST(request: NextRequest) {
         categorias: true,
       },
     })
+
+    if (requestedStorageBytes > 0) {
+      await applyUserStorageDelta(userId, requestedStorageBytes)
+    }
 
     return NextResponse.json({
       success: true,

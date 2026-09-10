@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../prisma";
 import { isHis, verifyUser } from "@/utils/verifyUserAuth";
 import { BlobService } from "@/lib/blob-service";
+import { applyUserStorageDelta, checkUserStorageQuotaByDelta, removeUserStorageBytes } from '@/lib/storage-quota';
 
 const normalizeOptionalText = (value: unknown) => {
   if (typeof value !== "string") return null;
@@ -83,6 +84,9 @@ export async function DELETE(
         }
       }
     }
+
+    const removedStorageBytes = Number(conteudoExistente.storageBytes || 0);
+    await removeUserStorageBytes(userId, removedStorageBytes);
 
     await prisma.conteudo.delete({
       where: { id },
@@ -210,6 +214,7 @@ export async function PUT(
       categoriasIds,
       isSequence,
       mediaUrls,
+      storageBytes,
     } = body;
 
     const normalizedName = normalizeOptionalText(name);
@@ -252,11 +257,26 @@ export async function PUT(
       );
     }
 
+    const oldStorageBytes = Number(conteudoExistente.storageBytes || 0);
+    const nextStorageBytes = Number(storageBytes || 0);
+    const storageDelta = nextStorageBytes - oldStorageBytes;
+
+    if (storageDelta > 0) {
+      const quota = await checkUserStorageQuotaByDelta(userId, storageDelta);
+      if (!quota.allowed) {
+        return NextResponse.json(
+          { success: false, error: quota.message },
+          { status: 400 }
+        );
+      }
+    }
+
     const updateData: any = {
       name: normalizedName,
       fonte: normalizedFonte,
       linkext: normalizedLinkext,
       updatedAt: new Date(),
+      storageBytes: BigInt(Math.max(0, nextStorageBytes)),
       categorias: {
         set: categoriasValidas.map(({ id: categoriaId }) => ({
           id: categoriaId,
@@ -308,6 +328,12 @@ export async function PUT(
         { success: false, error: "Envie um arquivo antes de salvar o conteudo." },
         { status: 400 }
       );
+    }
+
+    if (storageDelta > 0) {
+      await applyUserStorageDelta(userId, storageDelta);
+    } else if (storageDelta < 0) {
+      await removeUserStorageBytes(userId, Math.abs(storageDelta));
     }
 
     const conteudo = await prisma.conteudo.update({

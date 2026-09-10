@@ -91,7 +91,10 @@ export default function PricingSection({
       <div className={`px-4 sm:px-6 lg:px-8 ${className}`}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-4">
-            <h1 className="text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl">
+            <div className="inline-flex items-center rounded-full border border-green-400/50 bg-green-500/10 px-4 py-2 text-sm font-semibold text-green-300">
+              Cadastre-se e use grátis
+            </div>
+            <h1 className="mt-6 text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl">
               Escolha seu <span className="bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent">Plano</span>
             </h1>
             <p className="mt-4 text-xl text-gray-300 max-w-3xl mx-auto">

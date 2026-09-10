@@ -144,6 +144,11 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
 
     try {
       let uploadedUrls: string[] = []
+      const totalUploadBytes = formData.isSequence
+        ? formData.files.reduce((sum, file) => sum + file.size, 0)
+        : formData.file
+          ? formData.file.size
+          : 0
 
       if (formData.isSequence && formData.files.length > 0) {
         const uploads = await Promise.all(
@@ -152,6 +157,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             const blob = await upload(uniqueName, file, {
               access: 'public',
               handleUploadUrl: '/api/nextsteps/blob/upload',
+              clientPayload: JSON.stringify({ storageBytes: file.size }),
             })
 
             return blob.url
@@ -164,6 +170,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
         const blob = await upload(uniqueName, formData.file, {
           access: 'public',
           handleUploadUrl: '/api/nextsteps/blob/upload',
+          clientPayload: JSON.stringify({ storageBytes: formData.file.size }),
         })
 
         uploadedUrls = [blob.url]
@@ -177,6 +184,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
         linkext: formData.linkext,
         categoriasIds: selectedCategorias,
         isSequence: formData.isSequence,
+        storageBytes: totalUploadBytes,
       }
 
       const url = conteudo
