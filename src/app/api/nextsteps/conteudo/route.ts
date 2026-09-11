@@ -3,6 +3,24 @@ import prisma from "../../../../prisma"
 import { verifyUser } from "@/utils/verifyUserAuth"
 import { applyUserStorageDelta, checkUserStorageQuotaByDelta, removeUserStorageBytes } from '@/lib/storage-quota'
 
+const serializeJsonSafe = <T>(value: T): T => {
+  if (typeof value === 'bigint') {
+    return Number(value) as T
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => serializeJsonSafe(item)) as T
+  }
+
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, item]) => [key, serializeJsonSafe(item)])
+    ) as T
+  }
+
+  return value
+}
+
 const normalizeOptionalText = (value: unknown) => {
   if (typeof value !== 'string') return null
 
@@ -94,7 +112,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: conteudos,
+      data: serializeJsonSafe(conteudos),
       pagination: {
         currentPage: page,
         totalPages,
@@ -252,7 +270,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: conteudo,
+      data: serializeJsonSafe(conteudo),
       message: 'Conteudo criado com sucesso',
     })
   } catch (error) {
