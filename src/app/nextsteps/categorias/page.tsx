@@ -117,21 +117,23 @@ export default function CategoriasPage() {
     <div className="min-h-screen bg-black p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
+        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
             <h1 className="text-3xl font-bold text-white">Gerenciar Categorias</h1>
-            <p className="text-gray-400 mt-1">Crie, edite e remova as categorias da sua p&aacute;gina</p>
+            <p className="mt-1 text-gray-400">Crie, edite e remova as categorias da sua p&aacute;gina</p>
           </div>
-          
-          <div className="flex items-center gap-4">
-            <SearchBarNxt 
-              onSearch={handleSearch}
-              placeholder="Buscar por nome ou descrição..."
-            />
-            
+
+          <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-end lg:w-auto">
+            <div className="w-full sm:max-w-xs lg:w-[280px]">
+              <SearchBarNxt
+                onSearch={handleSearch}
+                placeholder="Buscar por nome ou descrição..."
+              />
+            </div>
+
             <Link
               href="/nextsteps/categorias/novo"
-              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors whitespace-nowrap"
+              className="inline-flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700 whitespace-nowrap"
             >
               + Nova Categoria
             </Link>
