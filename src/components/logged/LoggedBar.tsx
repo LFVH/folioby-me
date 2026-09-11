@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { MenuIcon } from '../signinsignup/icons'
+import { MoreDotsIcon } from '../signinsignup/icons'
 import { scrollToTop } from '@/lib/utils'
 import { UserButton } from './UserButtons'
 
@@ -37,7 +37,7 @@ export function LoggedBar() {
   return (
     <header className="fixed top-0 z-50 w-full bg-gradient-to-b from-black to-transparent">
       <div className="bg-black">
-        <div className="w-full overflow-hidden rounded-lg border border-gray-800 bg-gray-900">
+        <div className="relative z-50 w-full overflow-visible rounded-lg border border-gray-800 bg-gray-900">
           <div className="container mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-3 py-2 md:px-6">
             <div className="flex min-w-0 flex-1 items-center gap-2 md:flex-none">
               <Link
@@ -81,13 +81,13 @@ export function LoggedBar() {
                   aria-label="Abrir menu de gerenciamento"
                   aria-expanded={mobileMenuOpen}
                   onClick={() => setMobileMenuOpen((value) => !value)}
-                  className="inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500"
+                  className="inline-flex items-center justify-center rounded-md p-2 text-white transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500"
                 >
-                  <MenuIcon className="h-6 w-6" />
+                  <MoreDotsIcon className="h-6 w-6" />
                 </button>
 
                 {mobileMenuOpen && (
-                  <div className="absolute right-0 top-full z-50 mt-2 w-56 rounded-lg border border-gray-700 bg-gray-950 p-2 shadow-2xl shadow-black/50">
+                  <div className="absolute right-0 top-full z-[60] mt-2 w-56 rounded-lg border border-gray-700 bg-gray-950 p-2 shadow-2xl shadow-black/50">
                     {links.map((link) => (
                       <Link
                         key={link.title}
