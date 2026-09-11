@@ -296,7 +296,7 @@ export async function PUT(
       updatedAt: new Date(),
       storageBytes: BigInt(Math.max(0, nextStorageBytes)),
       categorias: {
-        set: categoriasValidas.map(({ id: categoriaId }) => ({
+        set: categoriasValidas.map(({ id: categoriaId }: { id: number }) => ({
           id: categoriaId,
         })),
       },

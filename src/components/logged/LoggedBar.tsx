@@ -39,23 +39,25 @@ export function LoggedBar() {
       <div className="bg-black">
         <div className="w-full overflow-hidden rounded-lg border border-gray-800 bg-gray-900">
           <div className="container mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-3 py-2 md:px-6">
-            <Link
-              href={`/${session.user?.status ? session.user?.slug : ''}`}
-              className="min-w-0 flex-1 text-sm font-bold tracking-tight text-red-600 sm:text-base"
-            >
-              <span className="truncate">FolioBy/{session.user?.status ? session.user?.slug : 'yournamehere'} (access mypage)</span>
-            </Link>
-
-            <Link
-              href={`/${session.user?.status ? session.user?.slug : ''}/profile`}
-              className="shrink-0"
-            >
-              <div
-                className={`${pathname === `/${session.user?.slug}/profile` ? 'text-white underline decoration-2 decoration-red-600 underline-offset-4' : 'text-red-600'} text-sm font-bold tracking-tight sm:text-base`}
+            <div className="flex min-w-0 flex-1 items-center gap-2 md:flex-none">
+              <Link
+                href={`/${session.user?.status ? session.user?.slug : ''}`}
+                className="min-w-0 flex-1 truncate text-sm font-bold tracking-tight text-red-600 sm:text-base"
               >
-                {session.user?.status ? '/Profile' : ''}
-              </div>
-            </Link>
+                <span>FolioBy/{session.user?.status ? session.user?.slug : 'yournamehere'} (access mypage)</span>
+              </Link>
+
+              <Link
+                href={`/${session.user?.status ? session.user?.slug : ''}/profile`}
+                className="shrink-0"
+              >
+                <div
+                  className={`${pathname === `/${session.user?.slug}/profile` ? 'text-white underline decoration-2 decoration-red-600 underline-offset-4' : 'text-red-600'} text-sm font-bold tracking-tight sm:text-base`}
+                >
+                  {session.user?.status ? '/Profile' : ''}
+                </div>
+              </Link>
+            </div>
 
             <nav className="hidden items-center gap-4 text-sm md:flex md:items-center">
               {links.map((link) => (

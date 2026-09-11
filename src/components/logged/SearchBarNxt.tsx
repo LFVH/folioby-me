@@ -35,15 +35,15 @@ export default function SearchBarNxt({
     setQuery(e.target.value)
   }, [])
   return (
-    <div className="relative">
-      <div className="relative">
+    <div className="relative w-full sm:w-64 md:w-80">
+      <div className="relative w-full">
         <input
           ref={inputRef}
           type="text"
           value={query}
           onChange={handleChange}
           placeholder={placeholder}
-          className="w-64 md:w-80 px-4 py-2 pl-10 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
+          className="w-full px-4 py-2 pl-10 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
           autoFocus={autoFocus}
         />
         

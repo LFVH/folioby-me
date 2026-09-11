@@ -12,8 +12,10 @@ async function fetchSlugsFromDB(): Promise<string[]> {
     select: { slug: true }
   })
   return users
-    .map(user => user.slug)
-    .filter((slug): slug is string => Boolean(slug) && !isReservedUserSlug(slug))
+    .map((user: { slug: string | null }) => user.slug)
+    .filter((slug): slug is string => {
+      return typeof slug === 'string' && !isReservedUserSlug(slug)
+    })
 }
 export async function getValidUserSlugs(): Promise<string[]> {
   const now = Date.now()

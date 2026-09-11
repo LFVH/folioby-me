@@ -60,15 +60,15 @@ function withUserSlugValidation(client: PrismaClient) {
   return client.$extends({
     query: {
       usuario: {
-        async create({ args, query }) {
+        async create({ args, query }: { args: any; query: any }) {
           validateSlugInArgs(args.data as Record<string, unknown>)
           return query(args)
         },
-        async update({ args, query }) {
+        async update({ args, query }: { args: any; query: any }) {
           validateSlugInArgs(args.data as Record<string, unknown>)
           return query(args)
         },
-        async upsert({ args, query }) {
+        async upsert({ args, query }: { args: any; query: any }) {
           validateSlugInArgs(args.create as Record<string, unknown>)
           validateSlugInArgs(args.update as Record<string, unknown>)
           return query(args)
