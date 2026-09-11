@@ -1,6 +1,7 @@
 import prisma from '@/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { isFileLikeUserSlug } from '@/lib/user-slug';
+import { serializeJsonSafe } from '@/lib/json-safe';
 
 // GET
 export async function GET(
@@ -23,7 +24,7 @@ export async function GET(
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    return NextResponse.json(user);
+    return NextResponse.json(serializeJsonSafe(user));
   } catch (error) {
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }

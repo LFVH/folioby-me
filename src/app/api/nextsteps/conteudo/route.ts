@@ -82,7 +82,19 @@ export async function GET(request: NextRequest) {
 
     const [conteudos, total] = await Promise.all([
       prisma.conteudo.findMany({
-        include: {
+        where,
+        select: {
+          id: true,
+          name: true,
+          filename: true,
+          mimetype: true,
+          link: true,
+          linkext: true,
+          mediaUrls: true,
+          mediaType: true,
+          isTrend: true,
+          createdAt: true,
+          updatedAt: true,
           categorias: {
             select: {
               id: true,
@@ -91,7 +103,6 @@ export async function GET(request: NextRequest) {
             },
           },
         },
-        where,
         orderBy: [
           {
             isTrend: 'desc',
@@ -259,8 +270,26 @@ export async function POST(request: NextRequest) {
           },
         },
       },
-      include: {
-        categorias: true,
+      select: {
+        id: true,
+        name: true,
+        fonte: true,
+        link: true,
+        linkext: true,
+        filename: true,
+        mimetype: true,
+        mediaType: true,
+        mediaUrls: true,
+        isTrend: true,
+        createdAt: true,
+        updatedAt: true,
+        categorias: {
+          select: {
+            id: true,
+            nome: true,
+            name: true,
+          },
+        },
       },
     })
 
@@ -270,7 +299,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: serializeJsonSafe(conteudo),
+      data: conteudo,
       message: 'Conteudo criado com sucesso',
     })
   } catch (error) {

@@ -44,7 +44,14 @@ export async function GET(request: NextRequest) {
     const [categorias, total] = await Promise.all([
       prisma.categoria.findMany({
         where,
-        include: {
+        select: {
+          id: true,
+          nome: true,
+          name: true,
+          descricao: true,
+          isTrend: true,
+          createdAt: true,
+          updatedAt: true,
           _count: {
             select: {
               conteudos: true
@@ -121,6 +128,15 @@ export async function POST(request: NextRequest) {
             id: userId
           }
         }
+      },
+      select: {
+        id: true,
+        nome: true,
+        name: true,
+        descricao: true,
+        isTrend: true,
+        createdAt: true,
+        updatedAt: true,
       },
     })
 

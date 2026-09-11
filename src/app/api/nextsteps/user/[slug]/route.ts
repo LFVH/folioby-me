@@ -1,6 +1,7 @@
 import prisma from "@/prisma";
 import { verifyUser } from "@/utils/verifyUserAuth";
 import { NextRequest, NextResponse } from "next/server";
+import { serializeJsonSafe } from '@/lib/json-safe';
 
 // GET
 export async function GET(

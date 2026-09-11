@@ -19,7 +19,14 @@ export const userService = {
 
     return await prisma.usuario.update({
       where: { id: userId },
-      data: { slug: normalizedSlug }
+      data: { slug: normalizedSlug },
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        image: true,
+        email: true,
+      }
     })
   },
 

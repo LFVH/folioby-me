@@ -85,7 +85,14 @@ export async function PUT(
 
     const categoria = await prisma.categoria.findFirst({
       where: { id, userId },
-      include: {
+      select: {
+        id: true,
+        nome: true,
+        name: true,
+        descricao: true,
+        isTrend: true,
+        createdAt: true,
+        updatedAt: true,
         _count: {
           select: {
             conteudos: true,
@@ -199,7 +206,14 @@ export async function GET(
 
     const categoria = await prisma.categoria.findFirst({
       where: { id, userId },
-      include: {
+      select: {
+        id: true,
+        nome: true,
+        name: true,
+        descricao: true,
+        isTrend: true,
+        createdAt: true,
+        updatedAt: true,
         _count: {
           select: {
             conteudos: true,
@@ -279,6 +293,10 @@ export async function PATCH(
 
       categoria = await prisma.categoria.findFirst({
         where: { id, userId },
+        select: {
+          id: true,
+          isTrend: true,
+        },
       });
     }
 
