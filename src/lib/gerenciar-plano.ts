@@ -57,7 +57,7 @@ export async function userPaid({
       );
     }
 
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       await tx.usuario.update({
         where: { id: userId },
         data: {

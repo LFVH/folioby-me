@@ -262,7 +262,7 @@ export async function POST(request: NextRequest) {
         mediaUrls: normalizedMediaUrls,
         storageBytes: BigInt(requestedStorageBytes > 0 ? requestedStorageBytes : 0),
         categorias: {
-          connect: categoriasValidas.map(({ id }) => ({ id })),
+          connect: categoriasValidas.map(({ id }: { id: number }) => ({ id })),
         },
         user: {
           connect: {

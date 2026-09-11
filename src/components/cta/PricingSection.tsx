@@ -1,9 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { loadStripe } from "@stripe/stripe-js";
 import { PricingCard } from './PricingCard';
 import { planos } from '@/types';
 
@@ -56,7 +56,8 @@ export default function PricingSection({
       void handlePayment(assinatura);
     }
     if (!session && assinatura) {
-      router.push(`/auth?plan=${assinatura}`);
+      //router.push(`/auth?plan=${assinatura}`);
+      router.push(`/signup`);
     }
   }, [session, assinatura, handlePayment, router]);
 
@@ -91,9 +92,12 @@ export default function PricingSection({
       <div className={`px-4 sm:px-6 lg:px-8 ${className}`}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-4">
-            <div className="inline-flex items-center rounded-full border border-green-400/50 bg-green-500/10 px-4 py-2 text-sm font-semibold text-green-300">
+            <Link
+              href="/signup"
+              className="inline-flex items-center justify-center rounded-full border border-green-400/50 bg-green-500/10 px-4 py-2 text-sm font-semibold text-green-300 transition-colors hover:border-green-300 hover:bg-green-500/20 hover:text-green-100"
+            >
               Cadastre-se e use grátis
-            </div>
+            </Link>
             <h1 className="mt-6 text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl">
               Escolha seu <span className="bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent">Plano</span>
             </h1>
