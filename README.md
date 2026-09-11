@@ -2,7 +2,7 @@
 
 > A SaaS platform for creative professionals to showcase their work, profile, and links in a visual experience inspired by streaming catalogs.
 
-**FolioBy** turns a professional portfolio into an organized showcase, combining a customized public page with a management dashboard. Its purpose is to bring projects, personal positioning, and contact channels together in one place, making it easier for designers, editors, motion designers, and other visual professionals to present their work.
+**FolioBy** FolioBy turns a professional portfolio into an organized showcase, combining a custom public page — accessible through your own personalized slug (folioby.me/yourname) — with a management dashboard. Its purpose is to bring projects, personal positioning, and contact channels together in one place, including a Linktree-style link hub for your social and professional links, making it easier for designers, editors, motion designers, and other visual professionals to present their work.
 
 ## The problem it solves
 
