@@ -23,7 +23,14 @@ export async function PUT(request: NextRequest) {
     const updatedUser = await userService.updateSlug(userId, slug)
     await refreshSlugCache()
 
-    return NextResponse.json({ success: true, user: updatedUser })
+    return NextResponse.json({
+      success: true,
+      user: {
+        slug: updatedUser.slug,
+        name: updatedUser.name,
+        image: updatedUser.image,
+      },
+    })
   } catch (error: any) {
     console.error('Error updating slug:', error)
 

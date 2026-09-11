@@ -357,14 +357,32 @@ export async function PUT(
     const conteudo = await prisma.conteudo.update({
       where: { id },
       data: updateData,
-      include: {
-        categorias: true,
+      select: {
+        id: true,
+        name: true,
+        fonte: true,
+        link: true,
+        linkext: true,
+        filename: true,
+        mimetype: true,
+        mediaType: true,
+        mediaUrls: true,
+        isTrend: true,
+        createdAt: true,
+        updatedAt: true,
+        categorias: {
+          select: {
+            id: true,
+            nome: true,
+            name: true,
+          },
+        },
       },
     });
 
     return NextResponse.json({
       success: true,
-      data: serializeJsonSafe(conteudo),
+      data: conteudo,
       message: "Conteudo atualizado com sucesso",
     });
   } catch (error) {
@@ -421,7 +439,7 @@ export async function PATCH(
       );
     }
 
-    let conteudo = null;
+    let conteudo: { id: number; isTrend: boolean } | null = null;
 
     if (toggle === "istrend") {
       conteudo = await prisma.conteudo.update({
@@ -429,7 +447,18 @@ export async function PATCH(
         data: {
           isTrend: !conteudoExistente.isTrend,
         },
+        select: {
+          id: true,
+          isTrend: true,
+        },
       });
+    }
+
+    if (!conteudo) {
+      return NextResponse.json(
+        { success: false, error: "Toggle invalido" },
+        { status: 400 }
+      );
     }
 
     return NextResponse.json({
