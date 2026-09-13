@@ -6,6 +6,7 @@
     "build": "prisma generate && prisma db push --accept-data-loss && next build",
     "start": "next start",
     "lint": "eslint .",
+    "test": "vitest run",
     "dev": "npx prisma db push && npx prisma generate && next dev",
     "prisma:generate": "prisma generate"
   },
@@ -78,6 +79,8 @@
     "postcss": "^8",
     "prisma": "^7.3.0",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.0"
   }
 }

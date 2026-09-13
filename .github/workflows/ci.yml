@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-test-build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: folioby_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d folioby_db"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/folioby_db
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: ci-secret-for-tests
+      STRIPE_WEBHOOK_SECRET: whsec_test
+      STRIPE_SECRET_KEY: sk_test
+      NEXT_PUBLIC_STRIPE_PUB_KEY: pk_test
+      STRIPE_PRODUCT_KEY: prod_test
+      STRIPE_SUBSCRIPTION_PRICEMONTH_ID: price_test
+      STRIPE_SUBSCRIPTION_PRICETRIME_ID: price_test_2
+      STRIPE_SUBSCRIPTION_PRICESEMES_ID: price_test_3
+      CHIEF_USER_IDS: ''
+      NODE_ENV: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
