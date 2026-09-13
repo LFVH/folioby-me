@@ -24,21 +24,14 @@ export default function UserPage() {
   const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [slug, setSlug] = useState('')
+  const [slug, setSlug] = useState(() => session?.user?.slug || '')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [uploadingImage, setUploadingImage] = useState(false)
-  const [userImage, setUserImage] = useState<string | null>(null)
+  const [userImage, setUserImage] = useState<string | null>(() => session?.user?.image || null)
   const [userImageSizeBytes, setUserImageSizeBytes] = useState(0)
   const [pendingImageCrop, setPendingImageCrop] = useState<PendingImageCrop | null>(null)
-
-  useEffect(() => {
-    if (session?.user) {
-      setSlug(session.user.slug || '')
-      setUserImage(session.user.image || null)
-    }
-  }, [session])
 
   useEffect(() => {
     return () => {

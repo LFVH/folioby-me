@@ -44,11 +44,7 @@ export default function ConteudosPage() {
     prevPage: null,
   })
 
-  useEffect(() => {
-    fetchConteudos(1, searchTerm)
-  }, [searchTerm])
-
-  const fetchConteudos = async (page: number, search: string = '') => {
+  const fetchConteudos = useCallback(async (page: number, search: string = '') => {
     setLoading(true)
     scrollToTop()
     try {
@@ -65,7 +61,15 @@ export default function ConteudosPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void fetchConteudos(1, searchTerm)
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [fetchConteudos, searchTerm])
 
   const handleSearch = (termo: string) => {
     setSearchTerm(termo)

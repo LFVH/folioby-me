@@ -18,7 +18,6 @@ export default function UserProfileContentManager() {
 
   useEffect(() => {
     if (!slug) {
-      setIsLoadingProfile(false);
       return;
     }
 

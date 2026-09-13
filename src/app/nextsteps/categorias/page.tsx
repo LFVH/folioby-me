@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import SearchBarNxt from '@/components/logged/SearchBarNxt'
 import { ToggleStatus } from '@/components/logged/ToggleStatus'
@@ -42,17 +42,13 @@ export default function CategoriasPage() {
     prevPage: null
   })
 
-  useEffect(() => {
-    fetchCategorias(1, searchTerm)
-  }, [searchTerm])
-
-  const fetchCategorias = async (page: number, search: string = '') => {
+  const fetchCategorias = useCallback(async (page: number, search: string = '') => {
     setLoading(true)
     try {
       const url = `/api/nextsteps/categorias?page=${page}&limit=12${search ? `&search=${encodeURIComponent(search)}` : ''}`
       const response = await fetch(url)
       const result = await response.json()
-      
+
       if (result.success) {
         setCategorias(result.data)
         setPagination(result.pagination)
@@ -62,7 +58,15 @@ export default function CategoriasPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void fetchCategorias(1, searchTerm)
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [fetchCategorias, searchTerm])
 
   const handleSearch = (termo: string) => {
     setSearchTerm(termo)

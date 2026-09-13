@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { handleImgError } from '@/utils/imageFallback'
 import { useRouter } from 'next/navigation'
 import { BlobService } from '@/lib/blob-service'
@@ -42,8 +42,11 @@ const getFriendlyErrorMessage = (status?: number, apiMessage?: string) => {
 export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [previewUrls, setPreviewUrls] = useState<string[]>([])
-  const [selectedCategorias, setSelectedCategorias] = useState<number[]>([])
+  const [selectedCategorias, setSelectedCategorias] = useState<number[]>(() =>
+    (conteudo?.categorias ?? [])
+      .map((categoria: any) => Number(categoria.id))
+      .filter((categoriaId: number) => Number.isInteger(categoriaId) && categoriaId > 0)
+  )
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [formData, setFormData] = useState<FormData>({
     name: conteudo?.name || '',
@@ -54,18 +57,9 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
     files: [],
     isSequence: false,
   })
+  const previewUrlsRef = useRef<string[]>([])
 
-  useEffect(() => {
-    if (conteudo?.categorias) {
-      setSelectedCategorias(
-        conteudo.categorias
-          .map((categoria: any) => Number(categoria.id))
-          .filter((categoriaId: number) => Number.isInteger(categoriaId) && categoriaId > 0)
-      )
-    }
-  }, [conteudo])
-
-  useEffect(() => {
+  const previewUrls = (() => {
     const urls: string[] = []
 
     if (formData.isSequence) {
@@ -80,16 +74,21 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
       urls.push(conteudo.link)
     }
 
-    setPreviewUrls(urls)
+    return urls
+  })()
+
+  useEffect(() => {
+    const urlsToRevoke = previewUrlsRef.current
+    previewUrlsRef.current = previewUrls
 
     return () => {
-      urls.forEach((url) => {
+      urlsToRevoke.forEach((url) => {
         if (url.startsWith('blob:')) {
           URL.revokeObjectURL(url)
         }
       })
     }
-  }, [formData.file, formData.files, formData.isSequence, conteudo])
+  }, [previewUrls])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]

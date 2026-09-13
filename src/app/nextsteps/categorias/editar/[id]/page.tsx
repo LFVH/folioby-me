@@ -21,32 +21,45 @@ export default function EditarCategoriaPage() {
     descricao: ''
   })
 
-  const fetchCategoria = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/nextsteps/categorias/${params.id}`)
-      const result = await response.json()
+  useEffect(() => {
+    let cancelled = false
 
-      if (result.success) {
-        const categoria = result.data
-        setFormData({
-          nome: categoria.nome || '',
-          name: categoria.name || '',
-          descricao: categoria.descricao || ''
-        })
-      } else {
-        alert('Categoria não encontrada')
-        router.push('/nextsteps/categorias')
+    const loadCategoria = async () => {
+      try {
+        const response = await fetch(`/api/nextsteps/categorias/${params.id}`)
+        const result = await response.json()
+
+        if (!cancelled && result.success) {
+          const categoria = result.data
+          setFormData({
+            nome: categoria.nome || '',
+            name: categoria.name || '',
+            descricao: categoria.descricao || ''
+          })
+          return
+        }
+
+        if (!cancelled) {
+          alert('Categoria não encontrada')
+          router.push('/nextsteps/categorias')
+        }
+      } catch {
+        if (!cancelled) {
+          alert('Erro ao carregar categoria')
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false)
+        }
       }
-    } catch (error) {
-      alert('Erro ao carregar categoria')
-    } finally {
-      setLoading(false)
+    }
+
+    void loadCategoria()
+
+    return () => {
+      cancelled = true
     }
   }, [params.id, router])
-
-  useEffect(() => {
-    void fetchCategoria()
-  }, [fetchCategoria])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

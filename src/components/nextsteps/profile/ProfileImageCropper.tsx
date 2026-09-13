@@ -18,14 +18,13 @@ interface ProfileImageCropperProps {
 
 const DEFAULT_CROP = { x: 0, y: 0 }
 
-export function ProfileImageCropper({
-  isOpen,
+function CropEditor({
   imageSrc,
   fileName,
-  outputFormat = 'image/jpeg',
+  outputFormat,
   onClose,
   onConfirm,
-}: ProfileImageCropperProps) {
+}: Pick<ProfileImageCropperProps, 'imageSrc' | 'fileName' | 'outputFormat' | 'onClose' | 'onConfirm'>) {
   const titleId = useId()
   const zoomId = useId()
   const previewCanvasRef = useRef<HTMLCanvasElement>(null)
@@ -44,10 +43,6 @@ export function ProfileImageCropper({
   const maxZoom = 4
 
   useEffect(() => {
-    if (!isOpen || !imageSrc) {
-      return
-    }
-
     let isMounted = true
 
     loadImage(imageSrc)
@@ -65,32 +60,18 @@ export function ProfileImageCropper({
     return () => {
       isMounted = false
     }
-  }, [imageSrc, isOpen])
+  }, [imageSrc])
 
   useEffect(() => {
-    if (!isOpen) {
-      setCrop(DEFAULT_CROP)
-      setZoom(1)
-      setCroppedAreaPixels(null)
-      setSourceImage(null)
-      setIsExporting(false)
-      setIsInteracting(false)
-      return
-    }
-
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
 
     return () => {
       document.body.style.overflow = previousOverflow
     }
-  }, [isOpen])
+  }, [])
 
   useEffect(() => {
-    if (!isOpen) {
-      return
-    }
-
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && !isExporting) {
         onClose()
@@ -99,7 +80,7 @@ export function ProfileImageCropper({
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isExporting, isOpen, onClose])
+  }, [isExporting, onClose])
 
   useEffect(() => {
     if (!previewCanvasRef.current || !sourceImage || !croppedAreaPixels) {
@@ -139,8 +120,14 @@ export function ProfileImageCropper({
     }
   }
 
-  if (!isOpen || !imageSrc) {
-    return null
+  const handleClose = () => {
+    setCrop(DEFAULT_CROP)
+    setZoom(1)
+    setCroppedAreaPixels(null)
+    setSourceImage(null)
+    setIsExporting(false)
+    setIsInteracting(false)
+    onClose()
   }
 
   return (
@@ -148,7 +135,7 @@ export function ProfileImageCropper({
       className="fixed inset-0 z-[80] flex items-end justify-center overflow-y-auto bg-black/80 p-0 backdrop-blur-sm overscroll-contain sm:items-center sm:p-6"
       onClick={(event) => {
         if (event.target === event.currentTarget && !isExporting) {
-          onClose()
+          handleClose()
         }
       }}
     >
@@ -177,7 +164,7 @@ export function ProfileImageCropper({
               </div>
               <button
                 type="button"
-                onClick={onClose}
+                onClick={handleClose}
                 disabled={isExporting}
                 aria-label="Fechar recorte"
                 className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
@@ -330,5 +317,29 @@ export function ProfileImageCropper({
         </div>
       </div>
     </div>
+  )
+}
+
+export function ProfileImageCropper({
+  isOpen,
+  imageSrc,
+  fileName,
+  outputFormat = 'image/jpeg',
+  onClose,
+  onConfirm,
+}: ProfileImageCropperProps) {
+  if (!isOpen || !imageSrc) {
+    return null
+  }
+
+  return (
+    <CropEditor
+      key={`${imageSrc}-${fileName}`}
+      imageSrc={imageSrc}
+      fileName={fileName}
+      outputFormat={outputFormat}
+      onClose={onClose}
+      onConfirm={onConfirm}
+    />
   )
 }
