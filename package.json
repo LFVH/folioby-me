@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "prisma generate && prisma db push --accept-data-loss && next build",
+    "build": "npx prisma generate && npx prisma db push --accept-data-loss && next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "vitest run",
+    "test": "npx prisma generate && npx vitest run",
     "dev": "npx prisma db push && npx prisma generate && next dev",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "npx prisma generate"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
