@@ -2,9 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - '**'
   pull_request:
-    branches: [main]
+    branches:
+      - '**'
 
 jobs:
   lint-test-build:
@@ -38,6 +40,13 @@ jobs:
       STRIPE_SUBSCRIPTION_PRICESEMES_ID: price_test_3
       CHIEF_USER_IDS: ''
       NODE_ENV: test
+      MERCADO_PAGO_ACCESS_TOKEN: APP_USR-04030
+      MERCADO_PAGO_WEBHOOK_SECRET: 12121235436
+      UPSTASH_REDIS_REST_URL: https://redis.io
+      UPSTASH_REDIS_REST_TOKEN: tttt
+      CHIEF_ROUTES: ''
+      PUBLIC_ROUTES: /,/api/create-checkout,/api/auth,/api/pagamentorecebido,/api/webhooks,/api/letsgo/categorias,/api/letsgo/user,/privacidade,/termos,/api/mercadopago/create-subscription
+      DESLOG_ROUTES: /login,/signup,/auth
 
     steps:
       - name: Checkout

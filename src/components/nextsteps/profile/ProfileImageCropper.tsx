@@ -24,7 +24,13 @@ function CropEditor({
   outputFormat,
   onClose,
   onConfirm,
-}: Pick<ProfileImageCropperProps, 'imageSrc' | 'fileName' | 'outputFormat' | 'onClose' | 'onConfirm'>) {
+}: {
+  imageSrc: string
+  fileName: string
+  outputFormat: ImageMimeType
+  onClose: () => void
+  onConfirm: (file: File) => Promise<void> | void
+}) {
   const titleId = useId()
   const zoomId = useId()
   const previewCanvasRef = useRef<HTMLCanvasElement>(null)
