@@ -40,14 +40,14 @@ jobs:
       STRIPE_SUBSCRIPTION_PRICESEMES_ID: price_test_3
       CHIEF_USER_IDS: ''
       NODE_ENV: test
-      MERCADO_PAGO_ACCESS_TOKEN=APP_USR-0403093213465466-564654-0000087654332226554747398636f211-242884715
-      MERCADO_PAGO_WEBHOOK_SECRET=121212354365rdsfXSASAFSAF609c55e57ecc8ccc6228018f23221bb21a332e1
-      UPSTASH_REDIS_REST_URL=https://redis.io
-      UPSTASH_REDIS_REST_TOKEN=tttt
-      CHIEF_USER_IDS=''
-      CHIEF_ROUTES=''
-      PUBLIC_ROUTES=/,/api/create-checkout,/api/auth,/api/pagamentorecebido,/api/webhooks,/api/letsgo/categorias,/api/letsgo/user,/privacidade,/termos,/api/mercadopago/create-subscription
-      DESLOG_ROUTES=/login,/signup,/auth
+      MERCADO_PAGO_ACCESS_TOKEN: APP_USR-04030
+      MERCADO_PAGO_WEBHOOK_SECRET: 12121235436
+      UPSTASH_REDIS_REST_URL: https://redis.io
+      UPSTASH_REDIS_REST_TOKEN: tttt
+      CHIEF_USER_IDS: ''
+      CHIEF_ROUTES: ''
+      PUBLIC_ROUTES: /,/api/create-checkout,/api/auth,/api/pagamentorecebido,/api/webhooks,/api/letsgo/categorias,/api/letsgo/user,/privacidade,/termos,/api/mercadopago/create-subscription
+      DESLOG_ROUTES: /login,/signup,/auth
 
     steps:
       - name: Checkout
