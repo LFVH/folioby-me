@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { handleImgError } from '@/utils/imageFallback'
 import Link from 'next/link'
 import SearchBarNxt from '@/components/logged/SearchBarNxt'
