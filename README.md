@@ -17,8 +17,17 @@ Creative professionals often spread their work across social media, cloud drives
 - **Professional profile:** edit rich-text descriptions and centralize important links on a public page.
 - **Authentication and protected workspace:** sign-up, sign-in, and access control for the user dashboard.
 - **Plans and subscriptions:** checkout and subscription-management infrastructure with Stripe and Mercado Pago, including Mercado Pago webhook processing.
-- **Scalable uploads:** file storage powered by Vercel Blob.
+- **Scalable uploads:** file storage powered by Vercel Blob, with image validation and per-user storage accounting.
 - **Navigation security:** middleware for permissions, route protection, and production request rate limiting.
+
+### Upload limits
+
+- Accepted media types: JPEG, PNG, GIF, WebP, and AVIF.
+- Maximum size per portfolio upload: **500 MB**.
+- Maximum profile image size: **5 MB**.
+- Maximum storage per user: **2 GB**.
+
+Limits are checked before issuing the Vercel Blob client token. Usage is persisted in the database and adjusted when content or profile images are added and removed.
 
 ## Technology stack
 
@@ -52,6 +61,15 @@ Next.js API + NextAuth
    ├── Stripe
    └── Mercado Pago + webhooks
 ```
+
+## Architecture and technical decisions
+
+- **Full-stack Next.js:** public pages, authenticated dashboard, and API Route Handlers live in the same application, keeping feature ownership close to its UI and reducing deployment complexity.
+- **Server-side authorization:** NextAuth, middleware, and `verifyUser` protect dashboard and upload endpoints; the server remains the source of truth for permissions and quotas.
+- **Relational core:** PostgreSQL and Prisma model users, content, categories, subscriptions, history, refresh tokens, and webhook requests. BigInt byte counters track storage without relying on client state.
+- **External services by responsibility:** Vercel Blob stores media, while Stripe and Mercado Pago handle billing. Webhook routes validate and record provider events independently from the user interface.
+- **Shared validation at boundaries:** Zod, route-level checks, rate limiting, and signed webhook validation reduce the amount of untrusted data that reaches application logic.
+- **Client-side media flow:** portfolio files are uploaded directly to Vercel Blob after the server validates the authenticated user, requested size, type, and remaining quota.
 
 ## Running locally
 
@@ -95,6 +113,20 @@ npm run dev
 Then open `http://localhost:3000`.
 
 > `npm run dev` synchronizes the Prisma schema with the database. Use a dedicated development database before running it.
+
+## Testing and CI
+
+Tests use [Vitest](https://vitest.dev/) with a Node environment and cover files matching `src/**/*.test.ts`. The current suite includes the credentials authentication flow, using Prisma mocks and bcrypt checks rather than a live database for that unit test.
+
+Run the checks locally with:
+
+```bash
+npm run lint
+npm run test
+npm run build
+```
+
+GitHub Actions runs the same lint, test, and build checks on every push and pull request. The workflow provisions PostgreSQL 16 as a service, installs dependencies with `npm ci`, generates the Prisma client as part of the test/build scripts, and uses Node.js 24 in CI.
 
 ## Portfolio highlights
 
