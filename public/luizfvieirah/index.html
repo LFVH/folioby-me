@@ -3,21 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Luiz Felipe Vieira Haragushiku · Desenvolvedor Back-end Java e Full-Stack</title>
-<meta name="description" content="Desenvolvedor Back-end Java e Full-Stack em Curitiba. Java 21, Spring Boot 3, SQL e PostgreSQL, com 2 anos e 8 meses de produção na fintech Sinqia: R$ 300 mil de prejuízo evitado e uma procedure levada de 10 minutos para 3 segundos. Criador do FolioBy (Next.js) e do WorkFlow Crédito (Java).">
+<title>Luiz Felipe Vieira Haragushiku · Back-end Java e Full-Stack</title>
+<meta name="description" content="Desenvolvedor Back-end Java em Curitiba. Java e SQL Server em produção na fintech Sinqia; hoje, Java 21, Spring Boot 3 e PostgreSQL. Remoto ou híbrido.">
 <link rel="canonical" href="https://www.folioby.me/luizfvieirah">
 <link rel="alternate" hreflang="pt-BR" href="https://www.folioby.me/luizfvieirah">
 <link rel="alternate" hreflang="en" href="https://www.folioby.me/luizfvieirah/en">
+<link rel="alternate" hreflang="x-default" href="https://www.folioby.me/luizfvieirah">
 <meta property="og:type" content="profile">
 <meta property="og:url" content="https://www.folioby.me/luizfvieirah">
 <meta property="og:title" content="Luiz Felipe Vieira Haragushiku · Desenvolvedor Back-end Java e Full-Stack">
-<meta property="og:description" content="Java 21, Spring Boot 3, SQL e PostgreSQL com experiência de produção em fintech. Criador do FolioBy e do WorkFlow Crédito.">
+<meta property="og:description" content="Java e SQL Server em produção na fintech Sinqia. Hoje constrói o WorkFlow Crédito (Java 21, Spring Boot 3, PostgreSQL) e o FolioBy (Next.js). Remoto ou híbrido, CLT ou PJ.">
 <meta property="og:locale" content="pt_BR">
+<meta property="og:locale:alternate" content="en_US">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Luiz Felipe Vieira Haragushiku · Desenvolvedor Back-end Java e Full-Stack">
+<meta name="twitter:description" content="Java e SQL Server em produção na fintech Sinqia. Hoje constrói o WorkFlow Crédito (Java 21, Spring Boot 3, PostgreSQL) e o FolioBy (Next.js). Remoto ou híbrido, CLT ou PJ.">
 <link rel="icon" href="/Fa1v_32px.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..800&family=JetBrains+Mono:wght@400;500&display=swap">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -61,66 +65,87 @@
   --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
   --body: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  /* Escala tipográfica e medida de leitura */
+  --fs-xs: 12px;     /* rótulos mono e tags */
+  --fs-sm: 14px;     /* textos secundários, botões e links de ação */
+  --fs-base: 16px;   /* corpo */
+  --fs-md: 18px;     /* títulos de item */
+  --fs-lg: 20px;     /* cargo e títulos de demo */
+  --fs-xl: 24px;     /* títulos de seção */
+  --measure: 32rem;  /* cerca de 71 caracteres por linha */
+  --ok: #1d8a5a;     /* ponto "Disponível" */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0c141f; --surface: #121c2a; --ink: #e6ebf2; --muted: #93a1b5; --line: #213044;
     --accent: #5fd3bc; --on-accent: #06201b; --accent-soft: rgba(95,211,188,.10);
-    --gold: #e2b25c; --on-gold: #1b1406; color-scheme: dark;
+    --gold: #e2b25c; --on-gold: #1b1406; --ok: #2fb37a; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0c141f; --surface: #121c2a; --ink: #e6ebf2; --muted: #93a1b5; --line: #213044;
   --accent: #5fd3bc; --on-accent: #06201b; --accent-soft: rgba(95,211,188,.10);
-  --gold: #e2b25c; --on-gold: #1b1406; color-scheme: dark;
+  --gold: #e2b25c; --on-gold: #1b1406; --ok: #2fb37a; color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-bottom: 96px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 html, body { margin: 0; }
 body {
   background: var(--bg); color: var(--muted); font-family: var(--body);
-  font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  font-size: var(--fs-base); line-height: 1.6; -webkit-font-smoothing: antialiased;
 }
 a { color: var(--ink); text-decoration: none; }
-a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.mailme:focus-visible, .mailme:focus-visible::after { animation-play-state: paused; }
 b, strong { color: var(--ink); font-weight: 600; }
 .skip { position: absolute; left: -9999px; }
 .skip:focus { left: 16px; top: 16px; z-index: 50; background: var(--surface); color: var(--ink); padding: 8px 12px; }
 
 .page {
   max-width: 1240px; margin: 0 auto;
-  padding: 48px max(20px, env(safe-area-inset-right, 0px)) 120px max(20px, env(safe-area-inset-left, 0px));
+  padding: 48px max(20px, env(safe-area-inset-right, 0px)) 240px max(20px, env(safe-area-inset-left, 0px));
   display: grid; gap: 48px;
 }
 @media (min-width: 1024px) {
   .page { grid-template-columns: minmax(320px, 430px) minmax(0, 660px); justify-content: center; gap: 72px; padding-top: 0; padding-bottom: 0; }
   .side { position: sticky; top: 0; height: 100vh; padding-block: 72px 48px; display: flex; flex-direction: column; }
-  main { padding-block: 72px 140px; }
+  main { padding-block: 72px 240px; }
+}
+/* Entre 1024 e 1320 px a coluna direita chega até a navegação flutuante: reserva a faixa dela */
+@media (min-width: 1024px) and (max-width: 1320px) {
+  main { padding-right: 64px; }
+}
+/* Telas baixas: a coluna esquerda rola junto, para os contatos e o link do código não ficarem cortados */
+@media (min-width: 1024px) and (max-height: 760px) {
+  .side { position: static; height: auto; }
 }
 
 /* Coluna esquerda */
 .side { min-width: 0; }
 .topline { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0 0 14px; }
 .topline .eyebrow { margin: 0; }
-.lang { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; white-space: nowrap; }
-.lang a, .lang span { padding: 2px 4px; }
-.lang span { color: var(--ink); font-weight: 500; border-bottom: 1px solid var(--accent); }
+/* Seletor de idioma: o link EN tem alvo de 44x44 px; as margens negativas evitam que a linha do topo cresça */
+.lang { display: flex; font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .06em; white-space: nowrap; margin-block: -12px; margin-inline-end: -10px; }
+.lang a, .lang span { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 2px 4px; }
+.lang a { min-width: 44px; }
+.lang span { color: var(--ink); font-weight: 500; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 4px; }
 .lang a { color: var(--muted); }
 .lang a:hover { color: var(--ink); }
-.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
+.eyebrow { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
 h1 {
   font-family: var(--display); font-stretch: 78%; font-weight: 800; color: var(--ink);
   font-size: clamp(38px, 5.4vw, 54px); line-height: 1; letter-spacing: -.015em; margin: 0; text-wrap: balance;
 }
-.role { font-family: var(--display); font-stretch: 90%; font-weight: 600; color: var(--ink); font-size: 20px; line-height: 1.3; margin: 12px 0 0; }
-.pitch { margin: 14px 0 0; max-width: 40ch; }
+.role { font-family: var(--display); font-stretch: 90%; font-weight: 600; color: var(--ink); font-size: var(--fs-lg); line-height: 1.3; margin: 12px 0 0; }
+.pitch { margin: 14px 0 0; max-width: 46ch; }
 .avail {
   display: inline-flex; align-items: center; gap: 9px; margin-top: 18px; padding: 5px 12px 5px 10px;
-  border: 1px solid var(--line); border-radius: 999px; font-size: 13.5px; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 999px; font-size: var(--fs-sm); color: var(--ink); background: var(--surface);
 }
-.avail i { width: 8px; height: 8px; border-radius: 50%; background: #2fb37a; box-shadow: 0 0 0 3px rgba(47,179,122,.2); }
+@media (max-width: 419px) { .avail { font-size: var(--fs-xs); } }
+.avail i { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent); }
 
 .contacts { list-style: none; margin: 26px 0 0; padding: 0; display: grid; gap: 10px; max-width: 420px; }
 .contact {
@@ -130,24 +155,31 @@ h1 {
 }
 .contact:hover { border-color: var(--accent); transform: translateY(-1px); }
 .contact svg { width: 20px; height: 20px; }
-.contact .k { font-weight: 700; font-size: 15px; line-height: 1.2; display: block; }
-.contact .v { font-family: var(--mono); font-size: 12.5px; color: var(--muted); display: block; overflow-wrap: break-word; }
-.contact .go { font-size: 18px; color: var(--muted); }
+.contact .k { font-weight: 700; font-size: var(--fs-base); line-height: 1.2; display: block; }
+.contact .v { font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); display: block; overflow-wrap: break-word; }
+.contact .go { font-size: var(--fs-md); color: var(--muted); }
 .contact.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.contact.primary:hover { filter: brightness(1.08); box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 35%, transparent); }
 .contact.primary .v, .contact.primary .go { color: var(--on-accent); opacity: .85; }
 .mailrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
 .copy {
-  font: inherit; font-size: 13px; font-weight: 600; color: var(--ink); background: var(--surface);
+  font: inherit; font-size: var(--fs-sm); font-weight: 600; color: var(--ink); background: var(--surface);
   border: 1px solid var(--line); border-radius: 6px; padding: 0 14px; cursor: pointer;
 }
 .copy:hover { border-color: var(--accent); }
+.code-cta { margin: 10px 0 0; font-size: var(--fs-sm); }
+.code-cta a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+
+/* Links dentro do texto: sublinhados, para se distinguirem do texto em volta */
+.pitch a, .what ul.pts a, .code-cta a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.pitch a:hover, .what ul.pts a:hover, .code-cta a:hover { color: var(--accent); }
 
 .toc { display: none; }
-@media (min-width: 1024px) and (min-height: 820px) {
-  .toc { display: grid; gap: 2px; margin-top: auto; padding-top: 28px; }
+@media (min-width: 1024px) and (min-height: 900px) {
+  .toc { display: grid; gap: 2px; margin-top: auto; padding-top: 24px; }
   .toc a {
-    display: flex; align-items: center; gap: 14px; padding: 6px 0; width: max-content;
-    font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+    display: flex; align-items: center; gap: 14px; padding: 4px 0; width: max-content;
+    font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
   }
   .toc a::before { content: ""; height: 1px; width: 28px; background: currentColor; transition: width 200ms; }
   .toc a:hover, .toc a.on { color: var(--ink); }
@@ -158,67 +190,73 @@ h1 {
 main { min-width: 0; display: grid; gap: 84px; }
 section { scroll-margin-top: 24px; }
 .sh {
-  font-family: var(--mono); font-size: 12.5px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
-  color: var(--ink); margin: 0 0 22px;
+  font-family: var(--display); font-stretch: 80%; font-size: var(--fs-xl); font-weight: 800; line-height: 1.15;
+  letter-spacing: -.005em; color: var(--ink); margin: 0 0 20px;
 }
 @media (max-width: 1023px) {
+  .contacts { grid-template-columns: 1fr 1fr; }
+  .contacts .mailrow { grid-column: 1 / -1; }
+  .contacts li:not(.mailrow) .contact { padding: 10px 14px; }
+  .contacts li:not(.mailrow) .contact .v { display: none; }
   .sh {
     position: sticky; top: 0; z-index: 5; margin-inline: -20px; padding: 14px 20px;
     background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(6px);
   }
 }
 p { margin: 0 0 14px; }
+main p { max-width: var(--measure); }
 code { font-family: var(--mono); font-size: .88em; color: var(--ink); }
 p:last-child { margin-bottom: 0; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; padding: 0; list-style: none; }
 .tags li {
-  font-size: 12.5px; font-weight: 600; color: var(--accent); background: var(--accent-soft);
-  padding: 3px 10px; border-radius: 999px; line-height: 1.5;
+  font-size: var(--fs-xs); font-weight: 500; color: var(--muted); background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line); padding: 2px 9px; border-radius: 999px; line-height: 1.5;
 }
 
-/* Números */
-.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-@media (max-width: 520px) { .stats { grid-template-columns: minmax(0, 1fr); } }
-.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; display: grid; gap: 4px; align-content: start; }
-.stat .n {
-  font-family: var(--display); font-stretch: 78%; font-weight: 800; color: var(--ink);
-  font-size: 32px; line-height: 1.05; letter-spacing: -.01em; font-variant-numeric: tabular-nums;
-}
-.stat .c { font-size: 14px; line-height: 1.5; }
-.stat .src { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+/* Tecnologias do Sobre, agrupadas por área */
+.stack { margin: 18px 0 0; display: grid; gap: 8px; }
+.stack div { display: grid; gap: 2px 22px; }
+@media (min-width: 640px) { .stack div { grid-template-columns: 132px minmax(0, 1fr); } }
+.stack dt { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+.stack dd { margin: 0; color: var(--ink); font-size: var(--fs-sm); font-weight: 500; line-height: 1.5; }
 
 /* Experiência e projetos */
 .items { list-style: none; margin: 0; padding: 0; display: grid; gap: 40px; }
 .item { display: grid; gap: 6px 22px; }
 @media (min-width: 640px) { .item { grid-template-columns: 132px minmax(0, 1fr); } }
-.when { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding-top: 4px; }
-.what h3 { font-size: 17px; line-height: 1.35; color: var(--ink); margin: 0 0 8px; font-weight: 700; }
-.what h3 small { display: block; font-size: 14.5px; font-weight: 500; color: var(--muted); }
+.when { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding-top: 4px; }
+.what h3 { font-size: var(--fs-md); line-height: 1.35; color: var(--ink); margin: 0 0 8px; font-weight: 700; }
+.what h3 small { display: block; font-size: var(--fs-sm); font-weight: 500; color: var(--muted); }
 .what ul.pts { margin: 0; padding-left: 18px; display: grid; gap: 7px; }
 .what ul.pts li::marker { color: var(--accent); }
-.links { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 14px; }
-.links a { font-weight: 600; font-size: 14.5px; color: var(--ink); border-bottom: 1px solid var(--accent); padding-bottom: 1px; }
+.links { display: flex; flex-wrap: wrap; gap: 0 18px; margin-top: 6px; }
+.links a {
+  display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; font-size: var(--fs-sm); color: var(--ink);
+  text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 4px;
+}
 .links a:hover { color: var(--accent); }
+.langs { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.langs b { display: inline-block; min-width: 6.5em; }
 
 /* Arquitetura interativa */
 .demos { display: grid; gap: 16px; }
 .demo { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
 .demo-head { padding: 18px 20px; display: grid; gap: 6px; }
-.demo-head .src { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
-.demo-head h3 { margin: 0; color: var(--ink); font-family: var(--display); font-stretch: 80%; font-weight: 800; font-size: 24px; line-height: 1.1; }
+.demo-head .src { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.demo-head h3 { margin: 0; color: var(--ink); font-family: var(--display); font-stretch: 80%; font-weight: 800; font-size: var(--fs-lg); line-height: 1.1; }
 .demo-actions { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; margin-top: 8px; }
 .btn {
-  font: inherit; font-size: 14.5px; font-weight: 700; cursor: pointer; border-radius: 6px; padding: 9px 16px;
+  font: inherit; font-size: var(--fs-sm); font-weight: 700; cursor: pointer; border-radius: 6px; padding: 10px 16px;
   background: var(--ink); color: var(--bg); border: 1px solid var(--ink);
 }
 .btn:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-.demo-actions a { font-size: 14px; font-weight: 600; color: var(--muted); }
+.demo-actions a { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--fs-sm); font-weight: 600; color: var(--muted); }
 .demo-actions a:hover { color: var(--ink); }
 .demo iframe { display: block; width: 100%; height: 960px; border: 0; background: var(--bg); }
 .demo.open .demo-head { border-bottom: 1px solid var(--line); }
 
 
-/* Navegação entre seções: coluna ↑ ☰ ↓ acima do mailMe; ☰ abre a lista para pular direto */
+/* Navegação entre seções: coluna ↑ ☰ ↓ acima do botão de e-mail; ☰ abre a lista para pular direto; some no topo */
 .jump {
   position: fixed; z-index: 40;
   right: max(18px, env(safe-area-inset-right, 0px)); bottom: calc(max(18px, env(safe-area-inset-bottom, 0px)) + 66px);
@@ -226,48 +264,52 @@ p:last-child { margin-bottom: 0; }
   background: var(--surface); border: 1px solid var(--line); box-shadow: 0 8px 22px rgba(0,0,0,.14);
 }
 .jump button { font: inherit; background: transparent; border: 0; color: var(--ink); cursor: pointer; border-radius: 999px; }
-.jb { width: 38px; height: 38px; font-size: 17px; line-height: 1; }
+.jb { width: 44px; height: 44px; font-size: var(--fs-md); line-height: 1; }
 .jb:hover:not(:disabled), .jcur:hover { background: var(--accent-soft); }
-.jb:disabled { color: var(--line); cursor: default; }
+.jb:disabled { color: var(--muted); opacity: .35; cursor: default; }
 .jcur {
-  width: 38px; height: 38px; padding: 0; display: inline-flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+  width: 44px; height: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase;
 }
 .jlabel, .jcur i { display: none; }
-.jicon { font-size: 16px; }
+.jicon { font-size: var(--fs-base); }
 .jcur i { font-style: normal; font-size: 10px; color: var(--muted); }
 .jlist {
   position: absolute; right: calc(100% + 8px); bottom: 0; margin: 0; padding: 6px; list-style: none; min-width: 230px;
   background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 12px 28px rgba(0,0,0,.18);
 }
-.jlist a { display: block; padding: 8px 12px; border-radius: 6px; font-size: 14.5px; color: var(--ink); }
+.jlist a { display: block; padding: 8px 12px; border-radius: 6px; font-size: var(--fs-sm); color: var(--ink); }
 .jlist a:hover { background: var(--accent-soft); }
 .jlist a[aria-current="true"] { background: var(--accent-soft); font-weight: 700; }
 
 /* Aviso de e-mail copiado */
 .toast {
   position: fixed; z-index: 60; left: 50%; bottom: 86px; transform: translate(-50%, 12px); opacity: 0; pointer-events: none;
-  background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-size: 14.5px; font-weight: 600;
+  background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-size: var(--fs-sm); font-weight: 600;
   transition: opacity 200ms, transform 200ms; width: max-content; max-width: calc(100vw - 32px); text-align: center;
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
-/* Botão mailMe: balança a cada 3 s para chamar atenção */
+/* Botão flutuante de e-mail: lembrete do card de e-mail, só aparece quando ele sai da tela; balança uma vez */
 .mailme {
   position: fixed; z-index: 40;
   right: max(18px, env(safe-area-inset-right, 0px)); bottom: max(18px, env(safe-area-inset-bottom, 0px));
   display: inline-flex; align-items: center; gap: 9px; padding: 13px 20px 13px 17px; border-radius: 999px;
-  background: var(--gold); color: var(--on-gold); font-weight: 800; font-size: 16px; letter-spacing: .01em;
+  background: var(--gold); color: var(--on-gold); font-weight: 800; font-size: var(--fs-base); letter-spacing: .01em;
   box-shadow: 0 8px 22px rgba(0,0,0,.22);
-  animation: nudge 3s ease-in-out 1.5s infinite;
+  animation: nudge 3s ease-in-out .6s 1;
 }
 .mailme svg { width: 19px; height: 19px; }
 .mailme::after {
   content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-  box-shadow: 0 0 0 0 var(--gold); animation: ring 3s ease-out 1.5s infinite;
+  box-shadow: 0 0 0 0 var(--gold); animation: ring 3s ease-out .6s 1;
 }
 .mailme:hover { animation-play-state: paused; filter: brightness(1.06); }
 .mailme:hover::after { animation-play-state: paused; }
+/* Flutuantes ocultáveis: e-mail enquanto o card principal está na tela; navegação no topo */
+.mailme, .jump { transition: opacity 200ms, visibility 200ms; }
+.mailme.off, .jump.off { opacity: 0; visibility: hidden; pointer-events: none; }
+.mailme.off, .mailme.off::after { animation: none; }
 @keyframes nudge {
   0%, 27%, 100% { transform: none; }
   4%  { transform: translateY(-4px) rotate(-9deg) scale(1.07); }
@@ -282,7 +324,7 @@ p:last-child { margin-bottom: 0; }
   100% { box-shadow: 0 0 0 16px transparent; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .mailme { animation: none; }
+  .mailme, .mailme::after { animation: none; }
 }
 </style>
 </head>
@@ -292,12 +334,12 @@ p:last-child { margin-bottom: 0; }
   <header class="side">
     <div>
       <div class="topline">
-        <p class="eyebrow">Curitiba, PR · remoto, híbrido ou presencial</p>
+        <p class="eyebrow">Curitiba, PR · remoto ou híbrido</p>
         <nav class="lang" aria-label="Idioma"><span aria-current="true">PT</span> <a href="/luizfvieirah/en" hreflang="en" lang="en">EN</a></nav>
       </div>
       <h1>Luiz Felipe Vieira Haragushiku</h1>
-      <p class="role">Desenvolvedor Back&#8209;end Java · Full&#8209;Stack</p>
-      <p class="pitch">Java, SQL e PostgreSQL com experiência de produção em fintech. Construo backends em Java 21 e Spring Boot e produtos web em Next.js e TypeScript.</p>
+      <p class="role">Desenvolvedor Back&#8209;end Java e Full&#8209;Stack</p>
+      <p class="pitch">Java e SQL Server em produção na fintech Sinqia (2019–2022). Hoje construo o <a href="#projetos">WorkFlow Crédito</a>, projeto próprio de esteira de crédito em Java 21, Spring Boot 3 e PostgreSQL, e produtos web em Next.js e TypeScript.</p>
       <span class="avail"><i></i>Disponível para novas oportunidades · CLT ou PJ</span>
 
       <ul class="contacts" aria-label="Contato">
@@ -324,43 +366,30 @@ p:last-child { margin-bottom: 0; }
           </a>
         </li>
       </ul>
+      <p class="code-cta"><a href="https://github.com/LFVH/workflow-credito" target="_blank" rel="noopener">Ver o código Java do WorkFlow Crédito ↗</a></p>
     </div>
 
     <nav class="toc" aria-label="Seções">
       <a href="#sobre">Sobre</a>
-      <a href="#numeros">Em números</a>
       <a href="#experiencia">Experiência</a>
       <a href="#projetos">Projetos</a>
       <a href="#arquitetura">Arquitetura interativa</a>
-      <a href="#formacao">Formação</a>
+      <a href="#formacao">Formação e idiomas</a>
     </nav>
   </header>
 
   <main id="conteudo">
     <section id="sobre" aria-labelledby="h-sobre">
       <h2 class="sh" id="h-sobre">Sobre</h2>
-      <p>Sou desenvolvedor com base em <b>Java e SQL</b>, construída em <b>2 anos e 8 meses na Sinqia</b>, fintech de sistemas financeiros e contábeis. Lá trabalhei em produção com SQL Server, stored procedures, índices e tuning de queries, e resolvi incidentes de ponta a ponta direto com os clientes.</p>
-      <p>Desde 2022 atuo como <b>full-stack com TypeScript e Next.js</b>. Lancei o <b>FolioBy</b>, um SaaS de portfólio no ar em folioby.me, com assinatura recorrente, webhooks validados por HMAC e PostgreSQL. Hoje construo o <b>WorkFlow Crédito</b>, backend de esteira de crédito em Java 21 e Spring Boot 3, com arquitetura hexagonal, TDD e Testcontainers.</p>
-      <p>Sou licenciado em Matemática pela UFPR e técnico em Informática pelo IFPR. Falo português, inglês, espanhol e italiano. Procuro uma vaga <b>back-end Java ou full-stack</b>, remota, híbrida ou presencial.</p>
-      <ul class="tags" aria-label="Principais tecnologias">
-        <li>Java 21</li><li>Spring Boot 3</li><li>Spring Data JPA</li><li>Hibernate</li><li>Spring for GraphQL</li><li>Maven</li>
-        <li>JUnit 5</li><li>Testcontainers</li><li>SQL</li><li>PostgreSQL</li><li>SQL Server</li><li>Flyway</li><li>Stored procedures</li>
-        <li>Arquitetura hexagonal</li><li>TDD</li><li>TypeScript</li><li>Next.js</li><li>React</li><li>Node.js</li><li>Prisma</li><li>GitHub Actions</li>
-      </ul>
-    </section>
-
-    <section id="numeros" aria-labelledby="h-numeros">
-      <h2 class="sh" id="h-numeros">Em números</h2>
-      <div class="stats">
-        <div class="stat"><span class="src">Sinqia · produção</span><span class="n">R$ 300 mil</span><span class="c">de prejuízo evitado ao destravar uma esteira de crédito parada por deadlock no SQL Server.</span></div>
-        <div class="stat"><span class="src">Sinqia · produção</span><span class="n">10 min → 3 s</span><span class="c">na procedure de inadimplência sobre milhões de contratos e parcelas, cerca de 200 vezes mais rápida.</span></div>
-        <div class="stat"><span class="src">Sinqia · produção</span><span class="n">~15 min</span><span class="c">para a esteira voltar a rodar normalmente, já com a correção da causa: ordem de acesso às tabelas e índices.</span></div>
-        <div class="stat"><span class="src">Sinqia · BI</span><span class="n">30 → 10</span><span class="c">chamados no backlog: 2/3 encerrados sem escrever código, ouvindo cada cliente; os 10 restantes resolvidos em ~3 meses.</span></div>
-        <div class="stat"><span class="src">WorkFlow Crédito</span><span class="n">74 testes</span><span class="c">automatizados com JUnit 5, AssertJ e Testcontainers, rodando no GitHub Actions.</span></div>
-        <div class="stat"><span class="src">FolioBy</span><span class="n">163 commits</span><span class="c">num SaaS no ar, com ~13 mil linhas de TypeScript e 25 rotas de API.</span></div>
-        <div class="stat"><span class="src">Carreira</span><span class="n">32 meses</span><span class="c">na Sinqia (set/2019 a mai/2022), entre BI e análise de sistemas.</span></div>
-        <div class="stat"><span class="src">Idiomas</span><span class="n">4</span><span class="c">português (nativo), inglês, espanhol e italiano.</span></div>
-      </div>
+      <p>Comecei no back-end de uma fintech: foram <b>2 anos e 8 meses na Sinqia</b> com Java e SQL Server em produção, entre stored procedures, índices, tuning de queries e incidentes resolvidos direto com os clientes. Foi lá que destravei uma esteira de crédito parada por deadlock e acelerei um relatório de inadimplência que levava minutos.</p>
+      <p>Em 2022, escolhi me tornar <b>full-stack</b>: fiz freelas em TypeScript e Next.js e, em 2026, lancei o <b>FolioBy</b>, SaaS de portfólio com assinatura recorrente. Agora volto ao back-end Java no domínio financeiro com o <b>WorkFlow Crédito</b>, uma esteira de crédito em Java 21 e Spring Boot 3.</p>
+      <p>Procuro uma vaga <b>back-end Java ou full-stack</b>, remota ou híbrida. Falo português (nativo) e <b>inglês fluente</b>, além de espanhol e italiano para conversação do dia a dia.</p>
+      <dl class="stack" aria-label="Principais tecnologias">
+        <div><dt>Back-end</dt><dd>Java 21, Spring Boot 3, Spring Data JPA, Hibernate, Spring for GraphQL, Maven, arquitetura hexagonal</dd></div>
+        <div><dt>Dados</dt><dd>SQL, PostgreSQL, SQL Server, Flyway, stored procedures</dd></div>
+        <div><dt>Testes e CI</dt><dd>JUnit 5, Testcontainers, TDD, GitHub Actions</dd></div>
+        <div><dt>Full-stack TS</dt><dd>TypeScript, Next.js, React, Node.js, Prisma</dd></div>
+      </dl>
     </section>
 
     <section id="experiencia" aria-labelledby="h-exp">
@@ -371,10 +400,10 @@ p:last-child { margin-bottom: 0; }
           <div class="what">
             <h3>Desenvolvedor Full-Stack<small>Freelancer e produtos próprios</small></h3>
             <ul class="pts">
-              <li>Entreguei projetos web para clientes com TypeScript e Next.js, da interface à integração com serviços de backend.</li>
-              <li>Fundei e desenvolvo o FolioBy, SaaS de portfólio no ar com usuários reais, e o WorkFlow Crédito, backend Java de esteira de crédito.</li>
+              <li>Transição deliberada para full-stack: entreguei projetos web para clientes com TypeScript e Next.js, da interface à integração com serviços de back-end.<!-- TODO(luiz): citar 1 ou 2 entregas reais de 2022–2025 (tipo de cliente, o que você fez, resultado) para dar substância ao período --></li>
+              <li>Em 2026, fundei o FolioBy, SaaS de portfólio no ar com usuários reais, e comecei o WorkFlow Crédito, back-end Java de esteira de crédito. <a href="#projetos">Detalhes em Projetos ↓</a></li>
             </ul>
-            <ul class="tags"><li>TypeScript</li><li>Next.js</li><li>React</li><li>PostgreSQL</li><li>Prisma</li><li>Java 21</li><li>Spring Boot</li></ul>
+            <ul class="tags"><li>Java 21</li><li>Spring Boot 3</li><li>PostgreSQL</li><li>TypeScript</li><li>Next.js</li><li>React</li><li>Prisma</li></ul>
           </div>
         </li>
         <li class="item">
@@ -382,9 +411,9 @@ p:last-child { margin-bottom: 0; }
           <div class="what">
             <h3>Analista de Sistemas<small>Sinqia · fintech de sistemas financeiros e contábeis</small></h3>
             <ul class="pts">
-              <li>Destravei em produção uma esteira de crédito parada por deadlock: analisei as sessões bloqueadas no SQL Server, padronizei a ordem de acesso às tabelas e criei índices a partir do plano de execução. <b>Evitei um prejuízo previsto de R$ 300 mil.</b></li>
-              <li>Otimizei a procedure do relatório de inadimplência, sobre milhões de contratos e parcelas, consolidando várias tabelas temporárias em uma: <b>de ~10 minutos para 3 segundos.</b></li>
-              <li>Desenvolvi funcionalidades e dei suporte a sistemas financeiros e contábeis em Java, com Git e em time ágil, atendendo os clientes de ponta a ponta.</li>
+              <li>Desenvolvi funcionalidades e dei suporte em produção a sistemas financeiros e contábeis em Java, em time ágil com Git, resolvendo incidentes de ponta a ponta direto com os clientes.</li>
+              <li>Destravei em produção a esteira de crédito de um cliente, parada por deadlock depois de uma carga em lote: analisei as sessões bloqueadas no SQL Server, padronizei a ordem de acesso às tabelas e criei índices a partir do plano de execução. Em cerca de 15 minutos a esteira voltou a rodar, já com a causa corrigida. <b>Evitei um prejuízo previsto de R$ 300 mil.</b></li>
+              <li>Otimizei a procedure do relatório de inadimplência, sobre milhões de contratos e parcelas, consolidando várias tabelas temporárias em uma: <b>de cerca de 10 minutos para 3 segundos</b> em produção.</li>
             </ul>
             <ul class="tags"><li>Java</li><li>SQL Server</li><li>Stored procedures</li><li>Índices</li><li>Tuning de queries</li><li>Git</li></ul>
           </div>
@@ -394,7 +423,7 @@ p:last-child { margin-bottom: 0; }
           <div class="what">
             <h3>Analista de BI<small>Sinqia</small></h3>
             <ul class="pts">
-              <li>Assumi um backlog de ~30 chamados e liguei para cada cliente para entender a necessidade real: 20 não precisavam mais de desenvolvimento. <b>Resolvi os 10 restantes em cerca de 3 meses.</b></li>
+              <li>Assumi um backlog de cerca de 30 chamados e liguei para cada cliente para entender a necessidade real: cerca de 20 não precisavam mais de desenvolvimento. <b>Resolvi os 10 restantes em cerca de 3 meses.</b></li>
               <li>Escrevi e otimizei queries sobre bancos relacionais para relatórios financeiros internos.</li>
             </ul>
             <ul class="tags"><li>SQL</li><li>Java</li><li>Business Intelligence</li></ul>
@@ -409,18 +438,21 @@ p:last-child { margin-bottom: 0; }
         <li class="item">
           <div class="when">2026 — hoje</div>
           <div class="what">
-            <h3>WorkFlow Crédito<small>Backend de esteira de crédito · Java 21 e Spring Boot 3</small></h3>
+            <h3>WorkFlow Crédito<small>Back-end de esteira de crédito · Java 21 e Spring Boot 3</small></h3>
             <ul class="pts">
-              <li>Máquina de estados de 6 status escrita à mão (enum de transições), com motivo obrigatório para reprovar e para cancelar.</li>
-              <li>Arquitetura hexagonal: o domínio é Java puro, sem anotação de framework. Trocar o repositório em memória pelo JPA não mudou uma linha do domínio.</li>
-              <li>API GraphQL com scalar <code>Decimal</code> próprio: dinheiro nunca passa por ponto flutuante.</li>
-              <li>PostgreSQL com Flyway em SQL puro; constraints CHECK espelham as regras do domínio.</li>
-              <li>74 testes (JUnit 5 e AssertJ) e testes de integração com Testcontainers no GitHub Actions.</li>
+              <li>Escrevi à mão a máquina de estados de 6 status (enum com as transições permitidas), com motivo obrigatório para reprovar e para cancelar.</li>
+              <li>Isolei o domínio em Java puro, sem anotação de framework (arquitetura hexagonal): troquei o repositório em memória pelo JPA com um adaptador novo; no domínio, só entrou a fábrica <code>Proposta.reconstituir</code>, para recriar a proposta a partir do banco.</li>
+              <li>Criei um scalar GraphQL <code>Decimal</code> próprio para que dinheiro nunca passe por ponto flutuante.</li>
+              <li>Versionei o PostgreSQL com Flyway em SQL puro, com constraints CHECK que espelham as regras do domínio.</li>
+              <li>Cobri o projeto com 74 testes (JUnit 5 e AssertJ), incluindo integração com Testcontainers no GitHub Actions.</li>
               <li>Próximos passos: padrão Outbox com Kafka, Docker Compose e Spring Cloud Gateway.</li>
             </ul>
             <ul class="tags"><li>Java 21</li><li>Spring Boot 3.5</li><li>Spring for GraphQL</li><li>Spring Data JPA</li><li>PostgreSQL</li><li>Flyway</li><li>Testcontainers</li><li>GitHub Actions</li></ul>
             <div class="links">
               <a href="https://github.com/LFVH/workflow-credito" target="_blank" rel="noopener">Código no GitHub ↗</a>
+              <a href="https://github.com/LFVH/workflow-credito/blob/main/src/main/java/br/com/luiz/workflow/domain/StatusProposta.java" target="_blank" rel="noopener">Máquina de estados ↗</a>
+              <a href="https://github.com/LFVH/workflow-credito/tree/main/src/main/resources/db/migration" target="_blank" rel="noopener">Migrations SQL ↗</a>
+              <a href="https://github.com/LFVH/workflow-credito/actions" target="_blank" rel="noopener">Execuções do CI ↗</a>
               <a href="#arquitetura">Ver o hexágono interativo ↓</a>
             </div>
           </div>
@@ -432,14 +464,14 @@ p:last-child { margin-bottom: 0; }
             <ul class="pts">
               <li>No ar em folioby.me com usuários reais: vitrine pública em estilo catálogo de streaming e painel autenticado.</li>
               <li>Assinatura recorrente com Mercado Pago: webhook validado por HMAC-SHA256, gravado antes de processar e processado em segundo plano com retry.</li>
-              <li>Middleware que nega por padrão, rate limit token bucket com Upstash Redis e checagem de dono do recurso nas rotas do painel.</li>
+              <li>Middleware que nega por padrão, rate limiting (token bucket) com Upstash Redis e checagem de dono do recurso (contra IDOR) nas rotas do painel.</li>
               <li>Upload direto para o Vercel Blob, com allowlist de tipos e cota de 2 GB por usuário.</li>
-              <li>163 commits, 6 modelos de dados e CI com lint, testes e build num Postgres 16.</li>
+              <li>Projetei o modelo relacional (6 modelos no Prisma) e o CI com lint, testes e build num PostgreSQL 16.</li>
             </ul>
             <ul class="tags"><li>Next.js 16</li><li>React 18</li><li>TypeScript</li><li>Prisma 7</li><li>PostgreSQL</li><li>NextAuth</li><li>Mercado Pago</li><li>Vercel Blob</li><li>Upstash Redis</li></ul>
             <div class="links">
-              <a href="https://folioby.me" target="_blank" rel="noopener">folioby.me ↗</a>
-              <a href="https://folioby.me/luizfelipevh" target="_blank" rel="noopener">Exemplo de vitrine ↗</a>
+              <a href="https://www.folioby.me" target="_blank" rel="noopener">folioby.me ↗</a>
+              <a href="https://www.folioby.me/luizfelipevh" target="_blank" rel="noopener">Ver uma vitrine publicada ↗</a><!-- TODO(luiz): esta vitrine é o seu portfólio de edição/motion design; confirme se quer que recrutadores de vagas Java a vejam ou troque por outra vitrine de exemplo -->
               <a href="https://github.com/LFVH/folioby-me" target="_blank" rel="noopener">Código no GitHub ↗</a>
               <a href="#arquitetura">Ver as camadas interativas ↓</a>
             </div>
@@ -490,7 +522,14 @@ p:last-child { margin-bottom: 0; }
         </li>
         <li class="item">
           <div class="when">Idiomas</div>
-          <div class="what"><h3>Português (nativo), inglês, espanhol e italiano<small>Confortável com times distribuídos e internacionais</small></h3></div>
+          <div class="what">
+            <ul class="langs">
+              <li><b>Português</b> nativo</li>
+              <li><b>Inglês</b> fluente</li>
+              <li><b>Espanhol</b> conversação do dia a dia</li>
+              <li><b>Italiano</b> conversação do dia a dia</li>
+            </ul>
+          </div>
         </li>
       </ol>
     </section>
@@ -498,16 +537,16 @@ p:last-child { margin-bottom: 0; }
   </main>
 </div>
 
-<a class="mailme" href="mailto:luizfvieirah@gmail.com?subject=Oportunidade%20(via%20folioby.me)" aria-label="Enviar e-mail para Luiz Felipe">
+<a class="mailme" href="mailto:luizfvieirah@gmail.com?subject=Oportunidade%20(via%20folioby.me)">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-  mailMe
+  Enviar e-mail
 </a>
 
-<nav class="jump" aria-label="Navegar entre seções">
+<nav class="jump off" aria-label="Navegar entre seções">
   <button type="button" class="jb" id="jPrev" aria-label="Seção anterior">↑</button>
   <button type="button" class="jcur" id="jCur" aria-expanded="false" aria-controls="jList" aria-label="Escolher seção"><span class="jlabel">Topo</span><span class="jicon" aria-hidden="true">☰</span><i aria-hidden="true">▾</i></button>
-  <button type="button" class="jb" id="jNext" aria-label="Próxima seção">↓</button>
   <ul class="jlist" id="jList" hidden></ul>
+  <button type="button" class="jb" id="jNext" aria-label="Próxima seção">↓</button>
 </nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -530,6 +569,13 @@ p:last-child { margin-bottom: 0; }
     catch { toast('Meu e-mail: luizfvieirah@gmail.com'); return false; }
   }
   document.querySelectorAll('a[href^="mailto:"]').forEach(a => a.addEventListener('click', copyMail));
+  // O flutuante só aparece quando o card de e-mail principal sai da tela
+  const fab = document.querySelector('.mailme');
+  const mainMail = document.querySelector('.contact.primary');
+  if (fab && mainMail && 'IntersectionObserver' in window) {
+    fab.classList.add('off');
+    new IntersectionObserver(([en]) => fab.classList.toggle('off', en.isIntersecting)).observe(mainMail);
+  }
   const copy = document.getElementById('copyMail');
   copy.addEventListener('click', async () => {
     if (await copyMail()) copy.textContent = 'Copiado';
@@ -539,15 +585,17 @@ p:last-child { margin-bottom: 0; }
   // Apresentações: o iframe só é criado no clique e ajusta a altura pelo postMessage da própria apresentação
   document.querySelectorAll('.demo').forEach(demo => {
     const btn = demo.querySelector('.btn');
+    btn.setAttribute('aria-expanded', 'false');
     btn.addEventListener('click', () => {
       let frame = demo.querySelector('iframe');
-      if (frame) { frame.remove(); demo.classList.remove('open'); btn.textContent = 'Abrir apresentação'; return; }
+      if (frame) { frame.remove(); demo.classList.remove('open'); btn.textContent = 'Abrir apresentação'; btn.setAttribute('aria-expanded', 'false'); return; }
       frame = document.createElement('iframe');
       frame.src = demo.dataset.src;
       frame.title = demo.dataset.title;
       demo.append(frame);
       demo.classList.add('open');
       btn.textContent = 'Fechar apresentação';
+      btn.setAttribute('aria-expanded', 'true');
     });
   });
   addEventListener('message', e => {
@@ -591,6 +639,7 @@ p:last-child { margin-bottom: 0; }
     else window.scrollTo({ top: 0, behavior: smooth });
   }
   function current() {
+    if (scrollY < 8) return 0;
     if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) return targets.length - 1;
     let i = 0;
     secs.forEach((s, k) => { if (s.getBoundingClientRect().top <= innerHeight * 0.35) i = k + 1; });
@@ -601,7 +650,9 @@ p:last-child { margin-bottom: 0; }
     const last = idx === targets.length - 1;
     jLabel.textContent = targets[idx].label;
     jCur.title = targets[idx].label;
+    jCur.setAttribute('aria-label', 'Escolher seção (atual: ' + targets[idx].label + ')');
     jPrev.disabled = idx === 0;
+    jCur.closest('.jump').classList.toggle('off', idx === 0);
     jNext.textContent = last ? '⤒' : '↓';
     jNext.setAttribute('aria-label', last ? 'Voltar ao topo' : 'Próxima seção');
     targets.forEach((t, i) => i === idx ? t.link.setAttribute('aria-current', 'true') : t.link.removeAttribute('aria-current'));
@@ -614,7 +665,12 @@ p:last-child { margin-bottom: 0; }
   jNext.addEventListener('click', () => go(idx === targets.length - 1 ? 0 : idx + 1));
   jCur.addEventListener('click', () => openList(jList.hidden));
   document.addEventListener('click', e => { if (!e.target.closest('.jump')) openList(false); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') openList(false); });
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    const inList = jList.contains(document.activeElement);
+    openList(false);
+    if (inList) jCur.focus();
+  });
   let ticking = false;
   addEventListener('scroll', () => {
     if (ticking) return;
