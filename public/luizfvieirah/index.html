@@ -218,11 +218,11 @@ p:last-child { margin-bottom: 0; }
 .demo.open .demo-head { border-bottom: 1px solid var(--line); }
 
 
-/* Navegação entre seções: ↑ seção atual ↓, com lista para pular direto */
+/* Navegação entre seções: coluna ↑ ☰ ↓ acima do mailMe; ☰ abre a lista para pular direto */
 .jump {
   position: fixed; z-index: 40;
-  left: max(18px, env(safe-area-inset-left, 0px)); bottom: max(18px, env(safe-area-inset-bottom, 0px));
-  display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 999px;
+  right: max(18px, env(safe-area-inset-right, 0px)); bottom: calc(max(18px, env(safe-area-inset-bottom, 0px)) + 66px);
+  display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px; border-radius: 999px;
   background: var(--surface); border: 1px solid var(--line); box-shadow: 0 8px 22px rgba(0,0,0,.14);
 }
 .jump button { font: inherit; background: transparent; border: 0; color: var(--ink); cursor: pointer; border-radius: 999px; }
@@ -230,15 +230,14 @@ p:last-child { margin-bottom: 0; }
 .jb:hover:not(:disabled), .jcur:hover { background: var(--accent-soft); }
 .jb:disabled { color: var(--line); cursor: default; }
 .jcur {
-  height: 38px; padding: 0 12px; display: inline-flex; align-items: center; gap: 7px;
+  width: 38px; height: 38px; padding: 0; display: inline-flex; align-items: center; justify-content: center;
   font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
 }
-.jlabel { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.jicon { display: none; font-size: 16px; }
+.jlabel, .jcur i { display: none; }
+.jicon { font-size: 16px; }
 .jcur i { font-style: normal; font-size: 10px; color: var(--muted); }
-@media (max-width: 480px) { .jlabel, .jcur i { display: none; } .jicon { display: inline; } .jcur { padding: 0 10px; } }
 .jlist {
-  position: absolute; left: 0; bottom: calc(100% + 8px); margin: 0; padding: 6px; list-style: none; min-width: 230px;
+  position: absolute; right: calc(100% + 8px); bottom: 0; margin: 0; padding: 6px; list-style: none; min-width: 230px;
   background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 12px 28px rgba(0,0,0,.18);
 }
 .jlist a { display: block; padding: 8px 12px; border-radius: 6px; font-size: 14.5px; color: var(--ink); }
@@ -601,6 +600,7 @@ p:last-child { margin-bottom: 0; }
     idx = current();
     const last = idx === targets.length - 1;
     jLabel.textContent = targets[idx].label;
+    jCur.title = targets[idx].label;
     jPrev.disabled = idx === 0;
     jNext.textContent = last ? '⤒' : '↓';
     jNext.setAttribute('aria-label', last ? 'Voltar ao topo' : 'Próxima seção');
