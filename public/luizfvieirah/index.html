@@ -6,6 +6,8 @@
 <title>Luiz Felipe Vieira Haragushiku · Desenvolvedor Back-end Java e Full-Stack</title>
 <meta name="description" content="Desenvolvedor Back-end Java e Full-Stack em Curitiba. Java 21, Spring Boot 3, SQL e PostgreSQL, com 2 anos e 8 meses de produção na fintech Sinqia: R$ 300 mil de prejuízo evitado e uma procedure levada de 10 minutos para 3 segundos. Criador do FolioBy (Next.js) e do WorkFlow Crédito (Java).">
 <link rel="canonical" href="https://www.folioby.me/luizfvieirah">
+<link rel="alternate" hreflang="pt-BR" href="https://www.folioby.me/luizfvieirah">
+<link rel="alternate" hreflang="en" href="https://www.folioby.me/luizfvieirah/en">
 <meta property="og:type" content="profile">
 <meta property="og:url" content="https://www.folioby.me/luizfvieirah">
 <meta property="og:title" content="Luiz Felipe Vieira Haragushiku · Desenvolvedor Back-end Java e Full-Stack">
@@ -93,13 +95,20 @@ b, strong { color: var(--ink); font-weight: 600; }
   display: grid; gap: 48px;
 }
 @media (min-width: 1024px) {
-  .page { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 64px; padding-top: 0; padding-bottom: 0; }
+  .page { grid-template-columns: minmax(320px, 430px) minmax(0, 660px); justify-content: center; gap: 72px; padding-top: 0; padding-bottom: 0; }
   .side { position: sticky; top: 0; height: 100vh; padding-block: 72px 48px; display: flex; flex-direction: column; }
   main { padding-block: 72px 140px; }
 }
 
 /* Coluna esquerda */
 .side { min-width: 0; }
+.topline { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0 0 14px; }
+.topline .eyebrow { margin: 0; }
+.lang { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; white-space: nowrap; }
+.lang a, .lang span { padding: 2px 4px; }
+.lang span { color: var(--ink); font-weight: 500; border-bottom: 1px solid var(--accent); }
+.lang a { color: var(--muted); }
+.lang a:hover { color: var(--ink); }
 .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
 h1 {
   font-family: var(--display); font-stretch: 78%; font-weight: 800; color: var(--ink);
@@ -210,33 +219,33 @@ p:last-child { margin-bottom: 0; }
 
 footer { font-size: 13.5px; max-width: 52ch; }
 
-/* Botão mailMe: balança a cada 5 s para chamar atenção */
+/* Botão mailMe: balança a cada 3 s para chamar atenção */
 .mailme {
   position: fixed; z-index: 40;
   right: max(18px, env(safe-area-inset-right, 0px)); bottom: max(18px, env(safe-area-inset-bottom, 0px));
   display: inline-flex; align-items: center; gap: 9px; padding: 13px 20px 13px 17px; border-radius: 999px;
   background: var(--gold); color: var(--on-gold); font-weight: 800; font-size: 16px; letter-spacing: .01em;
   box-shadow: 0 8px 22px rgba(0,0,0,.22);
-  animation: nudge 5s ease-in-out 2s infinite;
+  animation: nudge 3s ease-in-out 1.5s infinite;
 }
 .mailme svg { width: 19px; height: 19px; }
 .mailme::after {
   content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-  box-shadow: 0 0 0 0 var(--gold); animation: ring 5s ease-out 2s infinite;
+  box-shadow: 0 0 0 0 var(--gold); animation: ring 3s ease-out 1.5s infinite;
 }
 .mailme:hover { animation-play-state: paused; filter: brightness(1.06); }
 .mailme:hover::after { animation-play-state: paused; }
 @keyframes nudge {
-  0%, 16%, 100% { transform: none; }
-  2%  { transform: translateY(-4px) rotate(-9deg) scale(1.07); }
-  5%  { transform: translateY(-4px) rotate(8deg) scale(1.07); }
-  8%  { transform: translateY(-2px) rotate(-6deg) scale(1.04); }
-  11% { transform: translateY(-1px) rotate(4deg) scale(1.02); }
-  14% { transform: rotate(-1deg); }
+  0%, 27%, 100% { transform: none; }
+  4%  { transform: translateY(-4px) rotate(-9deg) scale(1.07); }
+  9%  { transform: translateY(-4px) rotate(8deg) scale(1.07); }
+  14% { transform: translateY(-2px) rotate(-6deg) scale(1.04); }
+  19% { transform: translateY(-1px) rotate(4deg) scale(1.02); }
+  24% { transform: rotate(-1deg); }
 }
 @keyframes ring {
   0%  { box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold) 70%, transparent); }
-  18% { box-shadow: 0 0 0 16px transparent; }
+  30% { box-shadow: 0 0 0 16px transparent; }
   100% { box-shadow: 0 0 0 16px transparent; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -249,7 +258,10 @@ footer { font-size: 13.5px; max-width: 52ch; }
 <div class="page">
   <header class="side">
     <div>
-      <p class="eyebrow">Curitiba, PR · remoto, híbrido ou presencial</p>
+      <div class="topline">
+        <p class="eyebrow">Curitiba, PR · remoto, híbrido ou presencial</p>
+        <nav class="lang" aria-label="Idioma"><span aria-current="true">PT</span> <a href="/luizfvieirah/en" hreflang="en" lang="en">EN</a></nav>
+      </div>
       <h1>Luiz Felipe Vieira Haragushiku</h1>
       <p class="role">Desenvolvedor Back&#8209;end Java · Full&#8209;Stack</p>
       <p class="pitch">Java, SQL e PostgreSQL com experiência de produção em fintech. Construo backends em Java 21 e Spring Boot e produtos web em Next.js e TypeScript.</p>
