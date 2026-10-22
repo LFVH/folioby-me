@@ -1,4 +1,12 @@
 const nextConfig = {
+  async rewrites() {
+    return {
+      // Antes da rota dinâmica [slug]: a página estática substitui a vitrine padrão
+      beforeFiles: [
+        { source: '/luizfvieirah', destination: '/luizfvieirah/index.html' },
+      ],
+    };
+  },
   images: {
     remotePatterns: [
       {

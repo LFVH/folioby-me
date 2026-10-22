@@ -8,6 +8,9 @@ import { isFileLikePathname } from "./lib/user-slug"
 
 export const runtime = "nodejs"
 
+// Páginas estáticas em public/ que substituem a vitrine padrão de um slug (rewrite em next.config.mjs)
+const STATIC_PROFILE_PAGES = ["/luizfvieirah"]
+
 export const config = {
   matcher: "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)",
 }
@@ -34,6 +37,13 @@ export async function middleware(request: NextRequest) {
 
   if (currentPath.startsWith("/_next") || currentPath.startsWith("/static") || isFileLikePathname(currentPath)) {
     return NextResponse.next()
+  }
+
+  const staticProfile = STATIC_PROFILE_PAGES.find((page) => page === currentPath.toLowerCase())
+  if (staticProfile) {
+    return staticProfile === currentPath
+      ? NextResponse.next()
+      : NextResponse.redirect(new URL(staticProfile, request.url))
   }
 
   const isPublic = publicRoutes.some(
