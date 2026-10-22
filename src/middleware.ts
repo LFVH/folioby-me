@@ -9,7 +9,7 @@ import { isFileLikePathname } from "./lib/user-slug"
 export const runtime = "nodejs"
 
 // Páginas estáticas em public/ que substituem a vitrine padrão de um slug (rewrite em next.config.mjs)
-const STATIC_PROFILE_PAGES = ["/luizfvieirah"]
+const STATIC_PROFILE_PAGES = ["/luizfvieirah", "/luizfvieirah/en"]
 
 export const config = {
   matcher: "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)",
