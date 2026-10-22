@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Camadas do FolioBy</title>
+<meta name="description" content="Apresentação interativa da arquitetura em camadas do FolioBy (Next.js 16, Prisma 7, PostgreSQL): 33 peças reais do código, montadas de baixo para cima, com simulação de requisições e de webhook do Mercado Pago.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: palco com a pilha de 6 camadas e o trilho de serviços externos à esquerda, bancada de controle e ficha da peça à direita; empilha no celular. */
+:root {
+  --bg: #eef0f3;
+  --surface: #ffffff;
+  --ink: #17202c;
+  --muted: #5a6474;
+  --line: #d4d9e0;
+  --l-ui: #e3ae4f;   --on-ui: #231a08;
+  --l-edge: #d98a5f; --on-edge: #2a1206;
+  --l-api: #2c7a6b;  --on-api: #f2fbf8;
+  --l-svc: #2a5f86;  --on-svc: #f2f7fb;
+  --l-data: #233a66; --on-data: #f2f5fb;
+  --l-db: #141c33;   --on-db: #e9edf6;
+  --l-ext: #eef0f3;  --on-ext: #17202c;
+  --plan: rgba(90,100,116,.08);
+  --accent: #c8336a;
+  --err: #c92a2a;
+  --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --body: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10141a; --surface: #181e26; --ink: #e5e9ef; --muted: #98a2b0; --line: #29313c;
+    --l-ui: #e2b25c; --on-ui: #1b1406; --l-edge: #de946a; --on-edge: #200d04;
+    --l-api: #2f9a86; --on-api: #04120e; --l-svc: #3a7bb0; --on-svc: #f2f7fb;
+    --l-data: #4767b0; --on-data: #f2f5fb; --l-db: #2c3a6e; --on-db: #e9edf6;
+    --l-ext: #222a35; --on-ext: #e5e9ef; --plan: rgba(152,162,176,.07);
+    --accent: #f06595; --err: #ff6b6b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10141a; --surface: #181e26; --ink: #e5e9ef; --muted: #98a2b0; --line: #29313c;
+  --l-ui: #e2b25c; --on-ui: #1b1406; --l-edge: #de946a; --on-edge: #200d04;
+  --l-api: #2f9a86; --on-api: #04120e; --l-svc: #3a7bb0; --on-svc: #f2f7fb;
+  --l-data: #4767b0; --on-data: #f2f5fb; --l-db: #2c3a6e; --on-db: #e9edf6;
+  --l-ext: #222a35; --on-ext: #e5e9ef; --plan: rgba(152,162,176,.07);
+  --accent: #f06595; --err: #ff6b6b; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+.embedded .wrap > header { display: none; }
+.embedded .wrap { padding-block: 16px; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body);
+  font-size: 15px; line-height: 1.5;
+}
+.wrap {
+  max-width: 1180px; margin: 0 auto;
+  padding-block: 28px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 24px;
+}
+header { display: grid; gap: 6px; max-width: 68ch; }
+.eyebrow {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--muted);
+}
+h1 {
+  font-family: var(--display); font-stretch: 72%; font-weight: 800;
+  font-size: clamp(30px, 5.2vw, 52px); line-height: 1; margin: 0;
+  letter-spacing: -.01em; text-wrap: balance;
+}
+.lede { margin: 4px 0 0; color: var(--muted); }
+
+.main { display: grid; gap: 24px; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); align-items: start; }
+@media (max-width: 920px) { .main { grid-template-columns: minmax(0, 1fr); } }
+
+/* Palco */
+.stage {
+  position: relative; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 6px; overflow: hidden; padding: 14px;
+  display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) 158px; align-items: start;
+}
+.stack { display: grid; gap: 6px; min-width: 0; }
+.flow {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); display: flex; justify-content: space-between; gap: 8px; padding: 0 2px;
+}
+.layer {
+  display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 10px; align-items: center;
+  padding: 8px 10px 8px 8px; border-radius: 4px; min-height: 58px;
+  border-left: 4px solid var(--c); background: color-mix(in srgb, var(--c) 9%, transparent);
+  transition: background-color 250ms, box-shadow 250ms;
+}
+.lab { display: grid; gap: 1px; min-width: 0; }
+.lab b { font-family: var(--mono); font-size: 10.5px; font-weight: 500; color: var(--muted); letter-spacing: .06em; }
+.lab span { font-family: var(--display); font-stretch: 80%; font-weight: 800; font-size: 15px; line-height: 1.1; }
+.slots { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.layer.focus { box-shadow: inset 0 0 0 2px var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); }
+
+.rail {
+  display: grid; gap: 8px; align-content: start; padding: 10px; border-radius: 4px;
+  border: 1.4px dashed var(--line); min-height: 100%;
+}
+.rail .lab { margin-bottom: 2px; }
+.rail .slots { flex-direction: column; flex-wrap: nowrap; }
+.rail .piece { width: 100%; }
+.rail.focus { border-color: var(--muted); border-style: solid; }
+
+/* Peças */
+.piece {
+  position: relative; display: grid; gap: 0; text-align: left;
+  background: var(--c); color: var(--on); border-radius: 4px;
+  padding: 5px 9px 6px; cursor: pointer; user-select: none; outline: none;
+  transition: transform 900ms cubic-bezier(.25,1.25,.5,1), opacity 450ms ease, box-shadow 200ms;
+  will-change: transform;
+}
+.piece .t { font-family: var(--display); font-stretch: 82%; font-weight: 700; font-size: 13px; line-height: 1.15; }
+.piece .s { font-size: 10.5px; font-weight: 500; opacity: .82; line-height: 1.2; }
+.piece:hover { filter: brightness(1.08); }
+.piece.sel, .piece:focus-visible { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--ink); }
+.piece.off { opacity: 0; pointer-events: none; }
+.piece.ext { border: 1px solid var(--line); }
+.piece.wait { border: 1.4px dashed var(--muted); }
+.piece.plan { background: var(--plan); color: var(--muted); border: 1.4px dashed var(--muted); }
+.hide-plan .piece.plan, .quiz .piece.plan { display: none; }
+.sim .piece:not(.lit):not(.bad) { opacity: .35; }
+.piece.lit { box-shadow: 0 0 0 3px var(--accent); }
+.piece.bad { box-shadow: 0 0 0 3px var(--err); }
+
+/* Modo "Eu monto" */
+.tray {
+  grid-column: 1 / -1; display: none; flex-wrap: wrap; gap: 6px; align-content: flex-start;
+  min-height: 70px; padding: 26px 10px 10px; border-radius: 4px;
+  border: 1.5px dashed var(--muted); position: relative;
+}
+.tray::before {
+  content: "Bandeja · arraste cada peça para a camada dela"; position: absolute; top: 6px; left: 10px;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+}
+.quiz .tray { display: flex; }
+.quiz .tray:empty::after { content: "Tudo encaixado."; color: var(--muted); font-size: 14px; }
+.quiz .layer, .quiz .rail { cursor: copy; }
+.piece.loose { touch-action: none; cursor: grab; }
+.piece.drag { cursor: grabbing; z-index: 10; transition: none; box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+.piece.armed { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent); }
+.piece.shake { animation: shake 420ms; }
+@keyframes shake { 20% { translate: -6px 0; } 40% { translate: 6px 0; } 60% { translate: -4px 0; } 80% { translate: 3px 0; } }
+
+#dot {
+  position: absolute; left: 0; top: 0; width: 16px; height: 16px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent);
+  opacity: 0; pointer-events: none; z-index: 6;
+  transition: transform 620ms cubic-bezier(.45,0,.25,1), opacity 200ms;
+}
+#dot.bad { background: var(--err); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 14px; height: 14px; border-radius: 2px; display: inline-block; background: var(--c); border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+.sw.x { border: 1.4px dashed var(--muted); background: var(--plan); }
+
+/* Bancada */
+aside { display: grid; gap: 18px; min-width: 0; }
+.block { display: grid; gap: 10px; }
+.label { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.row { display: flex; flex-wrap: wrap; gap: 8px; }
+button {
+  font: inherit; font-size: 14px; font-weight: 600; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 4px;
+  padding: 7px 12px; cursor: pointer;
+}
+button:hover { border-color: var(--muted); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.levels { display: grid; gap: 6px; }
+.level {
+  display: grid; grid-template-columns: 30px minmax(0,1fr); gap: 10px; align-items: baseline;
+  text-align: left; font-weight: 500; padding: 7px 12px; position: relative;
+}
+.level b { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--muted); }
+.level::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px; border-radius: 2px; background: var(--c); }
+.level[aria-pressed="true"] { border-color: var(--ink); }
+.toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); cursor: pointer; }
+.toggle input { accent-color: var(--ink); width: 16px; height: 16px; }
+.score { font-family: var(--mono); font-size: 12.5px; color: var(--muted); min-height: 1.5em; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+  padding: 16px 18px; display: grid; gap: 8px; min-height: 190px; align-content: start;
+}
+.card h2 { font-family: var(--display); font-stretch: 75%; font-size: 26px; font-weight: 800; margin: 0; line-height: 1.1; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 3px; border: 1px solid var(--line); color: var(--muted); }
+.chip.k { background: var(--c); color: var(--on); border-color: transparent; }
+.chip.d { border-style: dashed; }
+.card p { margin: 0; }
+code, .path { font-family: var(--mono); font-size: 12.5px; }
+.path { color: var(--muted); overflow-wrap: anywhere; }
+
+.log { margin: 0; padding: 0 0 0 22px; display: grid; gap: 4px; font-size: 14px; min-height: 24px; }
+.log li { color: var(--muted); }
+.log li.now { color: var(--ink); font-weight: 600; }
+.log li.err { color: var(--err); font-weight: 600; }
+.log code { font-size: 12px; }
+
+/* Cores por camada */
+.k-ui   { --c: var(--l-ui);   --on: var(--on-ui); }
+.k-edge { --c: var(--l-edge); --on: var(--on-edge); }
+.k-api  { --c: var(--l-api);  --on: var(--on-api); }
+.k-svc  { --c: var(--l-svc);  --on: var(--on-svc); }
+.k-data { --c: var(--l-data); --on: var(--on-data); }
+.k-db   { --c: var(--l-db);   --on: var(--on-db); }
+.k-ext  { --c: var(--l-ext);  --on: var(--on-ext); }
+
+/* O palco responde à própria largura (container query), não à da janela. */
+.stagebox { container-type: inline-size; }
+@container (max-width: 760px) {
+  .stage { grid-template-columns: minmax(0, 1fr); }
+  .rail { min-height: 0; }
+  .rail .slots { flex-direction: row; flex-wrap: wrap; }
+  .rail .piece { width: auto; }
+}
+@container (max-width: 560px) {
+  .stage { padding: 10px; }
+  .layer { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .lab { grid-auto-flow: column; justify-content: start; align-items: baseline; gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .piece { transition: opacity 200ms; }
+  #dot { transition: opacity 200ms; }
+  .piece.shake { animation: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">folioby.me · arquitetura em camadas</div>
+    <h1>Camadas do FolioBy</h1>
+    <p class="lede">Cada peça é um arquivo real do SaaS em produção. A requisição desce da interface até o PostgreSQL, e cada camada só conversa com a de baixo. Os serviços de pagamento, mídia e rate limit ficam no trilho ao lado, isolados em clientes próprios.</p>
+  </header>
+
+  <div class="main">
+    <div class="block stagebox">
+      <div class="stage" id="stage">
+        <div class="stack" id="stack">
+          <div class="flow"><span>navegador</span><span>↓ a requisição desce</span></div>
+        </div>
+        <div class="rail k-ext" id="rail" data-l="ext"></div>
+        <div class="tray" id="tray"></div>
+        <div id="dot"></div>
+      </div>
+      <div class="legend" id="legend"></div>
+    </div>
+
+    <aside>
+      <div class="block">
+        <div class="label">Montagem</div>
+        <div class="row">
+          <button class="primary" id="btnBuild">Montar camada a camada</button>
+          <button id="btnAll">Montar tudo</button>
+          <button id="btnApart">Desmontar</button>
+          <button id="btnQuiz">Eu monto</button>
+        </div>
+        <div class="score" id="score" aria-live="polite"></div>
+        <div class="levels" id="levels"></div>
+        <label class="toggle"><input type="checkbox" id="showPlan" checked> Mostrar próximos refactors</label>
+      </div>
+
+      <div class="card" id="card" aria-live="polite"></div>
+
+      <div class="block">
+        <div class="label">Simular uma requisição</div>
+        <div class="row">
+          <button id="simVisit">Visita à vitrine</button>
+          <button id="simPay">Webhook pago</button>
+          <button id="simForge">Webhook forjado</button>
+        </div>
+        <ol class="log" id="log" aria-live="polite"></ol>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(() => {
+  const LAYERS = {
+    ui:   { n: '01', t: 'Apresentação', s: 'App Router · React 18 · TypeScript',
+            d: 'Tudo o que o usuário vê: a vitrine pública em estilo catálogo de streaming, o painel autenticado e o cadastro. Nenhum componente importa o Prisma; os dados chegam por HTTP ou já vêm pré-carregados pelo servidor.' },
+    edge: { n: '02', t: 'Borda', s: 'middleware · sessão · rate limit',
+            d: 'Toda requisição passa por aqui antes de chegar à API ou às páginas do painel. A regra é negar por padrão: só passa o que está numa lista explícita.' },
+    api:  { n: '03', t: 'API', s: '25 route handlers',
+            d: 'Traduz HTTP em chamadas às regras: valida a entrada, confere a sessão e o dono do recurso e devolve JSON. Webhooks e pagamentos também entram por aqui.' },
+    svc:  { n: '04', t: 'Regras de negócio', s: 'src/lib · src/utils',
+            d: 'Plano, cota de armazenamento, slug, links e guardas de acesso. Aqui mora o que o produto decide, não importa quem chamou: o painel ou o webhook.' },
+    data: { n: '05', t: 'Acesso a dados', s: 'Prisma 7 · caches',
+            d: 'A única porta para o banco: o cliente Prisma e os serviços que consultam ou guardam em cache o que vem dele.' },
+    db:   { n: '06', t: 'PostgreSQL', s: '6 modelos · trigger',
+            d: 'A fonte da verdade. Tipos fortes (BigInt, Decimal, JSON), relação N:N e uma trigger de auditoria que não depende de a aplicação lembrar de registrar.' },
+    ext:  { n: 'EXT', t: 'Externos e entrega', s: 'pagamento · mídia · CI',
+            d: 'Serviços de terceiros, chamados por clientes isolados em src/lib, e o pipeline que valida cada push.' },
+  };
+  const STACK = ['ui', 'edge', 'api', 'svc', 'data', 'db'];
+  const BUILD = ['db', 'data', 'svc', 'api', 'edge', 'ui', 'ext']; // fundação primeiro
+
+  const PIECES = [
+    // 01 Apresentação
+    { id: 'vitrine', L: 'ui', t: 'Vitrine pública', s: 'src/app/[slug]', f: 'src/app/[slug]/page.tsx',
+      d: 'Server component dinâmico: monta metadata Open Graph e Twitter, emite JSON-LD (ProfilePage e BreadcrumbList) e pré-carrega os dados no React Query antes de hidratar o FlixClient.' },
+    { id: 'painel', L: 'ui', t: 'Painel /nextsteps', s: 'conteúdos · categorias · perfil', f: 'src/app/nextsteps/',
+      d: 'A área autenticada onde o usuário cadastra conteúdos, organiza categorias e troca slug, senha e avatar, com recorte de imagem feito no próprio navegador.' },
+    { id: 'flix', L: 'ui', t: 'Componentes da vitrine', s: 'HeroBanner · carrosséis', f: 'src/components/letsgo/',
+      d: 'HeroBanner que alterna até 5 destaques a cada 5 s, carrosséis por categoria e lista filtrada com infinite scroll por IntersectionObserver.' },
+    { id: 'estado', L: 'ui', t: 'Estado no cliente', s: 'React Query + Zustand', f: 'src/hooks/',
+      d: 'O React Query guarda o que veio do servidor, o Zustand guarda o filtro global de categoria e busca, e um debounce segura a busca enquanto o usuário digita.' },
+    { id: 'tiptap', L: 'ui', t: 'Editor TipTap', s: 'rich text salvo em JSON', f: 'src/components/logged/TipTapEditor.tsx',
+      d: 'A descrição do perfil é salva como JSON e renderizada pelo schema do ProseMirror, então HTML cru nunca chega à página.' },
+    { id: 'forms', L: 'ui', t: 'Formulários', s: 'React Hook Form + Zod', f: 'src/app/(auth)/',
+      d: 'Login e cadastro validam no navegador com os mesmos schemas Zod que o servidor usa, definidos num arquivo só.' },
+    // 02 Borda
+    { id: 'mw', L: 'edge', t: 'middleware.ts', s: 'nega por padrão', f: 'src/middleware.ts',
+      d: 'Ordem fixa: arquivos estáticos, rotas públicas, slugs premium, rate limit, sessão, usuário bloqueado e plano. No fim, uma allowlist de 5 prefixos do painel; o que estiver fora dela é redirecionado.' },
+    { id: 'rl', L: 'edge', t: 'Rate limit', s: 'token bucket · 10 a cada 10 s', f: 'src/lib/ratelimit.ts',
+      d: 'Token bucket no Redis da Upstash: 10 fichas repostas a cada 10 s e rajada de até 50, com chave pelo id do usuário logado ou pelo IP.' },
+    { id: 'auth', L: 'edge', t: 'NextAuth + JWT', s: 'credenciais · bcrypt', f: 'src/app/api/nxtHandle/nextAuthHandler.ts',
+      d: 'Provider de credenciais com senha em bcrypt e sessão em JWT. Os callbacks gravam o refresh token e definem o papel do usuário.' },
+    // 03 API
+    { id: 'letsgo', L: 'api', t: '/api/letsgo', s: 'leitura pública', f: 'src/app/api/letsgo/',
+      d: 'Os endpoints que a vitrine consome sem login: categorias com os seus conteúdos e os dados públicos do perfil.' },
+    { id: 'nextsteps', L: 'api', t: '/api/nextsteps', s: 'CRUD do painel', f: 'src/app/api/nextsteps/',
+      d: 'CRUD de conteúdos, categorias, links, avatar, slug e senha. Antes de alterar qualquer coisa, a rota confere a sessão, o plano e se o registro pertence ao usuário (where { id, userId }).' },
+    { id: 'webhook', L: 'api', t: 'Webhook Mercado Pago', s: 'HMAC-SHA256', f: 'src/app/api/webhooks/mcpg/route.ts',
+      d: 'Valida o x-signature com HMAC-SHA256 e timingSafeEqual, grava a notificação, responde 200 na hora e processa depois com after(), com retry e backoff.' },
+    { id: 'assinar', L: 'api', t: 'Criar assinatura', s: 'PreApproval', f: 'src/app/api/mercadopago/create-subscription/route.ts',
+      d: 'Cria a assinatura recorrente no Mercado Pago com external_reference igual ao id do usuário, para o webhook saber de quem é cada pagamento.' },
+    { id: 'upload', L: 'api', t: 'Upload direto', s: 'Vercel Blob · até 500 MB', f: 'src/app/api/nextsteps/blob/upload/route.ts',
+      d: 'O arquivo vai do navegador direto para o Blob. O servidor só emite o token depois de conferir a sessão, o tipo (JPEG, PNG, GIF, WebP, AVIF) e a cota.' },
+    { id: 'signup', L: 'api', t: 'Cadastro', s: 'server action', f: 'src/app/api/auth/auth/signup.ts',
+      d: 'Valida com Zod, gera o hash bcrypt, reserva um slug livre e cria o usuário com 7 dias de teste e uma categoria inicial.' },
+    // 04 Regras de negócio
+    { id: 'plano', L: 'svc', t: 'gerenciar-plano', s: 'userPaid em $transaction', f: 'src/lib/gerenciar-plano.ts',
+      d: 'Ativa o plano numa transação só: premium, datas de início e fim, plano deduzido do valor pago e status ATIVO. Se faltar a categoria inicial, cria também.' },
+    { id: 'status', L: 'svc', t: 'Status da assinatura', s: '12 estados', f: 'src/types/index.ts',
+      d: 'De INATIVO e TRIAL a INADIMPLENTE, CANCELADO, EXPIRADO e REEMBOLSADO. A mesma ideia da máquina de estados do WorkFlow Crédito, aqui guardada como código numérico.' },
+    { id: 'quota', L: 'svc', t: 'Cota de armazenamento', s: '5 MB · 500 MB · 2 GB', f: 'src/lib/storage-quota.ts',
+      d: 'Avatar de até 5 MB, arquivo de até 500 MB e 2 GB por usuário, contados em BigInt no próprio registro do usuário.' },
+    { id: 'slug', L: 'svc', t: 'Regras de slug', s: 'regex · 8 reservados', f: 'src/lib/user-slug.ts',
+      d: 'Minúsculas, números e hífen, até 50 caracteres, e 8 palavras reservadas (api, login, nextsteps…) para nenhum usuário ocupar uma rota do sistema.' },
+    { id: 'links', L: 'svc', t: 'Links do perfil', s: '13 tipos', f: 'src/lib/profile-links.ts',
+      d: '13 tipos de link, de LinkedIn e GitHub a e-mail, normalizados para http(s) ou mailto antes de salvar.' },
+    { id: 'guard', L: 'svc', t: 'Guardas de acesso', s: 'bloqueio · expiração · dono', f: 'src/utils/verifyUserAuth.ts',
+      d: 'Recusa usuário bloqueado, desliga o premium quando a data de fim passa e confere se o conteúdo pertence a quem pede, contra IDOR.' },
+    // 05 Acesso a dados
+    { id: 'prisma', L: 'data', t: 'Prisma 7', s: 'driver adapter pg', f: 'src/prisma.ts',
+      d: 'Cliente Prisma sem engine em Rust, falando com o Postgres pelo pool do pg. Uma extensão $extends valida e normaliza o slug em todo create, update e upsert.' },
+    { id: 'slugcache', L: 'data', t: 'Cache de slugs', s: '5 min em memória', f: 'src/lib/db/slug-service.ts',
+      d: 'A lista de slugs premium fica 5 minutos em memória, então o middleware não vai ao banco a cada visita. Trocar o slug invalida o cache na hora.' },
+    { id: 'slugfree', L: 'data', t: 'Slug disponível', s: 'até 25 tentativas', f: 'src/lib/db/user-slug-service.ts',
+      d: 'Gera um slug livre a partir do nome, com sufixo aleatório, em até 25 tentativas.' },
+    { id: 'whlog', L: 'data', t: 'Log de webhooks', s: 'WebhookRequest', f: 'src/lib/webhook-requests.ts',
+      d: 'Toda notificação com assinatura válida é gravada antes de ser processada, para poder auditar e reprocessar.' },
+    // 06 PostgreSQL
+    { id: 'models', L: 'db', t: '6 modelos', s: 'Usuario · Conteudo · Categoria…', f: 'prisma/schema.prisma',
+      d: 'Usuario, Conteudo, Categoria, HistoricoUsuario, RefreshToken e WebhookRequest. Categoria e Conteudo se relacionam em N:N.' },
+    { id: 'trigger', L: 'db', t: 'Trigger de auditoria', s: 'HistoricoUsuario', f: 'SQL versionado à parte',
+      d: 'Uma trigger no Postgres grava cada alteração do usuário em HistoricoUsuario. A auditoria acontece mesmo se algum código esquecer de registrar.' },
+    { id: 'tipos', L: 'db', t: 'Tipos do banco', s: 'BigInt · Decimal · JSON', f: 'prisma/schema.prisma',
+      d: 'BigInt para os bytes usados, Decimal para o valor pago e JSON para a descrição do TipTap e para os links.' },
+    // Externos e entrega
+    { id: 'mp', L: 'ext', t: 'Mercado Pago', s: 'assinatura recorrente', f: 'src/lib/mercadopago.ts',
+      d: 'Clientes de PreApproval, Payment e Invoice com timeout de 15 s. É o meio de cobrança ativo hoje.' },
+    { id: 'blob', L: 'ext', t: 'Vercel Blob', s: 'imagens e GIFs', f: 'src/lib/blob-service.ts',
+      d: 'Guarda imagens, GIFs e sequências de imagem. O upload vai direto do navegador; a remoção é feita pelo servidor.' },
+    { id: 'redis', L: 'ext', t: 'Upstash Redis', s: 'contador do rate limit', f: 'src/lib/ratelimit.ts',
+      d: 'Redis serverless via REST. Guarda só os baldes de fichas do rate limit, então a aplicação continua sem estado.' },
+    { id: 'stripe', L: 'ext', t: 'Stripe', s: 'em espera', f: 'src/lib/stripe.ts', wait: true,
+      d: 'O cliente e a rota de Checkout estão prontos, mas o webhook ainda não foi ligado. Hoje toda cobrança passa pelo Mercado Pago.' },
+    { id: 'ci', L: 'ext', t: 'GitHub Actions', s: 'lint → test → build', f: '.github/workflows/ci.yml',
+      d: 'A cada push e pull request: ESLint, Vitest e next build, com um Postgres 16 de serviço e Node 24.' },
+    // Próximos refactors
+    { id: 'p-repo', L: 'data', t: 'Repositórios', s: 'próximo refactor', f: 'planejado', plan: true,
+      d: 'Hoje os route handlers chamam o Prisma direto. Um repositório por agregado deixa as regras testáveis sem banco, como os ports do WorkFlow Crédito.' },
+    { id: 'p-svc', L: 'svc', t: 'Serviços extraídos', s: 'próximo refactor', f: 'planejado', plan: true,
+      d: 'Tirar dos handlers de conteúdo e do webhook a regra que ainda mora neles, para o handler só traduzir HTTP.' },
+    { id: 'p-mig', L: 'db', t: 'Migrations versionadas', s: 'próximo refactor', f: 'planejado', plan: true,
+      d: 'Trocar o prisma db push por prisma migrate, com histórico de schema revisável em pull request, como o Flyway no WorkFlow Crédito.' },
+    { id: 'p-test', L: 'ext', t: 'Testes de rota', s: 'próximo refactor', f: 'planejado', plan: true,
+      d: 'Levar o Vitest, que hoje cobre o fluxo de login, para o webhook HMAC, a cota de armazenamento e as guardas de acesso.' },
+  ];
+
+  const stage = document.getElementById('stage');
+  const stack = document.getElementById('stack');
+  const rail = document.getElementById('rail');
+  const tray = document.getElementById('tray');
+  const dot = document.getElementById('dot');
+  const card = document.getElementById('card');
+  const log = document.getElementById('log');
+  const score = document.getElementById('score');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const sleep = ms => new Promise(res => setTimeout(res, ms));
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  let run = 0; // invalida sequências antigas quando o usuário clica em outra coisa
+
+  function h(tag, cls, html) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html != null) n.innerHTML = html;
+    return n;
+  }
+
+  // Camadas
+  const rows = {};
+  STACK.forEach(L => {
+    const row = h('div', 'layer k-' + L);
+    row.dataset.l = L;
+    row.append(h('div', 'lab', `<b>${LAYERS[L].n}</b><span>${LAYERS[L].t}</span>`), h('div', 'slots'));
+    stack.append(row);
+    rows[L] = row;
+  });
+  rail.append(h('div', 'lab', `<b>${LAYERS.ext.n}</b><span>${LAYERS.ext.t}</span>`), h('div', 'slots'));
+  rows.ext = rail;
+  Object.values(rows).forEach(row => {
+    row.setAttribute('aria-label', 'Camada ' + LAYERS[row.dataset.l].t);
+    row.addEventListener('click', e => { if (quiz && armed && !e.target.closest('.piece')) place(armed, row); });
+    row.addEventListener('keydown', e => {
+      if (quiz && armed && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); place(armed, row); }
+    });
+  });
+
+  // Peças
+  const byId = {};
+  PIECES.forEach((p, i) => {
+    const el = h('div', 'piece k-' + p.L + (p.L === 'ext' ? ' ext' : '') + (p.wait ? ' wait' : '') + (p.plan ? ' plan' : ''),
+      `<span class="t">${p.t}</span><span class="s">${p.s}</span>`);
+    el.tabIndex = 0;
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-label', `${p.t}, camada ${LAYERS[p.L].t}`);
+    p.el = el; p.i = i; p.home = rows[p.L].querySelector('.slots');
+    p.home.append(el);
+    byId[p.id] = p;
+    bindPiece(p);
+  });
+
+  document.getElementById('legend').innerHTML =
+    STACK.concat('ext').map(L => `<span class="k-${L}"><i class="sw"></i>${LAYERS[L].t}</span>`).join('') +
+    '<span><i class="sw x"></i>Próximo refactor</span>';
+
+  // Ficha
+  let sel = null;
+  function chipFor(L) { return `<span class="chip k k-${L}">${LAYERS[L].n === 'EXT' ? 'Externo' : 'Camada ' + LAYERS[L].n} · ${LAYERS[L].t}</span>`; }
+  function show(p) {
+    card.innerHTML = `
+      <div class="meta">${chipFor(p.L)}${p.plan ? '<span class="chip d">planejado</span>' : ''}${p.wait ? '<span class="chip d">em espera</span>' : ''}</div>
+      <h2>${p.t}</h2>
+      <p>${p.d}</p>
+      <div class="path">${p.f}</div>`;
+  }
+  function showLayer(L) {
+    const n = PIECES.filter(p => p.L === L && !p.plan).length;
+    card.innerHTML = `
+      <div class="meta">${chipFor(L)}</div>
+      <h2>${LAYERS[L].t}</h2>
+      <p>${LAYERS[L].d}</p>
+      <div class="path">${LAYERS[L].s} · ${n} peças</div>`;
+  }
+  function intro() {
+    card.innerHTML = `
+      <div class="meta"><span class="chip">Toque numa peça</span></div>
+      <h2>Por que camadas?</h2>
+      <p>Cada camada só conversa com a de baixo. A vitrine nunca toca no banco, a API não sabe como o Redis conta requisições, e a regra que ativa um plano é a mesma para o webhook e para o painel. A montagem vai de baixo para cima, como num prédio: primeiro a fundação.</p>
+      <div class="path">33 peças no código · 4 próximos refactors · 25 route handlers · 6 modelos</div>`;
+  }
+  function select(p) {
+    if (sel) sel.el.classList.remove('sel');
+    sel = sel === p ? null : p;
+    if (sel) { sel.el.classList.add('sel'); show(sel); } else intro();
+  }
+
+  // Montagem automática
+  let level = BUILD.length;
+  function offTransform(p) {
+    const el = p.el;
+    if (p.L === 'ext') {
+      return `translate(${(stage.clientWidth - el.offsetLeft + 30).toFixed(0)}px, ${rnd(-60, 60).toFixed(0)}px) rotate(${rnd(-20, 20).toFixed(0)}deg)`;
+    }
+    return `translate(${rnd(-90, 90).toFixed(0)}px, ${(-(el.offsetTop + el.offsetHeight + rnd(30, 160))).toFixed(0)}px) rotate(${rnd(-24, 24).toFixed(0)}deg)`;
+  }
+  function setLevel(n, { instant = false, stagger = 45 } = {}) {
+    level = n;
+    const placedLayers = BUILD.slice(0, n);
+    let i = 0;
+    BUILD.forEach(L => {
+      PIECES.filter(p => p.L === L).forEach(p => {
+        const placed = placedLayers.includes(L);
+        const wasPlaced = !p.el.classList.contains('off');
+        p.el.style.transition = instant ? 'none' : '';
+        p.el.style.transitionDelay = instant || placed === wasPlaced ? '0ms' : (i++ * stagger) + 'ms';
+        p.el.style.transform = placed ? '' : offTransform(p);
+        p.el.classList.toggle('off', !placed);
+      });
+    });
+    if (instant) { stage.getBoundingClientRect(); PIECES.forEach(p => { p.el.style.transition = ''; }); }
+    document.querySelectorAll('.level').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.n === n)));
+    Object.values(rows).forEach(r => r.classList.remove('focus'));
+  }
+
+  const levelsEl = document.getElementById('levels');
+  BUILD.forEach((L, k) => {
+    const b = h('button', 'level k-' + L, `<b>${LAYERS[L].n}</b><span>${LAYERS[L].t}</span>`);
+    b.dataset.n = k + 1;
+    b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', () => {
+      run++; leaveQuiz(); clearSim(); setLevel(k + 1);
+      rows[L].classList.add('focus'); showLayer(L);
+    });
+    levelsEl.append(b);
+  });
+
+  async function buildByLayer() {
+    const me = ++run; leaveQuiz(); clearSim(); intro();
+    setLevel(0, { stagger: 12 });
+    await sleep(reduce ? 200 : 800);
+    for (let k = 1; k <= BUILD.length; k++) {
+      if (me !== run) return;
+      setLevel(k);
+      rows[BUILD[k - 1]].classList.add('focus');
+      showLayer(BUILD[k - 1]);
+      await sleep(reduce ? 500 : 1500);
+    }
+    if (me === run) { Object.values(rows).forEach(r => r.classList.remove('focus')); intro(); }
+  }
+  document.getElementById('btnBuild').onclick = buildByLayer;
+  document.getElementById('btnAll').onclick = () => { run++; leaveQuiz(); clearSim(); setLevel(BUILD.length, { stagger: 20 }); };
+  document.getElementById('btnApart').onclick = () => { run++; leaveQuiz(); clearSim(); setLevel(0, { stagger: 18 }); };
+  document.getElementById('showPlan').onchange = e => stage.classList.toggle('hide-plan', !e.target.checked);
+
+  // Modo "Eu monto": arrastar (ou tocar na peça e depois na camada)
+  let quiz = false, armed = null, ok = 0, errs = 0;
+  const total = PIECES.filter(p => !p.plan).length;
+  function updateScore() {
+    score.textContent = quiz ? `${ok}/${total} encaixadas · ${errs} ${errs === 1 ? 'erro' : 'erros'}` : '';
+  }
+  function homeInsert(p) {
+    const next = [...p.home.children].find(c => byIdEl(c).i > p.i);
+    p.home.insertBefore(p.el, next || null);
+  }
+  function byIdEl(el) { return PIECES.find(p => p.el === el); }
+  function enterQuiz() {
+    run++; clearSim(); setLevel(BUILD.length, { instant: true });
+    quiz = true; armed = null; ok = 0; errs = 0;
+    stage.classList.add('quiz');
+    const loose = PIECES.filter(p => !p.plan).sort(() => Math.random() - .5);
+    loose.forEach(p => { p.el.classList.add('loose'); p.el.classList.remove('sel'); tray.append(p.el); });
+    Object.values(rows).forEach(r => { r.tabIndex = 0; });
+    card.innerHTML = `
+      <div class="meta"><span class="chip">Eu monto</span></div>
+      <h2>Monte você mesmo</h2>
+      <p>Arraste cada peça da bandeja até a camada onde ela mora. No celular, toque na peça e depois na camada. Se errar, a ficha explica por quê.</p>
+      <div class="path">${total} peças · os próximos refactors ficam de fora</div>`;
+    updateScore();
+    stage.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+  }
+  function leaveQuiz() {
+    if (!quiz) return;
+    quiz = false; armed = null;
+    PIECES.forEach(p => { if (p.el.parentNode === tray) { p.el.classList.remove('loose', 'armed', 'drag'); p.el.style.transform = ''; homeInsert(p); } });
+    stage.classList.remove('quiz');
+    Object.values(rows).forEach(r => r.removeAttribute('tabindex'));
+    updateScore();
+    intro();
+  }
+  document.getElementById('btnQuiz').onclick = () => { if (quiz) { leaveQuiz(); setLevel(BUILD.length, { instant: true }); intro(); } else enterQuiz(); };
+
+  function rowAt(x, y) {
+    return Object.values(rows).find(r => {
+      const b = r.getBoundingClientRect();
+      return x >= b.left && x <= b.right && y >= b.top && y <= b.bottom;
+    });
+  }
+  function place(p, row) {
+    if (armed) { armed.el.classList.remove('armed'); armed = null; }
+    if (row.dataset.l === p.L) {
+      const r0 = p.el.getBoundingClientRect();
+      p.el.classList.remove('loose', 'drag');
+      p.el.style.transition = 'none';
+      p.el.style.transform = '';
+      homeInsert(p);
+      const r1 = p.el.getBoundingClientRect();
+      p.el.style.transform = `translate(${r0.left - r1.left}px, ${r0.top - r1.top}px)`;
+      p.el.getBoundingClientRect();
+      p.el.style.transition = '';
+      p.el.style.transform = '';
+      ok++;
+      show(p);
+      if (ok === total) {
+        card.innerHTML = `
+          <div class="meta"><span class="chip">Eu monto</span></div>
+          <h2>Arquitetura montada</h2>
+          <p>${total} peças no lugar com ${errs} ${errs === 1 ? 'erro' : 'erros'}. Agora rode uma das simulações e veja uma requisição descer pelas camadas.</p>
+          <div class="path">${errs === 0 ? 'Sem nenhum erro. Contratado.' : 'Clique em Eu monto para tentar de novo.'}</div>`;
+        quiz = false; stage.classList.remove('quiz');
+        Object.values(rows).forEach(r => r.removeAttribute('tabindex'));
+      }
+    } else {
+      errs++;
+      p.el.classList.remove('drag');
+      p.el.style.transform = '';
+      p.el.classList.remove('shake'); void p.el.offsetWidth; p.el.classList.add('shake');
+      const right = LAYERS[p.L], wrong = LAYERS[row.dataset.l];
+      card.innerHTML = `
+        <div class="meta"><span class="chip" style="color:var(--err);border-color:var(--err)">Não é aqui</span>${chipFor(p.L)}</div>
+        <h2>${p.t}</h2>
+        <p><b>${p.t}</b> não mora em ${wrong.t}. ${p.d}</p>
+        <div class="path">Camada certa: ${right.n === 'EXT' ? '' : right.n + ' · '}${right.t}</div>`;
+    }
+    updateScore();
+  }
+
+  function bindPiece(p) {
+    const el = p.el;
+    let start = null, dragging = false, lastRow = null;
+    el.addEventListener('pointerdown', e => {
+      if (!el.classList.contains('loose') || e.button > 0) return;
+      start = { x: e.clientX, y: e.clientY }; dragging = false;
+      el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove', e => {
+      if (!start) return;
+      const dx = e.clientX - start.x, dy = e.clientY - start.y;
+      if (!dragging && Math.hypot(dx, dy) > 5) { dragging = true; el.classList.add('drag'); }
+      if (!dragging) return;
+      el.style.transform = `translate(${dx}px, ${dy}px)`;
+      const r = rowAt(e.clientX, e.clientY);
+      if (r !== lastRow) { lastRow && lastRow.classList.remove('focus'); r && r.classList.add('focus'); lastRow = r; }
+    });
+    const end = e => {
+      if (!start) return;
+      start = null;
+      lastRow && lastRow.classList.remove('focus'); lastRow = null;
+      if (!dragging) return; // vira clique
+      const r = rowAt(e.clientX, e.clientY);
+      if (r) place(p, r);
+      else { el.classList.remove('drag'); el.style.transform = ''; }
+      el.dataset.dragged = '1';
+    };
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', e => { start = null; dragging = false; el.classList.remove('drag'); el.style.transform = ''; });
+    el.addEventListener('click', () => {
+      if (el.dataset.dragged) { delete el.dataset.dragged; return; }
+      if (el.classList.contains('loose')) return arm(p);
+      if (!quiz) select(p); else show(p);
+    });
+    el.addEventListener('keydown', e => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      if (el.classList.contains('loose')) arm(p); else if (!quiz) select(p); else show(p);
+    });
+  }
+  function arm(p) {
+    if (armed) armed.el.classList.remove('armed');
+    armed = armed === p ? null : p;
+    if (!armed) return;
+    armed.el.classList.add('armed');
+    card.innerHTML = `
+      <div class="meta"><span class="chip">Peça na mão</span></div>
+      <h2>${p.t}</h2>
+      <p>Agora toque na camada onde <b>${p.t}</b> mora. Pista: <i>${p.s}</i>.</p>
+      <div class="path">${p.f}</div>`;
+  }
+
+  // Simulações
+  const VISIT = [
+    ['mw', 'GET <code>/&lt;slug&gt;</code> passa no middleware: o slug está na lista de premium'],
+    ['slugcache', 'A lista veio do cache de 5 min, sem ir ao banco'],
+    ['vitrine', '<code>[slug]/page.tsx</code> monta metadata Open Graph e JSON-LD'],
+    ['letsgo', 'Busca <code>/api/letsgo/categorias?slug=</code>'],
+    ['guard', '<code>findBySlug</code> exige usuário premium e não bloqueado'],
+    ['prisma', 'O Prisma consulta pelo driver adapter <code>pg</code>'],
+    ['models', 'Categorias e conteúdos saem da relação N:N'],
+    ['estado', 'O React Query hidrata o cache, sem um segundo fetch no navegador'],
+    ['flix', 'HeroBanner e carrosséis aparecem na tela'],
+  ];
+  const PAY = [
+    ['mp', 'O Mercado Pago envia <code>POST /api/webhooks/mcpg</code>'],
+    ['mw', 'A rota é pública no middleware: webhook não tem sessão'],
+    ['webhook', 'HMAC-SHA256 de <code>id</code>, <code>request-id</code> e <code>ts</code> confere'],
+    ['whlog', 'Grava o <code>WebhookRequest</code> antes de processar'],
+    ['webhook', 'Responde <code>200</code> na hora; o resto roda em <code>after()</code>, com retry'],
+    ['mp', 'Consulta o pagamento na API do Mercado Pago'],
+    ['plano', '<code>userPaid()</code> numa <code>$transaction</code>: premium e status ATIVO'],
+    ['prisma', 'O Prisma grava o usuário'],
+    ['trigger', 'A trigger registra a mudança em <code>HistoricoUsuario</code>'],
+    ['slugcache', 'O slug entra na lista de premium na próxima renovação do cache'],
+  ];
+  const FORGE = [
+    ['mw', '<code>POST /api/webhooks/mcpg</code> com <code>x-signature</code> falsa: a rota é pública'],
+    ['webhook', 'O HMAC não confere em <code>timingSafeEqual</code>: <code>401 Unauthorized</code>', true],
+  ];
+
+  function clearSim() {
+    stage.classList.remove('sim');
+    PIECES.forEach(p => p.el.classList.remove('lit', 'bad'));
+    dot.style.opacity = 0;
+    dot.classList.remove('bad');
+  }
+  const center = el => [el.offsetLeft + el.offsetWidth / 2 - 8, el.offsetTop + el.offsetHeight / 2 - 8];
+  function moveDot(x, y, instant) {
+    dot.style.transition = instant ? 'opacity 200ms' : '';
+    dot.style.transform = `translate(${x.toFixed(0)}px, ${y.toFixed(0)}px)`;
+  }
+  async function simulate(steps, done) {
+    const me = ++run;
+    leaveQuiz(); clearSim();
+    if (level < BUILD.length) { setLevel(BUILD.length, { stagger: 20 }); await sleep(1300); if (me !== run) return; }
+    log.innerHTML = '';
+    stage.classList.add('sim');
+    const [x0, y0] = steps[0][0] === 'mp' ? center(byId.mp.el) : [stage.clientWidth / 2 - 8, -24];
+    moveDot(x0, y0, true);
+    dot.getBoundingClientRect();
+    dot.style.opacity = 1;
+    for (const [id, msg, bad] of steps) {
+      const p = byId[id];
+      const [x, y] = center(p.el);
+      moveDot(x, y, reduce);
+      await sleep(reduce ? 150 : 650);
+      if (me !== run) return;
+      p.el.classList.add(bad ? 'bad' : 'lit');
+      if (bad) dot.classList.add('bad');
+      log.querySelectorAll('li').forEach(li => li.classList.remove('now'));
+      const li = h('li', bad ? 'err' : 'now', msg);
+      log.append(li);
+      await sleep(reduce ? 300 : 650);
+    }
+    log.querySelectorAll('li').forEach(l => l.classList.remove('now'));
+    log.append(h('li', 'now', done));
+  }
+  document.getElementById('simVisit').onclick = () => simulate(VISIT, 'Vitrine renderizada no servidor e hidratada no navegador.');
+  document.getElementById('simPay').onclick = () => simulate(PAY, 'Assinatura ativa e vitrine liberada.');
+  document.getElementById('simForge').onclick = () => simulate(FORGE, 'Nada foi gravado e nenhum plano mudou.');
+  stage.addEventListener('click', e => { if (e.target === stage && stage.classList.contains('sim')) { run++; clearSim(); } });
+
+  // Quando aberta dentro de um iframe, informa a altura para a página que a incorporou.
+  // Embutida, ela esconde o próprio cabeçalho (a página que incorpora já tem título).
+  if (window.parent !== window) {
+    document.documentElement.classList.add('embedded');
+    const post = () => parent.postMessage({ type: 'embed-height', h: document.body.getBoundingClientRect().height }, '*');
+    new ResizeObserver(post).observe(document.body);
+    addEventListener('load', post);
+    post();
+  }
+
+  intro();
+  if (reduce) setLevel(BUILD.length, { instant: true });
+  else { setLevel(0, { instant: true }); setTimeout(buildByLayer, 350); }
+})();
+</script>
+</body>
+</html>
