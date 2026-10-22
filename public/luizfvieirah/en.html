@@ -217,7 +217,41 @@ p:last-child { margin-bottom: 0; }
 .demo iframe { display: block; width: 100%; height: 960px; border: 0; background: var(--bg); }
 .demo.open .demo-head { border-bottom: 1px solid var(--line); }
 
-footer { font-size: 13.5px; max-width: 52ch; }
+
+/* Navegação entre seções: ↑ seção atual ↓, com lista para pular direto */
+.jump {
+  position: fixed; z-index: 40;
+  left: max(18px, env(safe-area-inset-left, 0px)); bottom: max(18px, env(safe-area-inset-bottom, 0px));
+  display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--line); box-shadow: 0 8px 22px rgba(0,0,0,.14);
+}
+.jump button { font: inherit; background: transparent; border: 0; color: var(--ink); cursor: pointer; border-radius: 999px; }
+.jb { width: 38px; height: 38px; font-size: 17px; line-height: 1; }
+.jb:hover:not(:disabled), .jcur:hover { background: var(--accent-soft); }
+.jb:disabled { color: var(--line); cursor: default; }
+.jcur {
+  height: 38px; padding: 0 12px; display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+}
+.jlabel { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.jicon { display: none; font-size: 16px; }
+.jcur i { font-style: normal; font-size: 10px; color: var(--muted); }
+@media (max-width: 480px) { .jlabel, .jcur i { display: none; } .jicon { display: inline; } .jcur { padding: 0 10px; } }
+.jlist {
+  position: absolute; left: 0; bottom: calc(100% + 8px); margin: 0; padding: 6px; list-style: none; min-width: 230px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 12px 28px rgba(0,0,0,.18);
+}
+.jlist a { display: block; padding: 8px 12px; border-radius: 6px; font-size: 14.5px; color: var(--ink); }
+.jlist a:hover { background: var(--accent-soft); }
+.jlist a[aria-current="true"] { background: var(--accent-soft); font-weight: 700; }
+
+/* Aviso de e-mail copiado */
+.toast {
+  position: fixed; z-index: 60; left: 50%; bottom: 86px; transform: translate(-50%, 12px); opacity: 0; pointer-events: none;
+  background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-size: 14.5px; font-weight: 600;
+  transition: opacity 200ms, transform 200ms; width: max-content; max-width: calc(100vw - 32px); text-align: center;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
 
 /* Botão mailMe: balança a cada 3 s para chamar atenção */
 .mailme {
@@ -417,7 +451,7 @@ footer { font-size: 13.5px; max-width: 52ch; }
 
     <section id="arquitetura" aria-labelledby="h-arq">
       <h2 class="sh" id="h-arq">Interactive architecture</h2>
-      <p>Two presentations that assemble each project's architecture piece by piece, using the real source files. They load only when you ask, so this page stays light. <b>The presentations are in Portuguese</b>; class and file names read the same in any language.</p>
+      <p>Two presentations that assemble each project's architecture piece by piece, using the real source files. <b>The presentations are in Portuguese</b>; class and file names read the same in any language.</p>
       <div class="demos">
         <article class="demo" data-src="/luizfvieirah/hexagono.html" data-title="Credit Pipeline Hexagon: hexagonal architecture of WorkFlow Crédito">
           <div class="demo-head">
@@ -462,9 +496,6 @@ footer { font-size: 13.5px; max-width: 52ch; }
       </ol>
     </section>
 
-    <footer>
-      <p>Hand-made in HTML and CSS, with no framework, so it opens fast on any machine. Hosted on <a href="https://folioby.me">FolioBy</a>, which I built myself.</p>
-    </footer>
   </main>
 </div>
 
@@ -473,14 +504,36 @@ footer { font-size: 13.5px; max-width: 52ch; }
   mailMe
 </a>
 
+<nav class="jump" aria-label="Jump between sections">
+  <button type="button" class="jb" id="jPrev" aria-label="Previous section">↑</button>
+  <button type="button" class="jcur" id="jCur" aria-expanded="false" aria-controls="jList" aria-label="Choose a section"><span class="jlabel">Top</span><span class="jicon" aria-hidden="true">☰</span><i aria-hidden="true">▾</i></button>
+  <button type="button" class="jb" id="jNext" aria-label="Next section">↓</button>
+  <ul class="jlist" id="jList" hidden></ul>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script>
 (() => {
-  // Copiar e-mail
+  const smooth = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+
+  // E-mail: o mailto nem sempre abre um app, então todo clique também copia o endereço
+  const MAIL = 'luizfvieirah@gmail.com';
+  const toastEl = document.getElementById('toast');
+  let toastTimer;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 4000);
+  }
+  async function copyMail() {
+    try { await navigator.clipboard.writeText(MAIL); toast("Email copied: luizfvieirah@gmail.com. If your mail app doesn't open, just paste it."); return true; }
+    catch { toast('My email: luizfvieirah@gmail.com'); return false; }
+  }
+  document.querySelectorAll('a[href^="mailto:"]').forEach(a => a.addEventListener('click', copyMail));
   const copy = document.getElementById('copyMail');
   copy.addEventListener('click', async () => {
-    const mail = 'luizfvieirah@gmail.com';
-    try { await navigator.clipboard.writeText(mail); copy.textContent = 'Copied'; }
-    catch { copy.textContent = mail; }
+    if (await copyMail()) copy.textContent = 'Copied';
     setTimeout(() => { copy.textContent = 'Copy'; }, 2200);
   });
 
@@ -515,6 +568,61 @@ footer { font-size: 13.5px; max-width: 52ch; }
     }, { rootMargin: '-35% 0px -60% 0px' });
     document.querySelectorAll('main section').forEach(s => io.observe(s));
   }
+
+  // Navegação entre seções: ↑ e ↓ pulam uma seção; o rótulo abre a lista; no fim, ↓ volta ao topo
+  const secs = [...document.querySelectorAll('main section')];
+  const targets = [{ el: null, label: 'Top' }]
+    .concat(secs.map(s => ({ el: s, label: s.querySelector('.sh').textContent })));
+  const jPrev = document.getElementById('jPrev'), jNext = document.getElementById('jNext');
+  const jCur = document.getElementById('jCur'), jList = document.getElementById('jList');
+  const jLabel = jCur.querySelector('.jlabel');
+  targets.forEach((t, i) => {
+    const li = document.createElement('li'), a = document.createElement('a');
+    a.href = t.el ? '#' + t.el.id : '#';
+    a.textContent = t.label;
+    a.addEventListener('click', e => { e.preventDefault(); go(i); openList(false); });
+    li.append(a); jList.append(li);
+    t.link = a;
+  });
+  let idx = 0;
+  function go(i) {
+    idx = i;
+    const t = targets[i];
+    if (t.el) t.el.scrollIntoView({ behavior: smooth, block: 'start' });
+    else window.scrollTo({ top: 0, behavior: smooth });
+  }
+  function current() {
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) return targets.length - 1;
+    let i = 0;
+    secs.forEach((s, k) => { if (s.getBoundingClientRect().top <= innerHeight * 0.35) i = k + 1; });
+    return i;
+  }
+  function refresh() {
+    idx = current();
+    const last = idx === targets.length - 1;
+    jLabel.textContent = targets[idx].label;
+    jPrev.disabled = idx === 0;
+    jNext.textContent = last ? '⤒' : '↓';
+    jNext.setAttribute('aria-label', last ? 'Back to top' : 'Next section');
+    targets.forEach((t, i) => i === idx ? t.link.setAttribute('aria-current', 'true') : t.link.removeAttribute('aria-current'));
+  }
+  function openList(open) {
+    jList.hidden = !open;
+    jCur.setAttribute('aria-expanded', String(open));
+  }
+  jPrev.addEventListener('click', () => go(Math.max(0, idx - 1)));
+  jNext.addEventListener('click', () => go(idx === targets.length - 1 ? 0 : idx + 1));
+  jCur.addEventListener('click', () => openList(jList.hidden));
+  document.addEventListener('click', e => { if (!e.target.closest('.jump')) openList(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') openList(false); });
+  let ticking = false;
+  addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { ticking = false; refresh(); });
+  }, { passive: true });
+  addEventListener('resize', refresh);
+  refresh();
 })();
 </script>
 </body>

@@ -602,7 +602,7 @@ code, .path { font-family: var(--mono); font-size: 12.5px; }
           <div class="meta"><span class="chip">Eu monto</span></div>
           <h2>Arquitetura montada</h2>
           <p>${total} peças no lugar com ${errs} ${errs === 1 ? 'erro' : 'erros'}. Agora rode uma das simulações e veja uma requisição descer pelas camadas.</p>
-          <div class="path">${errs === 0 ? 'Sem nenhum erro. Contratado.' : 'Clique em Eu monto para tentar de novo.'}</div>`;
+          <div class="path">${errs === 0 ? 'Sem nenhum erro.' : 'Clique em Eu monto para tentar de novo.'}</div>`;
         quiz = false; stage.classList.remove('quiz');
         Object.values(rows).forEach(r => r.removeAttribute('tabindex'));
       }
