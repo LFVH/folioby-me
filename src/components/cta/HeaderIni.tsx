@@ -20,12 +20,12 @@ export default function Header() {
           >
             Sobre
           </Link>
-          <a
-            href="https://www.folioby.me/luizfvierah/profile#links"
+          <Link
+            href="/luizfvieirah/profile#links"
             className="px-5 py-2 text-white bg-transparent border border-white/30 hover:bg-white/10 rounded-lg transition-colors font-medium backdrop-blur-sm"
           >
             Contato
-          </a>
+          </Link>
           {!session ? (
             <>
               <Link 

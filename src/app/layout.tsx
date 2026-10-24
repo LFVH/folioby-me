@@ -21,8 +21,8 @@ const bebas = Bebas_Neue({
 });
 
 export const metadata = {
-  title: 'FolioBy - Your PortFlix ',
-  description: 'The best experience from a portfolio',
+  title: 'FolioBy - Portfólio, links e perfil em uma só página',
+  description: 'Mostre seus trabalhos, seus links e seu perfil profissional em uma página com o seu nome.',
 };
 
 export default function RootLayout({

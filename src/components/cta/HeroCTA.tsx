@@ -3,10 +3,17 @@
 import { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 
 import HeaderIni from './HeaderIni'
-import PricingSection from './PricingSection'
+
+const contatoHref = '/luizfvieirah/profile#links'
+
+// Adicione aqui apenas portfólios cujo dono autorizou a divulgação.
+const portfoliosReais = [
+  { slug: 'luizfelipevh', nome: 'Luiz Felipe VH', descricao: 'criador do FolioBy' },
+]
 
 const currentFeatures = [
   {
@@ -93,7 +100,8 @@ export default function HeroCTA() {
             </h1>
 
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
-              Seu <span className="text-purple-500">portfólio em formato Netflix*</span>
+              Seu portfólio, seus links e seu perfil{' '}
+              <span className="text-purple-500">em uma só página</span>
             </h2>
 
             <p className="text-xl md:text-2xl text-gray-300 mb-2 max-w-3xl mx-auto leading-relaxed">
@@ -104,7 +112,29 @@ export default function HeroCTA() {
 
             <div className="w-24 h-1 bg-gradient-to-r from-purple-600 to-pink-600 mx-auto"></div>
 
-            <PricingSection />
+            <div className="my-12 max-w-xl mx-auto rounded-2xl border border-green-400/30 bg-green-500/5 p-6">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-green-300">Comece grátis</p>
+              <p className="mt-3 text-gray-300">
+                Crie sua conta, monte seu portfólio e compartilhe seu link.
+              </p>
+              {session && !session.user.status && (
+                <p className="mt-4 text-sm text-gray-300">
+                  Seu período de acesso terminou. Para reativar sua página,{' '}
+                  <Link href={contatoHref} className="text-green-300 underline hover:text-green-100">
+                    entre em contato
+                  </Link>
+                  .
+                </p>
+              )}
+              {!session && (
+                <Link
+                  href="/signup"
+                  className="mt-5 inline-flex px-5 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors font-medium shadow-lg hover:shadow-purple-500/25"
+                >
+                  Criar meu portfólio grátis
+                </Link>
+              )}
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 max-w-4xl mx-auto">
               <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-gray-800 hover:border-pink-500 transition-all duration-300">
@@ -132,62 +162,47 @@ export default function HeroCTA() {
               </div>
             </div>
 
-            <p className="text-gray-400 text-xs">
-              *FolioBy não possui relação com a plataforma citada
-            </p>
-
             <div className="mb-20">
               <h3 className="text-3xl font-bold text-white mb-4">
-                Veja o <span className="text-purple-500">FolioBy</span> em ação
+                Como funciona uma página <span className="text-purple-500">FolioBy</span>
               </h3>
               <p className="text-gray-300 mb-10 max-w-2xl mx-auto">
-                Uma estrutura pensada para criativos que querem mostrar portfólio, perfil e links de um jeito mais bonito, organizado e profissional.
+                Vitrine de trabalhos por categoria, perfil com foto e bio, e todos os seus links em um só endereço.
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <div className="relative group overflow-hidden rounded-xl aspect-video bg-gradient-to-br from-purple-800 to-pink-800 cursor-pointer">
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="text-white font-semibold">Portfólio por nicho</span>
-                  </div>
-                  <div className="absolute bottom-4 left-4 text-white font-medium">Galerias visuais</div>
-                </div>
-
-                <div className="relative group overflow-hidden rounded-xl aspect-video bg-gradient-to-br from-blue-800 to-cyan-800 cursor-pointer">
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="text-white font-semibold">Imagens e GIFs</span>
-                  </div>
-                  <div className="absolute bottom-4 left-4 text-white font-medium">Conteúdo dinâmico</div>
-                </div>
-
-                <div className="relative group overflow-hidden rounded-xl aspect-video bg-gradient-to-br from-green-800 to-teal-800 cursor-pointer">
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="text-white font-semibold">Perfil com links</span>
-                  </div>
-                  <div className="absolute bottom-4 left-4 text-white font-medium">Hub profissional</div>
-                </div>
+              <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden border border-purple-500/30 shadow-2xl">
+                <Image
+                  src="/exemplos/ilustracao-portfolio.png"
+                  alt="Ilustração de uma página FolioBy com vitrine de trabalhos por categoria e perfil com links"
+                  width={1600}
+                  height={1000}
+                  sizes="(max-width: 1024px) 100vw, 1024px"
+                  className="w-full h-auto"
+                />
               </div>
+              <p className="text-gray-500 text-xs mt-3">
+                Ilustração do conceito, com nome e trabalhos fictícios. O visual real pode variar.
+              </p>
 
-              <div className="max-w-3xl mx-auto">
-                <div className="relative rounded-2xl overflow-hidden border-2 border-purple-500/30 shadow-2xl">
-                  <div className="aspect-video bg-gradient-to-r from-purple-900 to-black flex items-center justify-center group cursor-pointer">
-                    <div className="text-center">
-                      <div className="w-20 h-20 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                        <span className="text-4xl">{'>'}</span>
-                      </div>
-                      <p className="text-white text-lg font-medium">Assista à demonstração</p>
-                      <p className="text-gray-400 text-sm">2:30 min</p>
-                    </div>
-                  </div>
-
-                  <div className="h-1 bg-gray-700">
-                    <div className="w-0 h-full bg-purple-600 group-hover:w-1/3 transition-all duration-500"></div>
+              {portfoliosReais.length > 0 && (
+                <div className="mt-10">
+                  <p className="text-gray-300 mb-4">Veja uma página real feita com o FolioBy:</p>
+                  <div className="flex flex-wrap justify-center gap-3">
+                    {portfoliosReais.map((portfolio) => (
+                      <Link
+                        key={portfolio.slug}
+                        href={`/${portfolio.slug}`}
+                        className="rounded-lg border border-white/15 bg-black/40 px-5 py-3 text-left transition-colors hover:border-purple-400/60"
+                      >
+                        <span className="block font-semibold text-white">{portfolio.nome}</span>
+                        <span className="block text-sm text-gray-400">
+                          folioby.me/{portfolio.slug} · {portfolio.descricao}
+                        </span>
+                      </Link>
+                    ))}
                   </div>
                 </div>
-
-                <p className="text-gray-400 text-sm mt-3">
-                  Veja como o FolioBy ajuda a transformar apresentação visual em mais percepção de valor.
-                </p>
-              </div>
+              )}
             </div>
 
             <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 max-w-2xl mx-auto mt-12">
@@ -206,16 +221,6 @@ export default function HeroCTA() {
               <p className="text-gray-400 text-sm mt-4">
                 Seus dados ficam protegidos e você pode começar sem complicação.
               </p>
-            </div>
-
-            <div className="mt-12">
-              <p className="text-gray-400 mb-4">Usado por criativos de</p>
-              <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-                <div className="text-white font-bold text-lg">DESIGN STUDIO</div>
-                <div className="text-white font-bold text-lg">MOTION HOUSE</div>
-                <div className="text-white font-bold text-lg">EDIT PRO</div>
-                <div className="text-white font-bold text-lg">CRIATIVOS BR</div>
-              </div>
             </div>
           </div>
         </section>
