@@ -1,4 +1,3 @@
-// app/api/user/slug/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 
 import { userService } from '@/app/services/userService'

@@ -1,4 +1,4 @@
-// app/(auth)/auth/page.tsx - Versão com Abas
+// app/(auth)/auth/page.tsx
 'use client';
 
 import { useState } from 'react';

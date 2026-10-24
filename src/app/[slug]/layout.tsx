@@ -9,7 +9,7 @@ export default function Layout({
     <div className="min-h-screen bg-black">
       <HeaderWithCategories />
 
-      {/* Main Content Area - Corrigido */}
+      {/* Main Content Area */}
       <main className="pt-20">
         <div>
           {children}

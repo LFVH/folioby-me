@@ -1,4 +1,3 @@
-// app/api/user/password/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { userService } from '@/app/services/userService'
 import { verifyUser } from '@/utils/verifyUserAuth';

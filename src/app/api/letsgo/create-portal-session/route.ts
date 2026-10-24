@@ -1,4 +1,3 @@
-// app/api/stripe/create-portal-session/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import stripe from "@/lib/stripe";
 import { verifyUser } from '@/utils/verifyUserAuth';
