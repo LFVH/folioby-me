@@ -1,17 +1,17 @@
-// app/[slug]/FlixClient.tsx
+// app/[slug]/PortfolioClient.tsx
 'use client'
 
 import { useGlobalFilter } from '@/hooks/useGlobalFilter'
 import ConteudosFiltradosComScroll from '@/components/letsgo/ConteudosFiltrados'
 import LoadingSpinner from '@/components/LoadingSpinner'
-import { useCategorias } from '@/hooks/useCategorias' // ✅ SEU HOOK ORIGINAL!
+import { useCategorias } from '@/hooks/useCategorias'
 import HeroBanner from '@/components/letsgo/HeroBanner'
 
-interface FlixClientProps {
+interface PortfolioClientProps {
   slug: string
 }
 
-export default function FlixClient({ slug }: FlixClientProps) {
+export default function PortfolioClient({ slug }: PortfolioClientProps) {
   const { data, isLoading } = useCategorias(slug)
   
   const { filtroAtivo, tipoFiltro, termoPesquisa } = useGlobalFilter()

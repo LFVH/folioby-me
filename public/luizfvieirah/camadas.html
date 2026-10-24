@@ -311,10 +311,10 @@ code, .path { font-family: var(--mono); font-size: 12.5px; }
   const PIECES = [
     // 01 Apresentação
     { id: 'vitrine', L: 'ui', t: 'Vitrine pública', s: 'src/app/[slug]', f: 'src/app/[slug]/page.tsx',
-      d: 'Server component dinâmico: monta metadata Open Graph e Twitter, emite JSON-LD (ProfilePage e BreadcrumbList) e pré-carrega os dados no React Query antes de hidratar o FlixClient.' },
+      d: 'Server component dinâmico: monta metadata Open Graph e Twitter, emite JSON-LD (ProfilePage e BreadcrumbList) e pré-carrega os dados no React Query antes de hidratar o PortfolioClient.' },
     { id: 'painel', L: 'ui', t: 'Painel /nextsteps', s: 'conteúdos · categorias · perfil', f: 'src/app/nextsteps/',
       d: 'A área autenticada onde o usuário cadastra conteúdos, organiza categorias e troca slug, senha e avatar, com recorte de imagem feito no próprio navegador.' },
-    { id: 'flix', L: 'ui', t: 'Componentes da vitrine', s: 'HeroBanner · carrosséis', f: 'src/components/letsgo/',
+    { id: 'vitrine-ui', L: 'ui', t: 'Componentes da vitrine', s: 'HeroBanner · carrosséis', f: 'src/components/letsgo/',
       d: 'HeroBanner que alterna até 5 destaques a cada 5 s, carrosséis por categoria e lista filtrada com infinite scroll por IntersectionObserver.' },
     { id: 'estado', L: 'ui', t: 'Estado no cliente', s: 'React Query + Zustand', f: 'src/hooks/',
       d: 'O React Query guarda o que veio do servidor, o Zustand guarda o filtro global de categoria e busca, e um debounce segura a busca enquanto o usuário digita.' },
@@ -683,7 +683,7 @@ code, .path { font-family: var(--mono); font-size: 12.5px; }
     ['prisma', 'O Prisma consulta pelo driver adapter <code>pg</code>'],
     ['models', 'Categorias e conteúdos saem da relação N:N'],
     ['estado', 'O React Query hidrata o cache, sem um segundo fetch no navegador'],
-    ['flix', 'HeroBanner e carrosséis aparecem na tela'],
+    ['vitrine-ui', 'HeroBanner e carrosséis aparecem na tela'],
   ];
   const PAY = [
     ['mp', 'O Mercado Pago envia <code>POST /api/webhooks/mcpg</code>'],

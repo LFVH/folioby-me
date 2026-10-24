@@ -3,7 +3,7 @@ import { Metadata } from 'next'
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
 import { notFound } from 'next/navigation'
 import Script from 'next/script'
-import FlixClient from './FlixClient'
+import PortfolioClient from './PortfolioClient'
 import { getPortfolioBySlug } from '@/lib/db/slug-metadata'
 import { isFileLikeUserSlug } from '@/lib/user-slug'
 
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title: `${userName} - Portfólio Criativo`,
       description: `Conheça o trabalho de ${userName} no FolioBy`,
-      images: ['https://folioby.com/og-image.jpg'],
+      images: ['https://folioby.me/exemplos/ilustracao-portfolio.png'],
       type: 'profile',
     },
     twitter: {
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function FlixPage({ params }: PageProps) {
+export default async function PortfolioPage({ params }: PageProps) {
   const { slug } = await params
 
   if (isFileLikeUserSlug(slug)) {
@@ -94,13 +94,13 @@ export default async function FlixPage({ params }: PageProps) {
         '@type': 'ListItem',
         position: 1,
         name: 'FolioBy',
-        item: 'https://folioby.com',
+        item: 'https://folioby.me',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: userName,
-        item: `https://folioby.com/${slug}`,
+        item: `https://folioby.me/${slug}`,
       },
     ],
   }
@@ -120,7 +120,7 @@ export default async function FlixPage({ params }: PageProps) {
       />
 
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <FlixClient slug={slug} />
+        <PortfolioClient slug={slug} />
       </HydrationBoundary>
     </>
   )
