@@ -74,8 +74,6 @@ export async function signup(
     return { data: {
         name: userDB.name,
         email: userDB.email,
-        password: userDB.password,
-        id: userDB.id,
       }
     };
   } catch (error) {
