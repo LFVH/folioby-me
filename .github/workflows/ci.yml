@@ -45,7 +45,7 @@ jobs:
       UPSTASH_REDIS_REST_URL: https://redis.io
       UPSTASH_REDIS_REST_TOKEN: tttt
       CHIEF_ROUTES: ''
-      PUBLIC_ROUTES: /,/api/create-checkout,/api/auth,/api/pagamentorecebido,/api/webhooks,/api/letsgo/categorias,/api/letsgo/user,/privacidade,/termos,/api/mercadopago/create-subscription
+      PUBLIC_ROUTES: /,/api/create-checkout,/api/auth,/api/webhooks,/api/letsgo/categorias,/api/letsgo/user,/privacidade,/termos,/api/mercadopago/create-subscription
       DESLOG_ROUTES: /login,/signup,/auth
 
     steps:
