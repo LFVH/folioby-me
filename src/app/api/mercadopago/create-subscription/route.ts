@@ -21,6 +21,14 @@ export async function POST(req: Request) {
       );
     }
 
+    // Enquanto todos os planos custam R$0 não existe cobrança a criar.
+    if (planoSelecionado.price <= 0) {
+      return NextResponse.json(
+        { error: 'Plano sem cobranca disponivel' },
+        { status: 400 }
+      );
+    }
+
     const frequencyMap = {
       1: { type: 'months', value: 1 },
       2: { type: 'months', value: 3 },
@@ -48,7 +56,7 @@ export async function POST(req: Request) {
           currency_id: 'BRL',
         },
         back_url: 'https://folioby.me/?refresh=true',
-        payer_email: 'test_user_5727595662563318073@testuser.com',
+        payer_email: userDB.email,
         status: 'pending',
       },
     });
