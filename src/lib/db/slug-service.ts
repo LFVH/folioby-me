@@ -33,7 +33,6 @@ export async function getValidUserSlugs(): Promise<string[]> {
     slugCache.data = freshSlugs
     slugCache.timestamp = now
     slugCache.isRefreshing = false
-    console.log(`Cache atualizado com ${freshSlugs.length} slugs`)
     return freshSlugs
   } catch (error) {
     slugCache.isRefreshing = false
@@ -42,7 +41,6 @@ export async function getValidUserSlugs(): Promise<string[]> {
   }
 }
 export async function refreshSlugCache(): Promise<void> {
-  console.log('🚀 Forçando atualização do cache...')
   try {
     const freshSlugs = await fetchSlugsFromDB()
     slugCache.data = freshSlugs
@@ -53,7 +51,6 @@ export async function refreshSlugCache(): Promise<void> {
   }
 }
 export function invalidateSlugCache(): void {
-  console.log('🗑️ Cache invalidado (será refrescado na próxima requisição)')
   slugCache.timestamp = 0
 }
 export function getCachedSlugsSync(): string[] {

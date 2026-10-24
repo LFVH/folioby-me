@@ -53,7 +53,6 @@ export default function SearchBar({
     if (localQuery !== value) {
       if (localQuery.length >= 2 || localQuery === '') {
         timeoutRef.current = setTimeout(() => {
-          console.log("ðŸ” Executando busca:", localQuery)
           onSearch(localQuery)
         }, 300)
       }

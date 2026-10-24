@@ -32,7 +32,6 @@ const AuthHandler :AuthOptions= {
         }
         const passwordMatch = await bcrypt.compare(credentials.password, user.password);
         if (!passwordMatch) {
-          console.log(`senha incorreta do camarada ${user.email}`)
           throw new Error("Usuário ou senha incorreta.");
         }
          const isAdmin = await isActuallyChief(user.id);

@@ -24,7 +24,6 @@ export default async function ProfilePage({ params }: PageProps) {
 
     user = await res.json();
   } catch (error) {
-    console.log('ERRO AO CARREGAR');
     console.error(error);
     return <div>Erro ao carregar perfil</div>;
   }

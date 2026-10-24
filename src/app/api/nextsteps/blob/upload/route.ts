@@ -44,13 +44,7 @@ export async function POST(request: Request) {
         };
       },
 
-      onUploadCompleted: async ({ blob }) => {
-        try {
-          console.log('Upload finalizado:', blob.url);
-        } catch (error) {
-          console.error('Erro pós upload:', error);
-        }
-      },
+      onUploadCompleted: async () => {},
     });
 
     return NextResponse.json(jsonResponse);

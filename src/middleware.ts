@@ -32,9 +32,6 @@ export async function middleware(request: NextRequest) {
   const logginRoutes = process.env.DESLOG_ROUTES?.split(",") || ["/"]
   const currentPath = request.nextUrl.pathname
 
-  console.log("currentPath")
-  console.log(currentPath)
-
   if (currentPath.startsWith("/_next") || currentPath.startsWith("/static") || isFileLikePathname(currentPath)) {
     return NextResponse.next()
   }
@@ -51,16 +48,12 @@ export async function middleware(request: NextRequest) {
   )
 
   if (isPublic) {
-    console.log(`Rota ignorada: ${currentPath}`)
     return NextResponse.next()
   }
 
   const potentialSlug = currentPath.replace(/^\//, "").replace(/\/profile$/, "")
-  console.log(potentialSlug)
 
   const validSlugs = await getValidUserSlugs()
-  console.log(validSlugs)
-  console.log("validSlugs")
   if (validSlugs.includes(potentialSlug)) {
     return NextResponse.next()
   }
@@ -89,7 +82,6 @@ export async function middleware(request: NextRequest) {
 
   const authResult = await verifyUserById(tokenUserId)
   if (authResult instanceof NextResponse) {
-    console.log("1")
     return authResult
   }
 

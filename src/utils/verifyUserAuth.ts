@@ -164,7 +164,6 @@ export async function findBySlug(slug: string): Promise<Usuario | NextResponse> 
     if (userExists && !userExists.isBlocked && userExists.isPremium) {
       return userExists;
     }
-    console.error("SLUG: " + slug)
     return NextResponse.json(
       { success: false, body: { message: "Not Found" } },
       { status: 400 }
