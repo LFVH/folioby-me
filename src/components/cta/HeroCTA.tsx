@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react'
 
 import HeaderIni from './HeaderIni'
 
-const contatoHref = '/luizfvieirah/profile#links'
+const contatoEmail = 'luizfvieirah@gmail.com'
 
 // Adicione aqui apenas portfólios cujo dono autorizou a divulgação.
 const portfoliosReais = [
@@ -113,25 +113,24 @@ export default function HeroCTA() {
             <div className="w-24 h-1 bg-gradient-to-r from-purple-600 to-pink-600 mx-auto"></div>
 
             <div className="my-12 max-w-xl mx-auto rounded-2xl border border-green-400/30 bg-green-500/5 p-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-green-300">Comece grátis</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-green-300">Grátis por 7 dias</p>
               <p className="mt-3 text-gray-300">
-                Crie sua conta, monte seu portfólio e compartilhe seu link.
+                Crie sua conta, monte seu portfólio e compartilhe seu link. O acesso gratuito vale por 7 dias.
+                Depois disso, a conta precisa ser reativada para você continuar editando e manter sua página no ar.
               </p>
-              {session && !session.user.status && (
-                <p className="mt-4 text-sm text-gray-300">
-                  Seu período de acesso terminou. Para reativar sua página,{' '}
-                  <Link href={contatoHref} className="text-green-300 underline hover:text-green-100">
-                    entre em contato
-                  </Link>
-                  .
-                </p>
-              )}
+              <p className="mt-3 text-sm text-gray-400">
+                Quer continuar usando ou tem alguma dúvida? Escreva para{' '}
+                <a href={`mailto:${contatoEmail}`} className="text-green-300 underline hover:text-green-100">
+                  {contatoEmail}
+                </a>
+                .
+              </p>
               {!session && (
                 <Link
                   href="/signup"
                   className="mt-5 inline-flex px-5 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors font-medium shadow-lg hover:shadow-purple-500/25"
                 >
-                  Criar meu portfólio grátis
+                  Começar meus 7 dias grátis
                 </Link>
               )}
             </div>
@@ -214,7 +213,7 @@ export default function HeroCTA() {
                   href="/signup"
                   className="px-5 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors font-medium shadow-lg hover:shadow-purple-500/25"
                 >
-                  Criar meu portfólio grátis
+                  Começar meus 7 dias grátis
                 </Link>
               )}
 
