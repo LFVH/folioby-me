@@ -114,6 +114,20 @@ Then open `http://localhost:3000`.
 
 > `npm run dev` synchronizes the Prisma schema with the database. Use a dedicated development database before running it.
 
+### Database migrations
+
+The production build does not change the database. Schema changes are versioned in `prisma/migrations` and applied explicitly:
+
+```bash
+npm run db:migrate:deploy
+```
+
+`0_init` is the baseline that matches the schema already in production. On a database created before the migrations folder existed, mark it as applied once instead of running it:
+
+```bash
+npx prisma migrate resolve --applied 0_init
+```
+
 ## Testing and CI
 
 Tests use [Vitest](https://vitest.dev/) with a Node environment and cover files matching `src/**/*.test.ts`. The current suite includes the credentials authentication flow, using Prisma mocks and bcrypt checks rather than a live database for that unit test.
@@ -126,7 +140,7 @@ npm run test
 npm run build
 ```
 
-GitHub Actions runs the same lint, test, and build checks on every push and pull request. The workflow provisions PostgreSQL 16 as a service, installs dependencies with `npm ci`, generates the Prisma client as part of the test/build scripts, and uses Node.js 24 in CI.
+GitHub Actions runs the same lint, test, and build checks on every push and pull request. The workflow provisions PostgreSQL 16 as a service, installs dependencies with `npm ci`, runs lint and tests, applies the migrations with `npm run db:migrate:deploy`, then builds. The Prisma client is generated as part of the test and build scripts, and CI uses Node.js 24.
 
 ## Portfolio highlights
 
