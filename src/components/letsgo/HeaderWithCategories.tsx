@@ -1,6 +1,7 @@
 'use client'
 import { Menu } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import { useCategorias } from '@/hooks/useCategorias'
 import { useGlobalFilter } from '@/hooks/useGlobalFilter'
 import SearchBar from './SearchBar'
@@ -9,10 +10,15 @@ import { useParams } from 'next/navigation'
 import { scrollToTop } from '@/lib/utils'
 import { useRouter, usePathname } from 'next/navigation'
 
+// Altura da LoggedBar (borda + py-2 + botão h-10), fixa no topo para o dono logado.
+const LOGGED_BAR_OFFSET = 'top-[58px]'
+const focusRing = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded'
+
 export default function HeaderWithCategories() {
   const params = useParams()
   const slug = params.slug as string
-  const { data, isLoading } = useCategorias(slug)
+  const { data } = useCategorias(slug)
+  const { data: session } = useSession()
   const router = useRouter()
   const pathname = usePathname()
   const {
@@ -34,8 +40,9 @@ export default function HeaderWithCategories() {
         .join(' ')
     : ''
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [activeProfileSection, setActiveProfileSection] = useState<'profile' | 'contact' | null>(null)
+  const [isMobileCategoriesOpen, setIsMobileCategoriesOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const loggedBarVisible = Boolean(session?.user?.status)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -58,23 +65,8 @@ export default function HeaderWithCategories() {
     return () => document.removeEventListener('keydown', handleEscape)
   }, [filtroAtivo, limparFiltros])
 
-  useEffect(() => {
-    const updateActiveSection = () => {
-      if (pathname !== `/${slug}/profile`) {
-        setActiveProfileSection(null)
-        return
-      }
-
-      setActiveProfileSection(window.location.hash === '#links' ? 'contact' : 'profile')
-    }
-
-    updateActiveSection()
-    window.addEventListener('hashchange', updateActiveSection)
-    return () => window.removeEventListener('hashchange', updateActiveSection)
-  }, [pathname, slug])
-
-  const categoriasPrincipais = categorias?.slice(0, 4) || []
-  const categoriasRestantes = categorias?.slice(4) || []
+  const categoriasPrincipais = categorias.slice(0, 4)
+  const categoriasRestantes = categorias.slice(4)
 
   const handleCategoriaClick = (categoriaId: string) => {
     if (pathname !== `/${slug}`) {
@@ -86,6 +78,7 @@ export default function HeaderWithCategories() {
       setFiltroCategoria(categoriaId)
     }
     setIsDropdownOpen(false)
+    setIsMobileCategoriesOpen(false)
   }
 
   const handleInicioClick = () => {
@@ -98,249 +91,214 @@ export default function HeaderWithCategories() {
     scrollToTop()
   }
 
-  const handleContactClick = () => {
-    limparFiltros()
-  }
+  const navLinks = [
+    {
+      label: 'Portfólio',
+      href: `/${slug}`,
+      isActive: pathname === `/${slug}`,
+      title: firstNames ? `Trabalhos de ${firstNames}` : 'Trabalhos',
+      onClick: handleInicioClick,
+    },
+    {
+      label: 'Perfil',
+      href: `/${slug}/profile`,
+      isActive: pathname.startsWith(`/${slug}/profile`),
+      title: firstNames ? `Perfil e contatos de ${firstNames}` : 'Perfil e contatos',
+      onClick: handleProfileClick,
+    },
+  ]
 
-  const profileLinkClass = (section: 'profile' | 'contact') =>
-    `transition-colors duration-200 font-bold ${
-      activeProfileSection === section
-        ? 'text-white underline decoration-2 decoration-red-600 underline-offset-4'
-        : 'text-gray-300 hover:text-white'
+  const navLinkClass = (isActive: boolean) =>
+    `text-sm font-semibold whitespace-nowrap transition-colors ${focusRing} ${
+      isActive
+        ? 'text-white underline decoration-2 decoration-red-600 underline-offset-8'
+        : 'text-zinc-400 hover:text-white'
     }`
 
-  const handleSearch = (termo: string) => {
-    setFiltroPesquisa(termo)
-  }
+  const isCategoriaAtiva = (categoriaId: string) =>
+    filtroAtivo === categoriaId && tipoFiltro === 'categoria'
 
-  const handleClearSearch = () => {
-    limparFiltros()
-  }
+  const categoriaPillClass = (categoria: { id: string; isTrend?: boolean }) =>
+    `inline-flex min-h-9 items-center whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm transition-colors ${focusRing} ${
+      isCategoriaAtiva(categoria.id)
+        ? 'bg-red-600 font-semibold text-white'
+        : categoria.isTrend
+          ? 'bg-red-600/15 font-medium text-red-100 ring-1 ring-red-500/40 hover:bg-red-600/25'
+          : 'bg-zinc-900 text-zinc-300 ring-1 ring-zinc-800 hover:bg-zinc-800 hover:text-white'
+    }`
 
-  const handleClearAllFilters = () => {
-    limparFiltros()
-  }
+  const trendDot = (
+    <span aria-hidden="true" className="mr-1.5 inline-block size-1.5 rounded-full bg-orange-400" />
+  )
 
-  const activeCategory = categorias?.find((categoria: any) => categoria.id === filtroAtivo)
+  const activeCategory = categorias.find((categoria: any) => categoria.id === filtroAtivo)
   const activeCategoryLabel = activeCategory?.name || activeCategory?.nome || filtroAtivo
 
-  if (isLoading) {
-    return (
-      <header className="fixed top-0 w-full z-50 bg-gradient-to-b from-black to-transparent p-4">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center gap-4 min-w-0 flex-1">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="text-red-600 font-bold tracking-tight">
-                <h1 className="text-red-600 text-xl sm:text-2xl font-bold truncate">FolioBy</h1>
-              </div>
-            </Link>
-            <nav className="hidden md:flex gap-4">
-              <span className="text-gray-400">Carregando...</span>
-            </nav>
-          </div>
-        </div>
-      </header>
-    )
-  }
-
   return (
-    <header className="fixed top-7 w-full z-50 bg-gradient-to-b from-black to-transparent">
-      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div className="flex items-center gap-4 min-w-0 flex-1">
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="text-red-600 font-bold tracking-tight">
-              <h1 className="text-red-600 text-xl sm:text-2xl font-bold truncate">FolioBy</h1>
-            </div>
+    <>
+      <header
+        className={`fixed inset-x-0 ${loggedBarVisible ? LOGGED_BAR_OFFSET : 'top-0'} z-50 border-b border-white/5 bg-black/85 backdrop-blur-md`}
+      >
+        <div className="flex h-16 items-center gap-3 px-4 md:gap-6 md:px-8">
+          <Link
+            href="/"
+            aria-label="FolioBy - página inicial"
+            title="Conheça o FolioBy"
+            className={`shrink-0 ${focusRing}`}
+          >
+            <span className="text-xl font-bold tracking-tight text-red-600 md:text-2xl">FolioBy</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-4 flex-wrap min-w-0">
-            <Link
-              className={profileLinkClass('profile')}
-              href={`/${slug}/profile`}
-              key={userName}
-              onClick={handleProfileClick}
-            >
-              {firstNames ? `Perfil de ${firstNames}` : 'Perfil'}
-            </Link>
-            <Link
-              className={profileLinkClass('contact')}
-              href={`/${slug}/profile#links`}
-              key={`${userName}+${userName.substring(2)}`}
-              onClick={handleContactClick}
-            >
-              Contato
-            </Link>
-            {pathname !== `/${slug}` && (
+          <nav
+            aria-label="Navegação do portfólio"
+            className="flex min-w-0 flex-1 items-center gap-4 overflow-x-auto py-3 md:gap-5 md:overflow-visible md:py-0"
+          >
+            {navLinks.map((link) => (
               <Link
-                className="text-gray-300 hover:text-white transition-colors duration-200 text-lg font-light tracking-[0.3em]"
-                href={`/${slug}`}
-                key={`${userName}H`}
-                onClick={handleInicioClick}
+                key={link.label}
+                href={link.href}
+                title={link.title}
+                aria-current={link.isActive ? 'page' : undefined}
+                onClick={link.onClick}
+                className={navLinkClass(link.isActive)}
               >
-                Portfólio
+                {link.label}
               </Link>
-            )}
-            {categoriasPrincipais.map((categoria) => (
-              <div key={categoria.id} className="relative">
-                <button
-                  onClick={() => handleCategoriaClick(categoria.id)}
-                  className={`relative z-10 transition-all duration-300 whitespace-nowrap text-sm px-3 py-1 rounded-full ${
-                    filtroAtivo === categoria.id && tipoFiltro === 'categoria'
-                      ? 'text-white font-bold bg-red-600 shadow-lg shadow-red-500/30'
-                      : categoria.isTrend
-                        ? 'text-white font-semibold bg-gradient-to-r from-orange-500 to-red-500 shadow-lg shadow-orange-500/40 hover:shadow-orange-500/60 hover:scale-105'
-                        : 'text-gray-300 hover:text-white hover:bg-gray-800'
-                  }`}
-                >
-                  {categoria.name}
-                  {categoria.isTrend && (
-                    <span className="absolute -top-2 -right-2">
-                      <span className="relative flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
-                      </span>
-                    </span>
-                  )}
-                </button>
-                {categoria.isTrend && filtroAtivo !== categoria.id && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-full blur-sm animate-pulse-slow" />
-                )}
-              </div>
             ))}
-            {categoriasRestantes.length > 0 && (
-              <div ref={dropdownRef} className="relative">
-                <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className={`text-gray-300 hover:text-white transition-colors p-1 ${
-                    tipoFiltro === 'categoria' && categoriasRestantes.some((c) => c.id === filtroAtivo)
-                      ? 'text-white font-semibold underline decoration-red-600'
-                      : ''
-                  }`}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
-                  </svg>
-                </button>
-                {isDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-black/90 backdrop-blur-sm rounded-lg shadow-xl border border-gray-700 py-2 z-50">
-                    <div className="px-3 py-2 border-b border-gray-700">
-                      <p className="text-white text-sm font-semibold">Todas as categorias</p>
-                    </div>
 
-                    <div className="max-h-60 overflow-y-auto">
-                      {categoriasRestantes.map((categoria) => (
-                        <button
-                          key={categoria.id}
-                          onClick={() => handleCategoriaClick(categoria.id)}
-                          className={`w-full text-left px-3 py-2 text-sm ${
-                            filtroAtivo === categoria.id && tipoFiltro === 'categoria'
-                              ? 'bg-red-600 text-white'
-                              : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                          } transition-colors flex justify-between items-center`}
-                        >
-                          <span>{categoria.name}</span>
-                          <span className="text-xs bg-gray-700 px-2 py-1 rounded">
-                            {categoria.conteudos.length}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
+            {categorias.length > 0 && (
+              <div className="hidden items-center gap-2 md:flex">
+                <span aria-hidden="true" className="mr-2 h-5 w-px bg-zinc-700" />
+                {categoriasPrincipais.map((categoria) => (
+                  <button
+                    key={categoria.id}
+                    type="button"
+                    onClick={() => handleCategoriaClick(categoria.id)}
+                    aria-pressed={isCategoriaAtiva(categoria.id)}
+                    title={categoria.isTrend ? 'Categoria em alta' : undefined}
+                    className={categoriaPillClass(categoria)}
+                  >
+                    {categoria.isTrend && trendDot}
+                    {categoria.name}
+                  </button>
+                ))}
+
+                {categoriasRestantes.length > 0 && (
+                  <div ref={dropdownRef} className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                      aria-label="Mais categorias"
+                      title="Mais categorias"
+                      aria-haspopup="true"
+                      aria-expanded={isDropdownOpen}
+                      className={`inline-flex size-9 items-center justify-center rounded-full transition-colors ${focusRing} ${
+                        tipoFiltro === 'categoria' && categoriasRestantes.some((c) => c.id === filtroAtivo)
+                          ? 'bg-red-600 text-white'
+                          : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+                      }`}
+                    >
+                      <svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                      </svg>
+                    </button>
+                    {isDropdownOpen && (
+                      <div className="absolute top-full left-0 mt-2 w-56 rounded-lg border border-zinc-800 bg-black/95 py-2 shadow-xl backdrop-blur-sm z-50">
+                        <div className="px-3 py-2 border-b border-zinc-800">
+                          <p className="text-white text-sm font-semibold">Todas as categorias</p>
+                        </div>
+
+                        <div className="max-h-60 overflow-y-auto">
+                          {categoriasRestantes.map((categoria) => (
+                            <button
+                              key={categoria.id}
+                              type="button"
+                              onClick={() => handleCategoriaClick(categoria.id)}
+                              aria-pressed={isCategoriaAtiva(categoria.id)}
+                              className={`w-full text-left px-3 py-2 text-sm ${
+                                isCategoriaAtiva(categoria.id)
+                                  ? 'bg-red-600 text-white'
+                                  : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+                              } transition-colors flex justify-between items-center`}
+                            >
+                              <span>{categoria.name}</span>
+                              <span className="text-xs bg-zinc-800 px-2 py-1 rounded">
+                                {categoria.conteudos.length}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
             )}
           </nav>
 
-          <div className="md:hidden mt-3">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 flex-1">
-                <Link
-                  href={`/${slug}/profile`}
-                  onClick={handleProfileClick}
-                  className={`${activeProfileSection === 'profile' ? 'text-white bg-red-600' : 'text-gray-300 bg-gray-800 hover:bg-gray-700'} transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full`}
-                >
-                  {firstNames ? `Perfil de ${firstNames}` : 'Perfil'}
-                </Link>
+          {categorias.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setIsMobileCategoriesOpen(!isMobileCategoriesOpen)}
+              aria-label="Categorias"
+              title="Categorias"
+              aria-expanded={isMobileCategoriesOpen}
+              aria-controls="categorias-mobile"
+              className={`inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-zinc-900 ring-1 ring-zinc-800 transition-colors hover:bg-zinc-800 md:hidden ${focusRing}`}
+            >
+              <Menu aria-hidden="true" size={18} className="text-zinc-300" />
+            </button>
+          )}
 
-                <Link
-                  href={`/${slug}/profile#links`}
-                  onClick={handleContactClick}
-                  className={`${activeProfileSection === 'contact' ? 'text-white bg-red-600' : 'text-gray-300 bg-gray-800 hover:bg-gray-700'} transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full`}
-                >
-                  Contato
-                </Link>
-                {pathname !== `/${slug}` && (
-                  <Link
-                    href={`/${slug}`}
-                    onClick={handleInicioClick}
-                    className="text-gray-300 bg-gray-800 hover:bg-gray-700 transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full"
-                  >
-                    Portfólio
-                  </Link>
-                )}
-              </div>
+          <div className="ml-auto shrink-0">
+            <SearchBar
+              onSearch={setFiltroPesquisa}
+              value={tipoFiltro === 'search' ? termoPesquisa : ''}
+              onClear={limparFiltros}
+            />
+          </div>
+        </div>
 
+        {isMobileCategoriesOpen && categorias.length > 0 && (
+          <div id="categorias-mobile" className="flex flex-wrap gap-2 px-4 pb-3 md:hidden">
+            {categorias.map((categoria) => (
               <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center justify-center p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
+                key={categoria.id}
+                type="button"
+                onClick={() => handleCategoriaClick(categoria.id)}
+                aria-pressed={isCategoriaAtiva(categoria.id)}
+                className={categoriaPillClass(categoria)}
               >
-                <Menu size={18} className="text-gray-300" />
+                {categoria.isTrend && trendDot}
+                {categoria.name}
               </button>
-            </div>
-
-            {isDropdownOpen && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {categorias?.map((categoria) => (
-                  <button
-                    key={categoria.id}
-                    onClick={() => {
-                      handleCategoriaClick(categoria.id)
-                      setIsDropdownOpen(false)
-                    }}
-                    className={`${
-                      filtroAtivo === categoria.id &&
-                      tipoFiltro === 'categoria'
-                        ? 'text-white font-semibold bg-red-600'
-                        : 'text-gray-300 bg-gray-800 hover:bg-gray-700'
-                    } transition-colors whitespace-nowrap text-sm px-3 py-1 rounded-full`}
-                  >
-                    {categoria.name}
-                  </button>
-                ))}
-              </div>
-            )}
+            ))}
           </div>
+        )}
 
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-            <div className="flex-1 sm:flex-none min-w-0">
-              <SearchBar
-                onSearch={handleSearch}
-                value={tipoFiltro === 'search' ? termoPesquisa : ''}
-                onClear={handleClearSearch}
-              />
-            </div>
+        {filtroAtivo && (
+          <div className="flex items-center gap-2 px-4 pb-3 text-sm text-white md:px-8">
+            <span className="whitespace-nowrap">Filtrando por:</span>
+            <span className="bg-red-600 px-3 py-1 rounded-full text-xs font-medium truncate max-w-[200px]">
+              {tipoFiltro === 'categoria'
+                ? activeCategoryLabel
+                : `"${filtroAtivo}"`}
+            </span>
+            <button
+              type="button"
+              onClick={limparFiltros}
+              aria-label="Limpar filtro"
+              title="Limpar filtro"
+              className={`text-zinc-400 hover:text-white transition-colors p-1 flex-shrink-0 ${focusRing}`}
+            >
+              <svg aria-hidden="true" className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-        </div>
-      </div>
-
-      {filtroAtivo && (
-        <div className="mt-3 flex items-center gap-2 text-sm text-white">
-          <span className="whitespace-nowrap">Filtrando por:</span>
-          <span className="bg-red-600 px-3 py-1 rounded-full text-xs font-medium truncate max-w-[200px]">
-            {tipoFiltro === 'categoria'
-              ? activeCategoryLabel
-              : `"${filtroAtivo}"`}
-          </span>
-          <button
-            onClick={handleClearAllFilters}
-            className="text-gray-400 hover:text-white transition-colors p-1 flex-shrink-0"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      )}
-    </header>
+        )}
+      </header>
+      {loggedBarVisible && <div aria-hidden="true" className="h-[58px]" />}
+    </>
   )
 }

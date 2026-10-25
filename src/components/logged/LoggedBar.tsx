@@ -21,7 +21,7 @@ export function LoggedBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   if (status === 'loading') {
-    return <div className="h-8 w-8 animate-pulse rounded-full bg-gray-300" />
+    return null
   }
 
   if (!session || !session.user.status) {

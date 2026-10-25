@@ -103,11 +103,13 @@ export default function SearchBar({
   return (
     <>
       <button
+        type="button"
         onClick={handleOpen}
-        className="p-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+        className="inline-flex size-10 items-center justify-center text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+        aria-label="Buscar conteúdos"
         title="Buscar conteúdos"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </button>
@@ -128,6 +130,7 @@ export default function SearchBar({
                     value={inputValue}
                     onChange={handleChange}
                     placeholder="Buscar categorias ou conteúdos..."
+                    aria-label="Buscar no portfólio"
                     className="w-full px-4 py-4 pl-12 bg-transparent text-white placeholder-gray-400 focus:outline-none text-lg"
                     autoFocus={autoFocus}
                   />
@@ -138,6 +141,8 @@ export default function SearchBar({
                   </div>
                   {localQuery && (
                     <button
+                      type="button"
+                      aria-label="Limpar busca"
                       onClick={handleClear}
                       className="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors p-1"
                       title="Limpar busca"
@@ -148,6 +153,8 @@ export default function SearchBar({
                     </button>
                   )}
                   <button
+                    type="button"
+                    aria-label="Fechar busca"
                     onClick={handleClose}
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-gray-800"
                     title="Fechar busca"
