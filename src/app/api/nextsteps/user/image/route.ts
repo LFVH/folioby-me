@@ -4,6 +4,7 @@ import { BlobService } from '@/lib/blob-service';
 import { checkUserStorageQuotaByDelta, MAX_PROFILE_IMAGE_BYTES, MAX_USER_STORAGE_BYTES, removeUserStorageBytes, applyUserStorageDelta } from '@/lib/storage-quota';
 import { verifyUser } from '@/utils/verifyUserAuth';
 import prisma from '@/prisma';
+import { tipoRealDaImagem } from '@/lib/image-signature';
 
 // POST - Upload de nova imagem
 export async function POST(request: NextRequest) {
@@ -40,6 +41,15 @@ export async function POST(request: NextRequest) {
     if (file.size > MAX_PROFILE_IMAGE_BYTES) {
       return NextResponse.json(
         { error: 'Arquivo muito grande. Máximo 5MB para foto de perfil.' },
+        { status: 400 }
+      );
+    }
+
+    // O tipo declarado vem do navegador; a assinatura do arquivo confirma que é mesmo uma imagem.
+    const cabecalho = new Uint8Array(await file.slice(0, 16).arrayBuffer());
+    if (!tipoRealDaImagem(cabecalho)) {
+      return NextResponse.json(
+        { error: 'O arquivo não é uma imagem válida. Use GIF, JPEG, PNG, WebP ou AVIF.' },
         { status: 400 }
       );
     }
