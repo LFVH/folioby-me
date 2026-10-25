@@ -5,11 +5,9 @@ import { verifyUserById } from "./utils/verifyUserAuth"
 import { getValidUserSlugs } from "./lib/db/slug-service"
 import { ratelimit } from "./lib/ratelimit"
 import { isFileLikePathname } from "./lib/user-slug"
+import { STATIC_PROFILE_PAGES } from "./lib/static-profiles"
 
 export const runtime = "nodejs"
-
-// Páginas estáticas em public/ que substituem a vitrine padrão de um slug (rewrite em next.config.mjs)
-const STATIC_PROFILE_PAGES = ["/luizfvieirah", "/luizfvieirah/en"]
 
 export const config = {
   matcher: "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)",
@@ -83,6 +81,11 @@ export async function middleware(request: NextRequest) {
   const authResult = await verifyUserById(tokenUserId)
   if (authResult instanceof NextResponse) {
     return authResult
+  }
+
+  // Feedback vale para qualquer usuário logado, inclusive com o período grátis encerrado.
+  if (currentPath === "/api/feedback") {
+    return NextResponse.next()
   }
 
   if (!authResult.isPremium) {

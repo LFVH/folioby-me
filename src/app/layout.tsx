@@ -5,6 +5,7 @@ import { Inter, Poppins, Bebas_Neue } from 'next/font/google';
 import './globals.css';
 import { LoggedBar } from '@/components/logged/LoggedBar';
 import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
+import FeedbackPrompt from '@/components/feedback/FeedbackPrompt';
 
 const inter = Inter({ subsets: ['latin'] });
 const poppins = Poppins({
@@ -42,6 +43,7 @@ export default function RootLayout({
             </Suspense>
             </main>
             <ScrollToTopButton />
+            <FeedbackPrompt />
           </ClientProviders>
         </div>
       </body>

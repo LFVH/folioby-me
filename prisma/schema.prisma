@@ -33,6 +33,7 @@ model Usuario {
   refreshPasswordTokenExpires DateTime? 
   conteudos    Conteudo[]
   categorias   Categoria[]
+  feedbacks    Feedback[]
   updatedAt    DateTime @updatedAt
   createdAt    DateTime @default(now())
   @@index([email, statusAss, isPremium])
@@ -117,4 +118,18 @@ model WebhookRequest {
   @@index([provider, eventType, createdAt])
   @@index([resourceId, createdAt])
   @@index([externalRequestId])
+}
+
+model Feedback {
+  id           Int      @id @default(autoincrement())
+  userId       String
+  user         Usuario  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  seq          Int      // posição do envio (1 a 3); o unique e o CHECK da migration garantem o limite
+  nota         Int      // 1 a 5
+  mensagem     String   @db.VarChar(1000)
+  podeContatar Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  @@unique([userId, seq])
+  @@index([createdAt])
 }
