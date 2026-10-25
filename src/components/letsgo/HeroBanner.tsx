@@ -102,7 +102,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.18)_45%,rgba(0,0,0,0.92)_100%)]" />
         </div>
 
-        <div className="absolute inset-y-0 right-0 left-[20%] hidden items-center justify-end md:flex">
+        <div className="absolute inset-y-0 right-0 hidden items-center justify-end md:left-[45%] md:flex lg:left-[40%]">
           {bannerConteudos.map((conteudo, index) => {
             const imageUrl = getBannerMediaUrl(conteudo)
 
@@ -146,7 +146,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
               return (
               <div
                 key={`mobile-${conteudo.id}`}
-                className={`absolute top-8 h-[44vh] w-[92vw] max-w-xl transition-all duration-700 ease-out ${
+                className={`absolute top-6 aspect-video w-[92vw] max-w-xl overflow-hidden rounded-xl bg-zinc-900 transition-all duration-700 ease-out ${
                   index === currentBannerIndex
                     ? 'opacity-100 translate-y-0 scale-100'
                     : 'pointer-events-none opacity-0 translate-y-3 scale-[1.02]'
@@ -157,7 +157,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
                   alt={getBannerTitle(conteudo)}
                   fill
                   sizes="92vw"
-                  className="object-contain"
+                  className="object-cover"
                   unoptimized
                   onError={(e) => handleImgError(e)}
                 />
@@ -166,15 +166,15 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
           })}
         </div>
 
-        <div className="relative z-10 mx-auto flex min-h-[30rem] max-w-7xl items-end px-6 pb-12 pt-[19rem] md:min-h-[36rem] md:px-8 md:pb-16 md:pt-24 lg:min-h-[40rem]">
-          <div className="max-w-xl">
+        <div className="relative z-10 flex min-h-[30rem] items-end px-4 pb-12 pt-[calc(52vw+4.5rem)] md:min-h-[36rem] md:px-8 md:pb-16 md:pt-24 lg:min-h-[40rem]">
+          <div className="max-w-xl md:max-w-[40%] lg:max-w-[36%]">
             {currentBanner.isTrend && (
               <div className="mb-5 inline-flex items-center rounded-full bg-red-600 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-white">
                 Em alta
               </div>
             )}
 
-            <h1 className="max-w-lg text-4xl font-bold leading-[0.95] text-white md:text-6xl lg:text-7xl">
+            <h1 className="max-w-lg text-4xl font-bold leading-[0.95] text-white md:text-5xl lg:text-6xl">
               {getBannerTitle(currentBanner)}
             </h1>
 
@@ -189,7 +189,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
                 disabled={!currentBanner.linkext}
                 title={
                   currentBanner.linkext
-                    ? `Abrir ${currentBanner.linkext}`
+                    ? `Assistir ${getBannerTitle(currentBanner)} em nova aba`
                     : 'Link externo não disponível'
                 }
               >
@@ -210,7 +210,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
         </div>
 
         {bannerConteudos.length > 1 && (
-          <div className="absolute bottom-5 left-6 z-20 flex gap-2 md:bottom-8 md:left-8">
+          <div className="absolute bottom-5 left-4 z-20 flex gap-2 md:bottom-8 md:left-8">
             {bannerConteudos.map((conteudo, index) => (
               <button
                 key={conteudo.id}
@@ -221,6 +221,7 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
                     : 'h-2.5 w-2.5 bg-white/45 hover:bg-white/75'
                 }`}
                 aria-label={`Exibir banner ${index + 1}`}
+                aria-current={index === currentBannerIndex}
               />
             ))}
           </div>

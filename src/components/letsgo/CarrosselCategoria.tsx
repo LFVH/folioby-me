@@ -88,19 +88,19 @@ export default function CarrosselCategoria({
   if (layout === 'lista') {
     return (
       <div className="relative">
-        <div className="flex items-center gap-3 mb-6 px-8">
+        <div className="flex items-center gap-3 mb-6 px-4 md:px-8">
           <h2 className="text-2xl font-bold text-white">
             {categoria.name}
           </h2>
         </div>
         
         {categoria.descricao && (
-          <p className="text-gray-400 mb-6 px-8 text-sm">
+          <p className="text-gray-400 mb-6 px-4 md:px-8 text-sm">
             {categoria.descricao}
           </p>
         )}
 
-        <div className="px-8">
+        <div className="px-4 md:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {categoria.conteudos.map((conteudo, index) => (
               <ConteudoItem
@@ -184,14 +184,14 @@ export default function CarrosselCategoria({
 
   return (
     <div className="relative group">
-      <div className="flex items-center gap-3 mb-4 px-8">
+      <div className="flex items-center gap-3 mb-4 px-4 md:px-8">
         <h2 className="text-2xl font-bold text-white">
           {categoria.name}
         </h2>
       </div>
       
       {categoria.descricao && (
-        <p className="text-gray-400 mb-4 px-8 text-sm">
+        <p className="text-gray-400 mb-4 px-4 md:px-8 text-sm">
           {categoria.descricao}
         </p>
       )}
@@ -215,7 +215,7 @@ export default function CarrosselCategoria({
           </svg>
         </button>
 
-        <div className="relative px-8">
+        <div className="relative px-4 md:px-8">
           <div
             ref={carrosselRef}
             onScroll={handleScroll}

@@ -108,7 +108,7 @@ export default function ConteudosFiltradosComScroll({
   return (
     <section className="py-8 space-y-12">
       {tipoFiltro === 'search' && categoriasFiltradas.length > 0 && (
-        <div className="px-8">
+        <div className="px-4 md:px-8">
           <h2 className="text-2xl font-bold text-white mb-2">
             Resultados para &quot;{termoPesquisa}&quot;
           </h2>
@@ -150,8 +150,8 @@ export default function ConteudosFiltradosComScroll({
 
       {!hasMore && categoriasFiltradas.length > 0 && !filtroAtivo && (
         <div className="text-center py-8">
-          <p className="text-gray-400">
-            OK Let&apos;s go.
+          <p className="text-zinc-500 text-sm">
+            Você viu todo o portfólio.
           </p>
         </div>
       )}
