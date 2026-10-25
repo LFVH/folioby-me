@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { signIn } from "next-auth/react"
 import { SignupFormSchema } from '@/app/api/auth/auth/definitions';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { LIMITES } from '@/lib/limits'
 interface SignupFormProps {
   onLoginSuccess: () => void;
 }
@@ -106,6 +107,7 @@ export function SignupForm({ onLoginSuccess }: SignupFormProps) {
           <Input 
             id="name" 
             name="name" 
+            maxLength={LIMITES.usuarioNome}
             placeholder="John Macgo" 
             value={formState.name}
             onChange={handleInputChange('name')}
@@ -133,6 +135,7 @@ export function SignupForm({ onLoginSuccess }: SignupFormProps) {
           <Input 
             id="password" 
             name="password" 
+            maxLength={LIMITES.senhaMax}
             type="password" 
             value={formState.password}
             onChange={handleInputChange('password')}
@@ -150,6 +153,7 @@ export function SignupForm({ onLoginSuccess }: SignupFormProps) {
           <Input 
             id="confirmPassword" 
             name="confirmPassword" 
+            maxLength={LIMITES.senhaMax}
             type="password" 
             value={formState.confirmPassword}
             onChange={handleInputChange('confirmPassword')}

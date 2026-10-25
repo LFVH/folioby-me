@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation'
 import { BlobService } from '@/lib/blob-service'
 import { extractFonteFromUrl, normalizeExternalUrl } from '@/lib/profile-links'
 import { upload } from '@vercel/blob/client'
+import { LIMITES } from '@/lib/limits'
+import { formatBytes } from '@/lib/format-bytes'
 
 interface Categoria {
   id: number
@@ -113,6 +115,11 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
   const handleMultipleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
 
+    if (files.length > LIMITES.midiasPorConteudo) {
+      setErrorMessage(`Selecione no máximo ${LIMITES.midiasPorConteudo} imagens por conteúdo.`)
+      return
+    }
+
     for (const file of files) {
       const validation = BlobService.validateImage(file)
       if (!validation.valid) {
@@ -148,6 +155,18 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
         : formData.file
           ? formData.file.size
           : 0
+
+      // Confere o espaço antes de enviar: o upload direto ao Blob não devolve o motivo da recusa.
+      if (totalUploadBytes > 0) {
+        const statusResponse = await fetch('/api/nextsteps/blob/upload')
+        const status = statusResponse.ok ? await statusResponse.json() : null
+        if (status?.success && totalUploadBytes > status.remainingBytes) {
+          setErrorMessage(
+            `Este envio tem ${formatBytes(totalUploadBytes)}, mas restam ${formatBytes(status.remainingBytes)} dos seus ${formatBytes(status.limitBytes)} de armazenamento. Apague conteúdos antigos ou envie um arquivo menor.`
+          )
+          return
+        }
+      }
 
       if (formData.isSequence && formData.files.length > 0) {
         const uploads = await Promise.all(
@@ -212,7 +231,11 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
       router.refresh()
     } catch (error) {
       console.error(error)
-      setErrorMessage(GENERIC_SAVE_ERROR)
+      setErrorMessage(
+        error instanceof Error && error.message.includes('client token')
+          ? 'O envio do arquivo foi recusado. Confira se ele tem até 500 MB e se ainda cabe nos seus 2 GB de armazenamento.'
+          : GENERIC_SAVE_ERROR
+      )
     } finally {
       setLoading(false)
     }
@@ -247,8 +270,12 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             value={formData.name}
             onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
             className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
+            maxLength={LIMITES.conteudoNome}
             required
           />
+          <p className="mt-1 text-right text-xs text-gray-500">
+            {formData.name.length}/{LIMITES.conteudoNome}
+          </p>
         </div>
 
         <div>
@@ -272,6 +299,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             }}
             className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
             placeholder="https://fonte.com/..."
+            maxLength={LIMITES.url}
             required
           />
         </div>
@@ -286,6 +314,7 @@ export default function ConteudoForm({ conteudo, categorias }: ConteudoFormProps
             onChange={(e) => setFormData((prev) => ({ ...prev, fonte: e.target.value }))}
             className="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-white"
             placeholder="Ex: Instagram, YouTube, Vimeo"
+            maxLength={LIMITES.conteudoFonte}
           />
         </div>
 

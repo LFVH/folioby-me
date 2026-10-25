@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { LIMITES } from '@/lib/limits'
 
 export default function NovaCategoriaPage() {
   const router = useRouter()
@@ -65,6 +66,7 @@ export default function NovaCategoriaPage() {
               <input
                 type="text"
                 name="nome"
+                maxLength={LIMITES.categoriaNome}
                 value={formData.nome}
                 onChange={handleChange}
                 className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-red-500 transition-colors"
@@ -83,6 +85,7 @@ export default function NovaCategoriaPage() {
               <input
                 type="text"
                 name="name"
+                maxLength={LIMITES.categoriaNome}
                 value={formData.name}
                 onChange={handleChange}
                 className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-red-500 transition-colors"
@@ -100,6 +103,7 @@ export default function NovaCategoriaPage() {
               </label>
               <textarea
                 name="descricao"
+                maxLength={LIMITES.categoriaDescricao}
                 value={formData.descricao}
                 onChange={handleChange}
                 rows={4}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
+import { LIMITES } from '@/lib/limits'
 
 interface Categoria {
   id: number
@@ -121,6 +122,7 @@ export default function EditarCategoriaPage() {
               <input
                 type="text"
                 name="nome"
+                maxLength={LIMITES.categoriaNome}
                 value={formData.nome}
                 onChange={handleChange}
                 className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-red-500 transition-colors"
@@ -135,6 +137,7 @@ export default function EditarCategoriaPage() {
               <input
                 type="text"
                 name="name"
+                maxLength={LIMITES.categoriaNome}
                 value={formData.name}
                 onChange={handleChange}
                 className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-red-500 transition-colors"
@@ -148,6 +151,7 @@ export default function EditarCategoriaPage() {
               </label>
               <textarea
                 name="descricao"
+                maxLength={LIMITES.categoriaDescricao}
                 value={formData.descricao}
                 onChange={handleChange}
                 rows={4}

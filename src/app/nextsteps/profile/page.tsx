@@ -10,6 +10,8 @@ import { ProfileImageCropper } from '@/components/nextsteps/profile/ProfileImage
 import { Avatar } from '@/components/ui/Avatar'
 import { getUserSlugValidationError, normalizeUserSlug } from '@/lib/user-slug'
 import { contact_mail } from '@/types'
+import { LIMITES } from '@/lib/limits'
+import { USER_SLUG_MAX_LENGTH } from '@/lib/user-slug'
 
 type ImageMimeType = 'image/jpeg' | 'image/png'
 
@@ -330,7 +332,7 @@ export default function UserPage() {
                         type="file"
                         ref={fileInputRef}
                         onChange={handleImageSelection}
-                        accept="image/*"
+                        accept="image/gif,image/jpeg,image/png,image/webp,image/avif"
                         className="hidden"
                       />
                       <button
@@ -364,6 +366,7 @@ export default function UserPage() {
                     <input
                       type="text"
                       value={slug}
+                      maxLength={USER_SLUG_MAX_LENGTH}
                       onChange={(event) => setSlug(event.target.value.toLowerCase())}
                       className="w-full rounded border border-gray-700 bg-gray-900 px-4 py-3 focus:border-red-600 focus:outline-none"
                       placeholder="seu-slug-aqui"
@@ -394,6 +397,7 @@ export default function UserPage() {
                     <input
                       type="password"
                       value={password}
+                      maxLength={LIMITES.senhaMax}
                       onChange={(event) => setPassword(event.target.value)}
                       className="w-full rounded border border-gray-700 bg-gray-900 px-4 py-3 focus:border-red-600 focus:outline-none"
                     />
@@ -405,6 +409,7 @@ export default function UserPage() {
                     <input
                       type="password"
                       value={confirmPassword}
+                      maxLength={LIMITES.senhaMax}
                       onChange={(event) => setConfirmPassword(event.target.value)}
                       className="w-full rounded border border-gray-700 bg-gray-900 px-4 py-3 focus:border-red-600 focus:outline-none"
                     />

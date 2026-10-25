@@ -8,6 +8,7 @@ import {
   PROFILE_LINK_OPTIONS,
   PROFILE_LINK_TYPE,
 } from '@/lib/profile-links'
+import { LIMITES } from '@/lib/limits'
 
 type LinkTuple = [number, string, string]
 
@@ -110,12 +111,14 @@ export default function LinksManager() {
         <input
           value={titulo}
           onChange={(e) => setTitulo(e.target.value)}
+          maxLength={LIMITES.linkTitulo}
           placeholder="Título"
           className="w-full p-2 rounded bg-zinc-800 text-white"
         />
         <input
           value={url}
           onChange={(e) => setUrl(e.target.value)}
+          maxLength={LIMITES.url}
           type={isEmailSelected ? 'email' : 'text'}
           inputMode={isEmailSelected ? 'email' : 'url'}
           placeholder={
