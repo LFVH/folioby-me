@@ -3,6 +3,8 @@ import prisma from "../../../../../prisma";
 import { isHis, verifyUser } from "@/utils/verifyUserAuth";
 import { BlobService } from "@/lib/blob-service";
 import { applyUserStorageDelta, checkUserStorageQuotaByDelta, removeUserStorageBytes } from '@/lib/storage-quota';
+import { validarConteudo } from '@/lib/conteudo-input';
+import { descartarMidias, medirMidias } from '@/lib/media';
 
 const serializeJsonSafe = <T>(value: T): T => {
   if (typeof value === 'bigint') {
@@ -22,14 +24,6 @@ const serializeJsonSafe = <T>(value: T): T => {
   return value
 }
 
-const normalizeOptionalText = (value: unknown) => {
-  if (typeof value !== "string") return null;
-
-  const normalizedValue = value.trim();
-
-  return normalizedValue.length > 0 ? normalizedValue : null;
-};
-
 const normalizeCategoriaIds = (value: unknown) => {
   if (!Array.isArray(value)) return [];
 
@@ -40,15 +34,6 @@ const normalizeCategoriaIds = (value: unknown) => {
         .filter((item) => Number.isInteger(item) && item > 0)
     ),
   ];
-};
-
-const normalizeMediaUrls = (value: unknown) => {
-  if (!Array.isArray(value)) return [];
-
-  return value
-    .filter((item): item is string => typeof item === "string")
-    .map((item) => item.trim())
-    .filter(Boolean);
 };
 
 async function ensureConteudoAccess(userId: string, isPremium: boolean, id: number) {
@@ -224,23 +209,31 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const {
-      name,
-      fonte,
-      link,
-      linkext,
-      categoriasIds,
-      isSequence,
-      mediaUrls,
-      storageBytes,
-    } = body;
+    const { categoriasIds, isSequence } = body;
 
-    const normalizedName = normalizeOptionalText(name);
-    const normalizedFonte = normalizeOptionalText(fonte);
-    const normalizedLink = normalizeOptionalText(link);
-    const normalizedLinkext = normalizeOptionalText(linkext);
+    const validacao = validarConteudo(body);
+    if (!validacao.ok) {
+      return NextResponse.json(
+        { success: false, error: validacao.error },
+        { status: 400 }
+      );
+    }
+
+    const {
+      name: normalizedName,
+      fonte: normalizedFonte,
+      link: normalizedLink,
+      linkext: normalizedLinkext,
+      mediaUrls: mediaUrlsRecebidas,
+    } = validacao.value;
     const normalizedCategoriasIds = normalizeCategoriaIds(categoriasIds);
-    const normalizedMediaUrls = normalizeMediaUrls(mediaUrls);
+
+    // Reenviar as mesmas URLs não é arquivo novo: não mede, não troca e não apaga nada.
+    const midiasAtuais = conteudoExistente.mediaUrls ?? [];
+    const mesmasMidias =
+      mediaUrlsRecebidas.length === midiasAtuais.length &&
+      mediaUrlsRecebidas.every((url, index) => url === midiasAtuais[index]);
+    const normalizedMediaUrls = mesmasMidias ? [] : mediaUrlsRecebidas;
 
     if (!normalizedName) {
       return NextResponse.json(
@@ -275,13 +268,25 @@ export async function PUT(
       );
     }
 
+    // Sem arquivo novo, o tamanho do conteúdo não muda. Com arquivo novo, vale o tamanho real lido no Blob.
     const oldStorageBytes = Number(conteudoExistente.storageBytes || 0);
-    const nextStorageBytes = Number(storageBytes || 0);
+    let nextStorageBytes = oldStorageBytes;
+    if (normalizedMediaUrls.length > 0) {
+      try {
+        nextStorageBytes = await medirMidias(normalizedMediaUrls);
+      } catch {
+        return NextResponse.json(
+          { success: false, error: "Nao foi possivel confirmar o arquivo enviado. Envie de novo." },
+          { status: 400 }
+        );
+      }
+    }
     const storageDelta = nextStorageBytes - oldStorageBytes;
 
     if (storageDelta > 0) {
       const quota = await checkUserStorageQuotaByDelta(userId, storageDelta);
       if (!quota.allowed) {
+        await descartarMidias(normalizedMediaUrls);
         return NextResponse.json(
           { success: false, error: quota.message },
           { status: 400 }

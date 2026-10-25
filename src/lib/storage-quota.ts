@@ -1,26 +1,11 @@
 import prisma from '@/prisma';
+import { formatBytes } from './format-bytes';
 
 export const MAX_PROFILE_IMAGE_BYTES = 5 * 1024 * 1024;
 export const MAX_SINGLE_UPLOAD_BYTES = 500 * 1024 * 1024;
 export const MAX_USER_STORAGE_BYTES = 2 * 1024 * 1024 * 1024;
 
-export function formatBytes(bytes: number): string {
-  const safeBytes = Number.isFinite(bytes) ? Math.max(0, bytes) : 0;
-
-  if (safeBytes >= 1024 * 1024 * 1024) {
-    return `${(safeBytes / (1024 * 1024 * 1024)).toFixed(2).replace(/\.00$/, '')} GB`;
-  }
-
-  if (safeBytes >= 1024 * 1024) {
-    return `${(safeBytes / (1024 * 1024)).toFixed(2).replace(/\.00$/, '')} MB`;
-  }
-
-  if (safeBytes >= 1024) {
-    return `${(safeBytes / 1024).toFixed(2).replace(/\.00$/, '')} KB`;
-  }
-
-  return `${safeBytes} bytes`;
-}
+export { formatBytes };
 
 export async function getUserStorageStatus(userId: string) {
   const user = await prisma.usuario.findUnique({
@@ -68,18 +53,11 @@ export async function applyUserStorageDelta(userId: string, deltaBytes: number) 
     return;
   }
 
-  const user = await prisma.usuario.findUnique({
-    where: { id: userId },
-    select: { storageUsedBytes: true },
-  });
-
-  const currentUsed = Number(user?.storageUsedBytes ?? 0n);
-  const nextUsed = Math.max(0, currentUsed + safeDelta);
-
+  // Incremento atômico: dois uploads simultâneos não sobrescrevem a conta um do outro.
   await prisma.usuario.update({
     where: { id: userId },
     data: {
-      storageUsedBytes: BigInt(nextUsed),
+      storageUsedBytes: { increment: BigInt(Math.round(safeDelta)) },
     },
   });
 }
@@ -91,18 +69,10 @@ export async function removeUserStorageBytes(userId: string, amountBytes: number
     return;
   }
 
-  const user = await prisma.usuario.findUnique({
-    where: { id: userId },
-    select: { storageUsedBytes: true },
-  });
-
-  const currentUsed = Number(user?.storageUsedBytes ?? 0n);
-  const nextUsed = Math.max(0, currentUsed - safeAmount);
-
-  await prisma.usuario.update({
-    where: { id: userId },
-    data: {
-      storageUsedBytes: BigInt(nextUsed),
-    },
-  });
+  // Decremento atômico e sem ficar negativo.
+  await prisma.$executeRaw`
+    UPDATE "Usuario"
+    SET "storageUsedBytes" = GREATEST(0, "storageUsedBytes" - ${BigInt(Math.round(safeAmount))})
+    WHERE "id" = ${userId}
+  `;
 }

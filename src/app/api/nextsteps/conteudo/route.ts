@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from "../../../../prisma"
 import { verifyUser } from "@/utils/verifyUserAuth"
 import { applyUserStorageDelta, checkUserStorageQuotaByDelta, removeUserStorageBytes } from '@/lib/storage-quota'
+import { validarConteudo } from '@/lib/conteudo-input'
+import { descartarMidias, medirMidias } from '@/lib/media'
 
 const serializeJsonSafe = <T>(value: T): T => {
   if (typeof value === 'bigint') {
@@ -21,14 +23,6 @@ const serializeJsonSafe = <T>(value: T): T => {
   return value
 }
 
-const normalizeOptionalText = (value: unknown) => {
-  if (typeof value !== 'string') return null
-
-  const normalizedValue = value.trim()
-
-  return normalizedValue.length > 0 ? normalizedValue : null
-}
-
 const normalizeCategoriaIds = (value: unknown) => {
   if (!Array.isArray(value)) return []
 
@@ -39,15 +33,6 @@ const normalizeCategoriaIds = (value: unknown) => {
         .filter((item) => Number.isInteger(item) && item > 0)
     ),
   ]
-}
-
-const normalizeMediaUrls = (value: unknown) => {
-  if (!Array.isArray(value)) return []
-
-  return value
-    .filter((item): item is string => typeof item === 'string')
-    .map((item) => item.trim())
-    .filter(Boolean)
 }
 
 export async function GET(request: NextRequest) {
@@ -157,23 +142,24 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const {
-      name,
-      fonte,
-      link,
-      linkext,
-      categoriasIds,
-      isSequence,
-      mediaUrls,
-      storageBytes,
-    } = body
+    const { categoriasIds, isSequence } = body
 
-    const normalizedName = normalizeOptionalText(name)
-    const normalizedFonte = normalizeOptionalText(fonte)
-    const normalizedLink = normalizeOptionalText(link)
-    const normalizedLinkext = normalizeOptionalText(linkext)
+    const validacao = validarConteudo(body)
+    if (!validacao.ok) {
+      return NextResponse.json(
+        { success: false, error: validacao.error },
+        { status: 400 }
+      )
+    }
+
+    const {
+      name: normalizedName,
+      fonte: normalizedFonte,
+      link: normalizedLink,
+      linkext: normalizedLinkext,
+      mediaUrls: normalizedMediaUrls,
+    } = validacao.value
     const normalizedCategoriasIds = normalizeCategoriaIds(categoriasIds)
-    const normalizedMediaUrls = normalizeMediaUrls(mediaUrls)
 
     if (!normalizedName) {
       return NextResponse.json(
@@ -215,10 +201,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const requestedStorageBytes = Number(storageBytes || 0)
-    if (requestedStorageBytes > 0) {
+    // Tamanho real lido no Blob; o storageBytes enviado pelo navegador é ignorado.
+    let requestedStorageBytes = 0
+    if (normalizedMediaUrls.length > 0) {
+      try {
+        requestedStorageBytes = await medirMidias(normalizedMediaUrls)
+      } catch {
+        return NextResponse.json(
+          { success: false, error: 'Nao foi possivel confirmar o arquivo enviado. Envie de novo.' },
+          { status: 400 }
+        )
+      }
+
       const quota = await checkUserStorageQuotaByDelta(userId, requestedStorageBytes)
       if (!quota.allowed) {
+        await descartarMidias(normalizedMediaUrls)
         return NextResponse.json(
           { success: false, error: quota.message },
           { status: 400 }
