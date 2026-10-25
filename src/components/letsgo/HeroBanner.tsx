@@ -8,6 +8,7 @@ import { CategoriaWithUrls } from '@/types'
 interface HeroBannerProps {
   categorias: CategoriaWithUrls[]
   categoriaFiltrada?: string | null
+  ownerName?: string
 }
 
 type BannerConteudo = CategoriaWithUrls['conteudos'][number]
@@ -21,7 +22,7 @@ function getBannerMediaUrl(conteudo: BannerConteudo) {
   return firstMediaUrl || conteudo.url || null
 }
 
-export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBannerProps) {
+export default function HeroBanner({ categorias, categoriaFiltrada, ownerName }: HeroBannerProps) {
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0)
 
   const bannerConteudos = (
@@ -168,15 +169,21 @@ export default function HeroBanner({ categorias, categoriaFiltrada }: HeroBanner
 
         <div className="relative z-10 flex min-h-[30rem] items-end px-4 pb-12 pt-[calc(52vw+4.5rem)] md:min-h-[36rem] md:px-8 md:pb-16 md:pt-24 lg:min-h-[40rem]">
           <div className="max-w-xl md:max-w-[40%] lg:max-w-[36%]">
+            {ownerName && (
+              <p aria-hidden="true" className="mb-5 text-sm font-semibold text-zinc-300 md:text-base">
+                Portfólio de <span className="text-white">{ownerName}</span>
+              </p>
+            )}
+
             {currentBanner.isTrend && (
               <div className="mb-5 inline-flex items-center rounded-full bg-red-600 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-white">
                 Em alta
               </div>
             )}
 
-            <h1 className="max-w-lg text-4xl font-bold leading-[0.95] text-white md:text-5xl lg:text-6xl">
+            <h2 className="max-w-lg text-4xl font-bold leading-[0.95] text-white md:text-5xl lg:text-6xl">
               {getBannerTitle(currentBanner)}
-            </h1>
+            </h2>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <button

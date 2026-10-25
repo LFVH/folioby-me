@@ -21,10 +21,14 @@ export default function PortfolioClient({ slug }: PortfolioClientProps) {
     return <LoadingSpinner />
   }
 
+  const ownerName = data?.userName || slug
+
   return (
     <main className="">
+      <h1 className="sr-only">Portfólio de {ownerName}</h1>
       <HeroBanner 
         categorias={categorias}
+        ownerName={ownerName}
         categoriaFiltrada={tipoFiltro === 'categoria' ? filtroAtivo : null}
       />
       

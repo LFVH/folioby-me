@@ -54,17 +54,14 @@ function ProfileDescription({ desc }: { desc: User['desc'] }) {
   )
 }
 
-function ProfileLinksCard({ links }: { links: LinkItem[] }) {
+function ProfileLinksCard({ links, anchorId }: { links: LinkItem[]; anchorId: string }) {
   return (
     <section
-      id="links"
+      id={anchorId}
       className="scroll-mt-32 rounded-[28px] border border-zinc-800 bg-zinc-950/80 p-5 shadow-2xl shadow-black/30 backdrop-blur sm:p-6"
     >
       <div className="mb-5 flex items-end justify-between gap-4">
-        <div>
-          <p className="text-xs uppercase tracking-[0.35em] text-red-500">Contato</p>
-          <h2 className="mt-2 text-2xl font-semibold text-white">Links</h2>
-        </div>
+        <h2 className="text-2xl font-semibold text-white">Contato</h2>
         <div className="mb-2 h-px flex-1 bg-gradient-to-r from-red-600/70 to-transparent" />
       </div>
       <LinksList links={links} />
@@ -103,13 +100,13 @@ function MobileProfileLayout({ user }: { user: User }) {
           <div className="mt-4 h-1 w-20 rounded-full bg-red-600" />
           <PortfolioButton />
         </div>
-
-        <div className="relative mt-8 rounded-[24px] border border-zinc-800 bg-black/40 p-5 text-left">
-          <ProfileDescription desc={user.desc} />
-        </div>
       </section>
 
-      <ProfileLinksCard links={user.links} />
+      {user.links?.length > 0 && <ProfileLinksCard links={user.links} anchorId="links" />}
+
+      <section className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 text-left">
+        <ProfileDescription desc={user.desc} />
+      </section>
     </div>
   )
 }
@@ -144,7 +141,7 @@ function DesktopProfileLayout({ user }: { user: User }) {
           </div>
         </section>
 
-        <ProfileLinksCard links={user.links} />
+        {user.links?.length > 0 && <ProfileLinksCard links={user.links} anchorId="links-lg" />}
       </aside>
     </div>
   )
@@ -154,16 +151,21 @@ export default function ProfileClient({ user }: ProfileClientProps) {
   const pathname = usePathname()
 
   useEffect(() => {
-    const hash = window.location.hash
+    let id = window.location.hash.slice(1)
+    try {
+      id = decodeURIComponent(id)
+    } catch {
+      // Hash com % malformado: usa o texto cru.
+    }
 
-    if (!hash) {
+    if (!id) {
       return
     }
 
-    const el = document.querySelector(hash)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
-    }
+    // Mobile e desktop renderizam blocos próprios; rola até o que está visível.
+    const el = [document.getElementById(id), document.getElementById(`${id}-lg`)]
+      .find((candidate) => candidate && candidate.offsetParent !== null)
+    el?.scrollIntoView({ behavior: 'smooth' })
   }, [pathname])
 
   return (
