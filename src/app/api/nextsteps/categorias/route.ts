@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from "../../../../prisma"
 import { verifyUser } from "@/utils/verifyUserAuth"
+import { validarTextosCategoria } from '@/lib/limits'
 
 const normalizeOptionalText = (value: unknown) => {
   if (typeof value !== 'string') return null
@@ -107,6 +108,13 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
+    const limitesCategoria = validarTextosCategoria(body)
+    if (!limitesCategoria.ok) {
+      return NextResponse.json(
+        { success: false, error: limitesCategoria.error },
+        { status: 400 }
+      )
+    }
     const nome = normalizeOptionalText(body?.nome)
     const name = normalizeOptionalText(body?.name)
     const descricao = normalizeOptionalText(body?.descricao)

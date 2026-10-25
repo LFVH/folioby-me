@@ -1,16 +1,18 @@
 import { z } from 'zod';
 import { normalizeProfileLink, PROFILE_LINK_OPTIONS } from '@/lib/profile-links';
+import { LIMITES } from '@/lib/limits';
 
 export const SignupFormSchema = z.object({
   name: z
     .string()
     .min(2, { message: 'Name must be at least 2 characters long.' })
-    .max(100, { message: 'Name is too long.' })
+    .max(LIMITES.usuarioNome, { message: 'Name is too long.' })
     .trim(),
   email: z.string().email({ message: 'Please enter a valid email.' }).trim().transform(email => email.toLowerCase()),
   password: z
     .string()
     .min(8, { message: 'Be at least 8 characters long' })
+    .max(LIMITES.senhaMax, { message: `Use at most ${LIMITES.senhaMax} characters.` })
     .trim(),
 });
 
@@ -41,8 +43,8 @@ export type SessionPayload = {
 
 export const linkSchema = z.object({
   nr_redesocial: z.number().int().min(0).max(PROFILE_LINK_OPTIONS.length - 1),
-  link: z.string().min(1),
-  titulo: z.string().min(1).max(60)
+  link: z.string().min(1).max(LIMITES.url),
+  titulo: z.string().min(1).max(LIMITES.linkTitulo)
 }).superRefine((data, ctx) => {
   const normalizedLink = normalizeProfileLink(data.link, data.nr_redesocial)
 
