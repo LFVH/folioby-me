@@ -63,7 +63,7 @@ export default function ConteudosFiltradosComScroll({
       <div className="text-center py-16">
         <p className="text-gray-400 text-xl mb-4">
           {tipoFiltro === 'search'
-            ? `Nenhum resultado encontrado para &quot;${termoPesquisa}&quot;`
+            ? `Nenhum resultado encontrado para “${termoPesquisa}”`
             : tipoFiltro === 'categoria'
               ? 'Nenhum conteúdo encontrado nesta categoria.'
               : 'Nenhum conteúdo encontrado.'
@@ -105,16 +105,17 @@ export default function ConteudosFiltradosComScroll({
     </Link>
   )
 
+  const totalEncontrado = categoriasFiltradas.reduce((total, cat) => total + cat.conteudos.length, 0)
+
   return (
     <section className="py-8 space-y-12">
       {tipoFiltro === 'search' && categoriasFiltradas.length > 0 && (
         <div className="px-4 md:px-8">
           <h2 className="text-2xl font-bold text-white mb-2">
-            Resultados para &quot;{termoPesquisa}&quot;
+            Resultados para “{termoPesquisa}”
           </h2>
           <p className="text-gray-400">
-            {categoriasFiltradas.reduce((total, cat) => total + cat.conteudos.length, 0)} 
-            conteúdo(s) encontrado(s)
+            {totalEncontrado === 1 ? '1 conteúdo encontrado' : `${totalEncontrado} conteúdos encontrados`}
           </p>
         </div>
       )}

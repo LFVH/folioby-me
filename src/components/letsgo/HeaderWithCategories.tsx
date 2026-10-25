@@ -8,6 +8,7 @@ import SearchBar from './SearchBar'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { scrollToTop } from '@/lib/utils'
+import { hasStaticShowcase } from '@/lib/static-profiles'
 import { useRouter, usePathname } from 'next/navigation'
 
 // Altura da LoggedBar (borda + py-2 + botão h-10), fixa no topo para o dono logado.
@@ -43,6 +44,8 @@ export default function HeaderWithCategories() {
   const [isMobileCategoriesOpen, setIsMobileCategoriesOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const loggedBarVisible = Boolean(session?.user?.status)
+  // Sem vitrine dinâmica (página estática), busca e categorias não teriam o que filtrar.
+  const showcaseFilters = !hasStaticShowcase(slug)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -79,6 +82,13 @@ export default function HeaderWithCategories() {
     }
     setIsDropdownOpen(false)
     setIsMobileCategoriesOpen(false)
+  }
+
+  const handleSearch = (termo: string) => {
+    if (termo && pathname !== `/${slug}`) {
+      router.push(`/${slug}`)
+    }
+    setFiltroPesquisa(termo)
   }
 
   const handleInicioClick = () => {
@@ -166,7 +176,7 @@ export default function HeaderWithCategories() {
               </Link>
             ))}
 
-            {categorias.length > 0 && (
+            {showcaseFilters && categorias.length > 0 && (
               <div className="hidden items-center gap-2 md:flex">
                 <span aria-hidden="true" className="mr-2 h-5 w-px bg-zinc-700" />
                 {categoriasPrincipais.map((categoria) => (
@@ -236,7 +246,7 @@ export default function HeaderWithCategories() {
             )}
           </nav>
 
-          {categorias.length > 0 && (
+          {showcaseFilters && categorias.length > 0 && (
             <button
               type="button"
               onClick={() => setIsMobileCategoriesOpen(!isMobileCategoriesOpen)}
@@ -250,13 +260,15 @@ export default function HeaderWithCategories() {
             </button>
           )}
 
-          <div className="ml-auto shrink-0">
-            <SearchBar
-              onSearch={setFiltroPesquisa}
-              value={tipoFiltro === 'search' ? termoPesquisa : ''}
-              onClear={limparFiltros}
-            />
-          </div>
+          {showcaseFilters && (
+            <div className="ml-auto shrink-0">
+              <SearchBar
+                onSearch={handleSearch}
+                value={tipoFiltro === 'search' ? termoPesquisa : ''}
+                onClear={limparFiltros}
+              />
+            </div>
+          )}
         </div>
 
         {isMobileCategoriesOpen && categorias.length > 0 && (

@@ -17,7 +17,7 @@ export const useConteudosFiltrados = ({
   const [categoriasFiltradas, setCategoriasFiltradas] = useState<CategoriaWithUrls[]>([])
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const lastFilterRef = useRef({ filtroAtivo, tipoFiltro, termoPesquisa })
 
