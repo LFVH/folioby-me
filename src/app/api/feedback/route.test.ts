@@ -123,6 +123,22 @@ describe('/api/feedback', () => {
     expect(response.status).toBe(409);
   });
 
+  it('salva o feedback mesmo se o aviso no Telegram falhar', async () => {
+    vi.stubEnv('TELEGRAM_BOT_TOKEN', '123:abc');
+    vi.stubEnv('TELEGRAM_CHAT_ID', '999');
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('fora do ar')));
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(prisma.feedback, 'findMany').mockResolvedValue([] as any);
+    vi.spyOn(prisma.feedback, 'create').mockResolvedValue({ id: 12 } as any);
+    vi.spyOn(prisma.usuario, 'findUnique').mockResolvedValue({ name: 'Maria', email: 'maria@exemplo.com' } as any);
+
+    const response = await post(valido);
+
+    expect(response.status).toBe(201);
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
   it('informa quantos feedbacks o usuario ja enviou', async () => {
     vi.spyOn(prisma.feedback, 'count').mockResolvedValue(2);
 

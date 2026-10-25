@@ -6,6 +6,20 @@ import {
   FEEDBACK_LIMITE_POR_USUARIO,
   feedbackSchema,
 } from '@/lib/feedback';
+import { avisarFeedbackNoTelegram } from '@/lib/telegram';
+
+async function avisarDono(userId: string, feedback: { nota: number; mensagem: string; podeContatar: boolean }) {
+  if (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_CHAT_ID) {
+    return;
+  }
+
+  try {
+    const usuario = await prisma.usuario.findUnique({ where: { id: userId }, select: { name: true, email: true } });
+    await avisarFeedbackNoTelegram({ ...feedback, nome: usuario?.name, email: usuario?.email });
+  } catch {
+    // O feedback já está salvo; o aviso é só conveniência.
+  }
+}
 
 function erro(message: string, status: number) {
   return NextResponse.json({ success: false, message }, { status });
@@ -93,6 +107,9 @@ export async function POST(request: NextRequest) {
       }
       throw error;
     }
+
+    // Aguardado (com timeout de 3s): na Vercel, trabalho solto depois da resposta pode ser interrompido.
+    await avisarDono(userId, parsed.data);
 
     return NextResponse.json(
       { success: true, enviados: existentes.length + 1, limite: FEEDBACK_LIMITE_POR_USUARIO },
