@@ -202,7 +202,7 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
   }
 
   return (
-    <div className="tiptap-editor">
+    <div className={`tiptap-editor${editable ? '' : ' is-readonly'}`}>
       {editable && (
         <>
           <div className="toolbar">
@@ -318,6 +318,17 @@ export default function TiptapEditor({ content, onChange, editable = true }: Tip
       )}
       
       <style jsx global>{`
+        .tiptap-editor.is-readonly {
+          border: 0;
+          background: transparent;
+        }
+
+        .tiptap-editor.is-readonly .ProseMirror {
+          min-height: 0;
+          padding: 0;
+          background: transparent;
+        }
+
         .tiptap-editor {
           border: 1px solid #333;
           border-radius: 0.5rem;

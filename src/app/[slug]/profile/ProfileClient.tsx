@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
-import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+import { useParams, usePathname } from 'next/navigation'
 import TipTapEditor from '@/components/logged/TipTapEditor'
 import LinksList from '@/components/letsgo/profile/LinksList'
 import { Avatar } from '@/components/ui/Avatar'
@@ -59,15 +60,30 @@ function ProfileLinksCard({ links }: { links: LinkItem[] }) {
       id="links"
       className="scroll-mt-32 rounded-[28px] border border-zinc-800 bg-zinc-950/80 p-5 shadow-2xl shadow-black/30 backdrop-blur sm:p-6"
     >
-      <div className="mb-5 flex items-center justify-between gap-4">
+      <div className="mb-5 flex items-end justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.35em] text-red-500">Contato</p>
           <h2 className="mt-2 text-2xl font-semibold text-white">Links</h2>
         </div>
-        <div className="h-px flex-1 bg-gradient-to-r from-red-600/70 to-transparent" />
+        <div className="mb-2 h-px flex-1 bg-gradient-to-r from-red-600/70 to-transparent" />
       </div>
       <LinksList links={links} />
     </section>
+  )
+}
+
+function PortfolioButton() {
+  const params = useParams()
+  const slug = params.slug as string
+
+  return (
+    <Link
+      href={`/${slug}`}
+      className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-zinc-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+    >
+      Ver portfólio
+      <span aria-hidden="true">→</span>
+    </Link>
   )
 }
 
@@ -85,6 +101,7 @@ function MobileProfileLayout({ user }: { user: User }) {
           <p className="mt-6 text-xs uppercase tracking-[0.4em] text-red-500">Perfil</p>
           <h1 className="mt-3 text-4xl font-bold text-white">{user.name}</h1>
           <div className="mt-4 h-1 w-20 rounded-full bg-red-600" />
+          <PortfolioButton />
         </div>
 
         <div className="relative mt-8 rounded-[24px] border border-zinc-800 bg-black/40 p-5 text-left">
@@ -108,8 +125,9 @@ function DesktopProfileLayout({ user }: { user: User }) {
             {user.name}
           </h1>
           <div className="mt-6 h-1 w-28 rounded-full bg-red-600" />
+          <PortfolioButton />
 
-          <div className="mt-10 rounded-[28px] border border-zinc-800 bg-black/30 p-8">
+          <div className="mt-10 rounded-[24px] border border-zinc-800 bg-black/30 p-6 lg:p-8">
             <ProfileDescription desc={user.desc} />
           </div>
         </div>
