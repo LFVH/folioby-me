@@ -18,7 +18,7 @@ export default function PoliticaPrivacidadePage() {
             FolioBy - Sua privacidade é nossa prioridade
           </p>
           <p className="text-center text-sm text-gray-500 mt-2">
-            Última atualização: 04/03/2026
+            Última atualização: 25/10/2026
           </p>
         </div>
       </div>
@@ -75,14 +75,14 @@ export default function PoliticaPrivacidadePage() {
                 <h3 className="text-xl font-semibold text-yellow-300 mb-3 flex items-center">
                   <span className="mr-2">💳</span> Dados de Pagamento
                 </h3>
-                <p className="mb-2">Processados de forma segura pelo Stripe:</p>
+                <p className="mb-2">Processados de forma segura pelo processador de pagamento (Stripe ou Mercado Pago):</p>
                 <ul className="list-disc pl-6 space-y-1">
-                  <li><span className="text-green-400">Dados de cartão de crédito:</span> Coletados e processados exclusivamente pelo Stripe.</li>
+                  <li><span className="text-green-400">Dados de cartão de crédito:</span> Coletados e processados exclusivamente pelo Stripe ou pelo Mercado Pago.</li>
                   <li><span className="text-green-400">Informações de faturamento:</span> Endereço, CPF/CNPJ quando necessário para emissão de notas.</li>
                 </ul>
                 <div className="mt-4 p-3 bg-black/40 rounded-lg">
                   <p className="text-sm font-medium text-yellow-300">⚠️ Importante:</p>
-                  <p className="text-sm">O FolioBy <span className="text-red-400">NÃO ARMAZENA</span> dados de cartão de crédito. Todo o processamento é feito diretamente nos servidores seguros do <span className="text-blue-400">Stripe</span>, que é certificado PCI DSS nível 1.</p>
+                  <p className="text-sm">O FolioBy <span className="text-red-400">NÃO ARMAZENA</span> dados de cartão de crédito. Todo o processamento é feito diretamente nos servidores do processador de pagamento (<span className="text-blue-400">Stripe</span> ou <span className="text-blue-400">Mercado Pago</span>).</p>
                 </div>
               </div>
               {}
@@ -131,7 +131,7 @@ export default function PoliticaPrivacidadePage() {
                 <span className="text-2xl">💳</span>
                 <div>
                   <h3 className="font-semibold text-green-400">Processar pagamentos</h3>
-                  <p className="text-sm">Via Stripe, com máxima segurança.</p>
+                  <p className="text-sm">Via Stripe ou Mercado Pago, com máxima segurança.</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3 bg-black/30 p-4 rounded-lg">
@@ -154,7 +154,7 @@ export default function PoliticaPrivacidadePage() {
           <section className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-xl p-6 md:p-8 border border-blue-500/50">
             <h2 className="text-2xl font-semibold text-white mb-4 flex items-center">
               <span className="w-1 h-8 bg-blue-500 mr-3 rounded-full"></span>
-              3. Processamento de Pagamentos - Stripe
+              3. Processamento de Pagamentos
             </h2>
             <div className="flex flex-col md:flex-row gap-6 items-center">
               <div className="w-32 h-32 bg-white rounded-xl flex items-center justify-center p-4">
@@ -163,8 +163,8 @@ export default function PoliticaPrivacidadePage() {
                 </svg>
               </div>
               <div className="flex-1">
-                <p className="text-lg mb-2">Utilizamos o <span className="text-blue-400 font-bold">Stripe</span> como processador de pagamentos.</p>
-                <p className="text-gray-300">Todos os dados financeiros são enviados diretamente para o Stripe, seguindo os mais altos padrões de segurança da indústria (PCI DSS Nível 1).</p>
+                <p className="text-lg mb-2">Podemos utilizar o <span className="text-blue-400 font-bold">Stripe</span> ou o <span className="text-blue-400 font-bold">Mercado Pago</span> como processadores de pagamento.</p>
+                <p className="text-gray-300">Todos os dados financeiros são enviados diretamente para o processador escolhido, que segue os padrões de segurança da indústria de pagamentos.</p>
                 <p className="mt-3 text-sm">Para mais informações, consulte a <a href="https://stripe.com/br/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-400 underline">Política de Privacidade do Stripe</a>.</p>
               </div>
             </div>
@@ -177,7 +177,11 @@ export default function PoliticaPrivacidadePage() {
             </h2>
             <p className="mb-3">Seus dados <span className="text-red-400">NÃO</span> são vendidos para terceiros. Podemos compartilhar apenas:</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li><span className="text-green-400">Com o Stripe:</span> Exclusivamente para processar pagamentos.</li>
+              <li><span className="text-green-400">Com o Stripe ou o Mercado Pago:</span> Exclusivamente para processar pagamentos.</li>
+              <li>
+                <span className="text-green-400">Com o Telegram (notificação interna):</span> Quando você se cadastra ou envia um feedback, seu nome, seu e-mail e o conteúdo do feedback são enviados em mensagem privada apenas ao administrador do FolioBy, para acompanhar a plataforma. O Telegram pode processar esses dados fora do Brasil. Consulte a{' '}
+                <a href="https://telegram.org/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-400 underline">Política de Privacidade do Telegram</a>.
+              </li>
               <li><span className="text-green-400">Por obrigação legal:</span> Com autoridades judiciais quando exigido por lei.</li>
               <li><span className="text-green-400">Dados públicos:</span> Nome e foto de perfil são visíveis para qualquer visitante do seu portfólio (essa é a finalidade do serviço).</li>
             </ul>
