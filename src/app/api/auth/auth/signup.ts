@@ -1,6 +1,7 @@
 'use server';
 
 import bcrypt from 'bcryptjs';
+import { after } from 'next/server';
 
 import {
   FormState,
@@ -8,8 +9,22 @@ import {
 } from '@/app/api/auth/auth/definitions';
 import { generateAvailableUserSlug } from '@/lib/db/user-slug-service';
 import { UserSlugError } from '@/lib/user-slug';
+import { avisarCadastroNoTelegram } from '@/lib/telegram';
 
 import Prisma from '../../../../prisma';
+
+async function avisarDonoDoCadastro(usuario: { name: string; email: string; slug: string }) {
+  if (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_CHAT_ID) {
+    return;
+  }
+
+  try {
+    const totalUsuarios = await Prisma.usuario.count().catch(() => null);
+    await avisarCadastroNoTelegram({ nome: usuario.name, email: usuario.email, slug: usuario.slug, totalUsuarios });
+  } catch {
+    // A conta já foi criada; o aviso é só conveniência.
+  }
+}
 
 export async function signup(
   state: FormState,
@@ -69,7 +84,8 @@ export async function signup(
           },
         });
 
-
+    // Roda depois da resposta (na Vercel via waitUntil): o cadastro não espera pelo Telegram nem pela contagem.
+    after(() => avisarDonoDoCadastro(userDB));
 
     return { data: {
         name: userDB.name,
