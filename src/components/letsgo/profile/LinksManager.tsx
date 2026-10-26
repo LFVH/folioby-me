@@ -22,20 +22,32 @@ export default function LinksManager() {
   const isEmailSelected = rede === PROFILE_LINK_TYPE.EMAIL
 
   const fetchLinks = async () => {
-    const res = await fetch('/api/nextsteps/user/links')
-    const data = await res.json()
-    setLinks(data.data || [])
+    try {
+      const res = await fetch('/api/nextsteps/user/links')
+      const data = await res.json()
+      setLinks(data.data || [])
+    } catch (error) {
+      console.error('Erro ao carregar links:', error)
+      toast.error('Erro ao carregar links.')
+    }
   }
 
   useEffect(() => {
     let active = true
 
     const loadLinks = async () => {
-      const res = await fetch('/api/nextsteps/user/links')
-      const data = await res.json()
+      try {
+        const res = await fetch('/api/nextsteps/user/links')
+        const data = await res.json()
 
-      if (active) {
-        setLinks(data.data || [])
+        if (active) {
+          setLinks(data.data || [])
+        }
+      } catch (error) {
+        console.error('Erro ao carregar links:', error)
+        if (active) {
+          toast.error('Erro ao carregar links.')
+        }
       }
     }
 
@@ -71,38 +83,48 @@ export default function LinksManager() {
       return
     }
 
-    const response = await fetch('/api/nextsteps/user/links', {
-      method: 'POST',
-      body: JSON.stringify({
-        nr_redesocial: rede,
-        link: normalizedLink.value,
-        titulo,
-      }),
-    })
+    try {
+      const response = await fetch('/api/nextsteps/user/links', {
+        method: 'POST',
+        body: JSON.stringify({
+          nr_redesocial: rede,
+          link: normalizedLink.value,
+          titulo,
+        }),
+      })
 
-    if (response.ok) {
-      toast.success('Link adicionado com sucesso!')
-      setTitulo('')
-      setUrl('')
-      setRede(0)
-      fetchLinks()
-      return
+      if (response.ok) {
+        toast.success('Link adicionado com sucesso!')
+        setTitulo('')
+        setUrl('')
+        setRede(0)
+        await fetchLinks()
+        return
+      }
+
+      toast.error('Erro ao adicionar link. Tente novamente.')
+    } catch (error) {
+      console.error('Erro ao adicionar link:', error)
+      toast.error('Erro ao adicionar link. Tente novamente.')
     }
-
-    toast.error('Erro ao adicionar link. Tente novamente.')
   }
 
   const deleteLink = async (index: number) => {
-    const response = await fetch('/api/nextsteps/user/links', {
-      method: 'DELETE',
-      body: JSON.stringify({ index }),
-    })
-    if (response.ok) {
-      toast.success('Link excluído com sucesso!')
-    } else {
+    try {
+      const response = await fetch('/api/nextsteps/user/links', {
+        method: 'DELETE',
+        body: JSON.stringify({ index }),
+      })
+      if (response.ok) {
+        toast.success('Link excluído com sucesso!')
+      } else {
+        toast.error('Erro ao excluir link. Tente novamente.')
+      }
+    } catch (error) {
+      console.error('Erro ao excluir link:', error)
       toast.error('Erro ao excluir link. Tente novamente.')
     }
-    fetchLinks()
+    await fetchLinks()
   }
 
   return (

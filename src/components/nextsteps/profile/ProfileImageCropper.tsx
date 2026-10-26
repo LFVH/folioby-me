@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import Cropper, { type Area, type Point } from 'react-easy-crop'
+import { toast } from 'react-toastify'
 import { cn } from '@/lib/utils'
 import { drawCroppedPreview, exportCroppedImage, loadImage } from '@/lib/image-crop'
 
@@ -57,7 +58,8 @@ function CropEditor({
           setSourceImage(image)
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error('Erro ao carregar imagem para recorte:', error)
         if (isMounted) {
           setSourceImage(null)
         }
@@ -121,6 +123,9 @@ function CropEditor({
       })
 
       await onConfirm(croppedFile)
+    } catch (error) {
+      console.error('Erro ao preparar a imagem recortada:', error)
+      toast.error('Não foi possível preparar a imagem. Tente de novo.')
     } finally {
       setIsExporting(false)
     }

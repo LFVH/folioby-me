@@ -88,6 +88,7 @@ export default function CategoriasPage() {
         alert(result.error || 'Erro ao excluir categoria')
       }
     } catch (error) {
+      console.error('Erro ao excluir categoria:', error)
       alert('Erro ao excluir categoria')
     }
   }

@@ -470,6 +470,7 @@ export async function POST(request: NextRequest) {
       try {
         parsedBody = JSON.parse(rawBody);
       } catch {
+        console.warn('[mercadopago webhook] Payload JSON inválido');
         return NextResponse.json(
           { error: 'Invalid JSON payload' },
           { status: 400 }

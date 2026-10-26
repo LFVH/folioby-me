@@ -16,8 +16,9 @@ async function avisarDono(userId: string, feedback: { nota: number; mensagem: st
   try {
     const usuario = await prisma.usuario.findUnique({ where: { id: userId }, select: { name: true, email: true } });
     await avisarFeedbackNoTelegram({ ...feedback, nome: usuario?.name, email: usuario?.email });
-  } catch {
-    // O feedback já está salvo; o aviso é só conveniência.
+  } catch (error) {
+    // O feedback já está salvo; o aviso é só conveniência e não muda a resposta.
+    console.error('Aviso de feedback no Telegram falhou:', error instanceof Error ? error.message : error);
   }
 }
 

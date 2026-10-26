@@ -85,7 +85,8 @@ export default function UserPage() {
       } else {
         toast.error(data.error || 'Erro ao atualizar slug')
       }
-    } catch {
+    } catch (error) {
+      console.error('Erro ao atualizar slug:', error)
       toast.error('Erro ao atualizar slug')
     } finally {
       setIsLoading(false)
@@ -122,7 +123,8 @@ export default function UserPage() {
       } else {
         toast.error(data.error || 'Erro ao atualizar senha')
       }
-    } catch {
+    } catch (error) {
+      console.error('Erro ao atualizar senha:', error)
       toast.error('Erro ao atualizar senha')
     } finally {
       setIsLoading(false)

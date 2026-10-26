@@ -206,7 +206,8 @@ export async function POST(request: NextRequest) {
     if (normalizedMediaUrls.length > 0) {
       try {
         requestedStorageBytes = await medirMidias(normalizedMediaUrls)
-      } catch {
+      } catch (error) {
+        console.error('Erro ao medir mídia no Vercel Blob:', error instanceof Error ? error.message : error)
         return NextResponse.json(
           { success: false, error: 'Nao foi possivel confirmar o arquivo enviado. Envie de novo.' },
           { status: 400 }

@@ -75,7 +75,9 @@ export default function HeroCTA() {
     }
 
     if (refreshTrue) {
-      verifyPayment()
+      verifyPayment().catch((error) => {
+        console.error('Erro ao atualizar a sessão após o pagamento:', error)
+      })
     }
   }, [refreshTrue, update, router])
 

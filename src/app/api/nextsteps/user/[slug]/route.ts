@@ -45,6 +45,7 @@ export async function GET(
     const { name, image, desc } = user;
     return NextResponse.json({ name, image, desc });
   } catch (error) {
+    console.error('Erro ao buscar perfil do usuário:', error instanceof Error ? error.message : error);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }
@@ -91,6 +92,7 @@ export async function PUT(
 
     return NextResponse.json(updatedUser);
   } catch (error) {
+    console.error('Erro ao atualizar descrição do perfil:', error instanceof Error ? error.message : error);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }

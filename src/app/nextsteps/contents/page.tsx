@@ -91,6 +91,7 @@ export default function ConteudosPage() {
         alert(result.error || 'Erro ao excluir conteúdo')
       }
     } catch (error) {
+      console.error('Erro ao excluir conteúdo:', error)
       alert('Erro ao excluir conteúdo')
     }
   }

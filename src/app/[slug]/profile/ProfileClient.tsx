@@ -154,8 +154,9 @@ export default function ProfileClient({ user }: ProfileClientProps) {
     let id = window.location.hash.slice(1)
     try {
       id = decodeURIComponent(id)
-    } catch {
-      // Hash com % malformado: usa o texto cru.
+    } catch (error) {
+      // Hash com % malformado: segue com o texto cru.
+      console.warn('Hash da URL com codificação inválida:', error)
     }
 
     if (!id) {

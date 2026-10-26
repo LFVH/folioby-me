@@ -25,6 +25,7 @@ export async function GET(
 
     return NextResponse.json(serializeJsonSafe(user));
   } catch (error) {
+    console.error('Erro ao buscar perfil público:', error instanceof Error ? error.message : error);
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

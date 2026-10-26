@@ -39,6 +39,7 @@ export default function UserProfileContentManager() {
           setSavedDesc(data.desc ?? null);
         }
       } catch (error) {
+        console.error('Erro ao carregar perfil:', error);
         toast.error(error instanceof Error ? error.message : 'Erro ao carregar perfil');
       } finally {
         if (!cancelled) {
@@ -81,6 +82,7 @@ export default function UserProfileContentManager() {
       setSavedDesc(data.desc ?? null);
       toast.success('Descrição atualizada com sucesso!');
     } catch (error) {
+      console.error('Erro ao salvar descrição:', error);
       toast.error(error instanceof Error ? error.message : 'Erro ao salvar descrição');
     } finally {
       setIsSaving(false);

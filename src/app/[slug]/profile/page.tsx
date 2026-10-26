@@ -49,7 +49,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description,
       },
     };
-  } catch {
+  } catch (error) {
+    console.error('Erro ao gerar metadados do perfil:', error instanceof Error ? error.message : error);
     return {};
   }
 }

@@ -19,10 +19,14 @@ async function avisarDonoDoCadastro(usuario: { name: string; email: string; slug
   }
 
   try {
-    const totalUsuarios = await Prisma.usuario.count().catch(() => null);
+    const totalUsuarios = await Prisma.usuario.count().catch((error) => {
+      console.error('Contagem de usuários para o aviso de cadastro falhou:', error instanceof Error ? error.message : error);
+      return null;
+    });
     await avisarCadastroNoTelegram({ nome: usuario.name, email: usuario.email, slug: usuario.slug, totalUsuarios });
-  } catch {
-    // A conta já foi criada; o aviso é só conveniência.
+  } catch (error) {
+    // A conta já foi criada; o aviso é só conveniência e não muda o resultado do cadastro.
+    console.error('Aviso de cadastro no Telegram falhou:', error instanceof Error ? error.message : error);
   }
 }
 
@@ -99,6 +103,7 @@ export async function signup(
       };
     }
 
+    console.error('Erro ao criar conta:', error instanceof Error ? error.message : error);
     return {
       message: 'An error occurred while creating your account.',
     };

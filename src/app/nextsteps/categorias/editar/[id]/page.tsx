@@ -44,7 +44,8 @@ export default function EditarCategoriaPage() {
           alert('Categoria não encontrada')
           router.push('/nextsteps/categorias')
         }
-      } catch {
+      } catch (error) {
+        console.error('Erro ao carregar categoria:', error)
         if (!cancelled) {
           alert('Erro ao carregar categoria')
         }
@@ -84,6 +85,7 @@ export default function EditarCategoriaPage() {
         alert(result.error || 'Erro ao atualizar categoria')
       }
     } catch (error) {
+      console.error('Erro ao atualizar categoria:', error)
       alert('Erro ao atualizar categoria')
     } finally {
       setSaving(false)

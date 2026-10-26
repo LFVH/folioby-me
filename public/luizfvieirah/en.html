@@ -566,7 +566,7 @@ p:last-child { margin-bottom: 0; }
   }
   async function copyMail() {
     try { await navigator.clipboard.writeText(MAIL); toast("Email copied: luizfvieirah@gmail.com. If your mail app doesn't open, just paste it."); return true; }
-    catch { toast('My email: luizfvieirah@gmail.com'); return false; }
+    catch (error) { console.warn('Could not copy the email:', error); toast('My email: luizfvieirah@gmail.com'); return false; }
   }
   document.querySelectorAll('a[href^="mailto:"]').forEach(a => a.addEventListener('click', copyMail));
   // O flutuante só aparece quando o card de e-mail principal sai da tela

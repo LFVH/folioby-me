@@ -22,7 +22,8 @@ function avisoFechadoRecentemente() {
   try {
     const fechadoEm = Number(localStorage.getItem(AVISO_FECHADO_KEY))
     return Boolean(fechadoEm) && Date.now() - fechadoEm < AVISO_PAUSA_MS
-  } catch {
+  } catch (error) {
+    console.warn('Não foi possível ler o armazenamento local do aviso de feedback:', error)
     return false
   }
 }
@@ -30,8 +31,9 @@ function avisoFechadoRecentemente() {
 function lembrarAvisoFechado() {
   try {
     localStorage.setItem(AVISO_FECHADO_KEY, String(Date.now()))
-  } catch {
+  } catch (error) {
     // Sem storage o aviso só volta a aparecer no próximo carregamento.
+    console.warn('Não foi possível salvar o fechamento do aviso de feedback:', error)
   }
 }
 
@@ -82,7 +84,9 @@ export default function FeedbackPrompt() {
           setAvisoVisivel(disponiveis > 0 && !avisoFechadoRecentemente())
         }
       })
-      .catch(() => {})
+      .catch((error) => {
+        console.error('Não foi possível consultar os feedbacks enviados:', error)
+      })
 
     return () => {
       cancelado = true
@@ -164,7 +168,10 @@ export default function FeedbackPrompt() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nota, mensagem: mensagemLimpa, podeContatar }),
       })
-      const dados = await res.json().catch(() => null)
+      const dados = await res.json().catch((error) => {
+        console.error('Resposta inválida da API de feedback:', error)
+        return null
+      })
 
       if (res.status === 201) {
         toast.success('Obrigado! Seu feedback foi registrado.')
@@ -184,7 +191,8 @@ export default function FeedbackPrompt() {
       }
 
       setErroForm(dados?.message ?? 'Não foi possível enviar agora. Tente de novo em instantes.')
-    } catch {
+    } catch (error) {
+      console.error('Erro ao enviar feedback:', error)
       setErroForm('Não foi possível enviar agora. Verifique sua conexão.')
     } finally {
       setEnviando(false)
