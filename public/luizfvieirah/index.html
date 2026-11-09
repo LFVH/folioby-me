@@ -382,13 +382,13 @@ p:last-child { margin-bottom: 0; }
     <section id="sobre" aria-labelledby="h-sobre">
       <h2 class="sh" id="h-sobre">Sobre</h2>
       <p>Comecei no back-end de uma fintech: foram <b>2 anos e 8 meses na Sinqia</b> com Java e SQL Server em produção, entre stored procedures, índices, tuning de queries e incidentes resolvidos direto com os clientes. Foi lá que destravei uma esteira de crédito parada por deadlock e acelerei um relatório de inadimplência que levava minutos.</p>
-      <p>Em 2022, escolhi me tornar <b>full-stack</b>: fiz freelas em TypeScript e Next.js e, em 2026, lancei o <b>FolioBy</b>, SaaS de portfólio com assinatura recorrente. Agora volto ao back-end Java no domínio financeiro com o <b>WorkFlow Crédito</b>, uma esteira de crédito em Java 21 e Spring Boot 3.</p>
+      <p>Em 2022, escolhi me tornar <b>full-stack</b>: fiz freelas em TypeScript, Node.js e Next.js, entre eles a evolução de uma plataforma em produção para uma entidade do setor de educação, de 2024 a 2025. Em 2026, lancei o <b>FolioBy</b>, SaaS de portfólio com assinatura recorrente. Agora volto ao back-end Java no domínio financeiro com o <b>WorkFlow Crédito</b>, uma esteira de crédito em Java 21 e Spring Boot 3.</p>
       <p>Procuro uma vaga <b>back-end Java ou full-stack</b>, remota, híbrida ou presencial. Falo português (nativo) e <b>inglês fluente</b>, além de espanhol e italiano para conversação do dia a dia.</p>
       <dl class="stack" aria-label="Principais tecnologias">
         <div><dt>Back-end</dt><dd>Java 21, Spring Boot 3, Spring Data JPA, Hibernate, Spring for GraphQL, Maven, arquitetura hexagonal</dd></div>
         <div><dt>Dados</dt><dd>SQL, PostgreSQL, SQL Server, Flyway, stored procedures</dd></div>
         <div><dt>Testes e CI</dt><dd>JUnit 5, Testcontainers, TDD, GitHub Actions</dd></div>
-        <div><dt>Full-stack TS</dt><dd>TypeScript, Next.js, React, Node.js, Prisma</dd></div>
+        <div><dt>Full-stack TS</dt><dd>TypeScript, Next.js, React, Node.js, Express, Prisma, AWS (RDS, S3), Vercel</dd></div>
       </dl>
     </section>
 
@@ -400,10 +400,13 @@ p:last-child { margin-bottom: 0; }
           <div class="what">
             <h3>Desenvolvedor Full-Stack<small>Freelancer e produtos próprios</small></h3>
             <ul class="pts">
-              <li>Transição deliberada para full-stack: entreguei projetos web para clientes com TypeScript e Next.js, da interface à integração com serviços de back-end.</li>
+              <li>Transição deliberada para full-stack: projetos web sob contrato e produtos próprios, com TypeScript, Node.js, React/Next.js e PostgreSQL.</li>
+              <li><b>Cliente: entidade de classe do setor de educação (set/2024 — abr/2025).</b> Conduzi a evolução de uma plataforma em produção com três aplicações: portal e painel em Next.js 14 e API REST em Node.js/Express com Prisma, PostgreSQL (AWS RDS) e Redis, na Vercel. Escrevi as propostas e os contratos: 12 semanas divididas em 5 entregas, com homologação.</li>
+              <li>Transformei um módulo fixo de campanha em páginas dinâmicas por slug, com cerca de 20 endpoints REST protegidos por permissão (RBAC), e migrei o conteúdo existente com SQL (<code>INSERT … SELECT</code>) sem perda de dados.</li>
+              <li>Desenvolvi a gestão de membros com upload no AWS S3 e ativei os e-mails transacionais via Gmail com OAuth2: <b>a equipe do cliente passou a atualizar o site sem depender de desenvolvedor.</b></li>
               <li>Em 2026, fundei o FolioBy, SaaS de portfólio no ar com usuários reais, e comecei o WorkFlow Crédito, back-end Java de esteira de crédito. <a href="#projetos">Detalhes em Projetos ↓</a></li>
             </ul>
-            <ul class="tags"><li>Java 21</li><li>Spring Boot 3</li><li>PostgreSQL</li><li>TypeScript</li><li>Next.js</li><li>React</li><li>Prisma</li></ul>
+            <ul class="tags"><li>Java 21</li><li>Spring Boot 3</li><li>PostgreSQL</li><li>TypeScript</li><li>Node.js</li><li>Express</li><li>Next.js</li><li>React</li><li>Prisma</li><li>AWS</li></ul>
           </div>
         </li>
         <li class="item">
@@ -411,7 +414,7 @@ p:last-child { margin-bottom: 0; }
           <div class="what">
             <h3>Analista de Sistemas<small>Sinqia · fintech de sistemas financeiros e contábeis</small></h3>
             <ul class="pts">
-              <li>Desenvolvi funcionalidades e dei suporte em produção a sistemas financeiros e contábeis em Java, em time ágil com Git, resolvendo incidentes de ponta a ponta direto com os clientes.</li>
+              <li>Desenvolvi funcionalidades e dei suporte em produção a sistemas financeiros e contábeis em Java, em time ágil com Git, resolvendo incidentes de ponta a ponta direto com uma carteira de 8 a 13 clientes da indústria, do varejo e do setor bancário.</li>
               <li>Destravei em produção a esteira de crédito de um cliente, parada por deadlock depois de uma carga em lote: analisei as sessões bloqueadas no SQL Server, padronizei a ordem de acesso às tabelas e criei índices a partir do plano de execução. Em cerca de 15 minutos a esteira voltou a rodar, já com a causa corrigida. <b>Evitei um prejuízo previsto de R$ 300 mil.</b></li>
               <li>Otimizei a procedure do relatório de inadimplência, sobre milhões de contratos e parcelas, consolidando várias tabelas temporárias em uma: <b>de cerca de 10 minutos para 3 segundos</b> em produção.</li>
             </ul>
@@ -444,6 +447,7 @@ p:last-child { margin-bottom: 0; }
               <li>Isolei o domínio em Java puro, sem anotação de framework (arquitetura hexagonal): troquei o repositório em memória pelo JPA com um adaptador novo; no domínio, só entrou a fábrica <code>Proposta.reconstituir</code>, para recriar a proposta a partir do banco.</li>
               <li>Criei um scalar GraphQL <code>Decimal</code> próprio para que dinheiro nunca passe por ponto flutuante.</li>
               <li>Versionei o PostgreSQL com Flyway em SQL puro, com constraints CHECK que espelham as regras do domínio.</li>
+              <li>Tratei concorrência com lock otimista (<code>@Version</code>): atualizar uma proposta desatualizada vira erro <code>CONFLITO</code> na API, coberto por testes.</li>
               <li>Cobri o projeto com 74 testes (JUnit 5 e AssertJ), incluindo integração com Testcontainers no GitHub Actions.</li>
               <li>Próximos passos: padrão Outbox com Kafka, Docker Compose e Spring Cloud Gateway.</li>
             </ul>
@@ -513,11 +517,11 @@ p:last-child { margin-bottom: 0; }
       <h2 class="sh" id="h-form">Formação e idiomas</h2>
       <ol class="items">
         <li class="item">
-          <div class="when">2022</div>
+          <div class="when">2016 — 2023</div>
           <div class="what"><h3>Licenciatura em Matemática<small>Universidade Federal do Paraná (UFPR)</small></h3></div>
         </li>
         <li class="item">
-          <div class="when">2016</div>
+          <div class="when">2013 — 2015</div>
           <div class="what"><h3>Técnico em Informática, com foco em Java e SQL<small>Instituto Federal do Paraná (IFPR)</small></h3></div>
         </li>
         <li class="item">
