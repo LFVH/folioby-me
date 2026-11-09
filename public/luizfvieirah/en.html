@@ -382,13 +382,13 @@ p:last-child { margin-bottom: 0; }
     <section id="sobre" aria-labelledby="h-sobre">
       <h2 class="sh" id="h-sobre">About</h2>
       <p>I started in the back end of a fintech: <b>2 years and 8 months at Sinqia</b>, a Brazilian maker of financial and accounting systems, working with Java and SQL Server in production on stored procedures, indexes, query tuning and incidents resolved directly with clients. That is where I unblocked a credit pipeline stalled by a deadlock and sped up a delinquency report that used to take minutes.</p>
-      <p>In 2022 I chose to become <b>full-stack</b>: I took freelance work in TypeScript and Next.js and, in 2026, launched <b>FolioBy</b>, a portfolio SaaS with recurring subscriptions. Now I am returning to Java back-end work in the financial domain with <b>WorkFlow Crédito</b>, a credit pipeline in Java 21 and Spring Boot 3.</p>
+      <p>In 2022 I chose to become <b>full-stack</b>: I took freelance work in TypeScript, Node.js and Next.js, including the evolution of a production platform for an education-sector association from 2024 to 2025. In 2026, I launched <b>FolioBy</b>, a portfolio SaaS with recurring subscriptions. Now I am returning to Java back-end work in the financial domain with <b>WorkFlow Crédito</b>, a credit pipeline in Java 21 and Spring Boot 3.</p>
       <p>I am looking for a <b>Java back-end or full-stack</b> role, remote, hybrid or on-site. I speak Portuguese (native) and <b>fluent English</b>, plus conversational Spanish and Italian.</p>
       <dl class="stack" aria-label="Main technologies">
         <div><dt>Back-end</dt><dd>Java 21, Spring Boot 3, Spring Data JPA, Hibernate, Spring for GraphQL, Maven, hexagonal architecture</dd></div>
         <div><dt>Data</dt><dd>SQL, PostgreSQL, SQL Server, Flyway, stored procedures</dd></div>
         <div><dt>Testing and CI</dt><dd>JUnit 5, Testcontainers, TDD, GitHub Actions</dd></div>
-        <div><dt>Full-stack TS</dt><dd>TypeScript, Next.js, React, Node.js, Prisma</dd></div>
+        <div><dt>Full-stack TS</dt><dd>TypeScript, Next.js, React, Node.js, Express, Prisma, AWS (RDS, S3), Vercel</dd></div>
       </dl>
     </section>
 
@@ -400,10 +400,13 @@ p:last-child { margin-bottom: 0; }
           <div class="what">
             <h3>Full-Stack Developer<small>Freelance and own products</small></h3>
             <ul class="pts">
-              <li>Deliberate move to full-stack: delivered web projects for clients with TypeScript and Next.js, from the interface to back-end service integration.</li>
+              <li>Deliberate move to full-stack: contract web projects and own products with TypeScript, Node.js, React/Next.js and PostgreSQL.</li>
+              <li><b>Client: education-sector professional association (Sep 2024 — Apr 2025).</b> Led the evolution of a production platform with three apps: portal and admin panel in Next.js 14 and a REST API in Node.js/Express with Prisma, PostgreSQL (AWS RDS) and Redis, on Vercel. Wrote the proposals and contracts: 12 weeks split into 5 deliveries, with user acceptance testing.</li>
+              <li>Turned a hard-coded campaign module into slug-based dynamic pages, with about 20 permission-protected REST endpoints (RBAC), and migrated the existing content with SQL (<code>INSERT … SELECT</code>) with no data loss.</li>
+              <li>Built member management with uploads to AWS S3 and enabled transactional emails through Gmail with OAuth2: <b>the client's team could update the site without depending on a developer.</b></li>
               <li>In 2026, founded FolioBy, a portfolio SaaS live with real users, and started WorkFlow Crédito, a Java credit-pipeline back end. <a href="#projetos">Details in Projects ↓</a></li>
             </ul>
-            <ul class="tags"><li>Java 21</li><li>Spring Boot 3</li><li>PostgreSQL</li><li>TypeScript</li><li>Next.js</li><li>React</li><li>Prisma</li></ul>
+            <ul class="tags"><li>Java 21</li><li>Spring Boot 3</li><li>PostgreSQL</li><li>TypeScript</li><li>Node.js</li><li>Express</li><li>Next.js</li><li>React</li><li>Prisma</li><li>AWS</li></ul>
           </div>
         </li>
         <li class="item">
@@ -411,7 +414,7 @@ p:last-child { margin-bottom: 0; }
           <div class="what">
             <h3>Systems Analyst<small>Sinqia · fintech for financial and accounting systems</small></h3>
             <ul class="pts">
-              <li>Built features and provided production support for Java-based financial and accounting systems in an agile team using Git, resolving incidents end to end directly with clients.</li>
+              <li>Built features and provided production support for Java-based financial and accounting systems in an agile team using Git, resolving incidents end to end directly with a portfolio of 8 to 13 clients in manufacturing, retail and banking.</li>
               <li>Unblocked a client's production credit pipeline, stalled by a deadlock after a batch load: analyzed blocked sessions in SQL Server, standardized the table access order and added indexes guided by the execution plan. In about 15 minutes the pipeline was running again, with the root cause fixed. <b>Prevented an expected BRL 300k loss.</b></li>
               <li>Optimized the delinquency-report stored procedure over millions of contracts and installments by consolidating several temporary tables into one: <b>from about 10 minutes to 3 seconds</b> in production.</li>
             </ul>
@@ -444,6 +447,7 @@ p:last-child { margin-bottom: 0; }
               <li>Kept the domain in plain Java with no framework annotations (hexagonal architecture): swapped the in-memory repository for JPA through a new adapter; the only domain addition was the <code>Proposta.reconstituir</code> factory, to rebuild a proposal from the database.</li>
               <li>Built a custom GraphQL <code>Decimal</code> scalar so money never goes through floating point.</li>
               <li>Versioned PostgreSQL with plain-SQL Flyway migrations, with CHECK constraints that mirror the domain rules.</li>
+              <li>Handled concurrency with optimistic locking (<code>@Version</code>): updating a stale proposal becomes a <code>CONFLICT</code> error in the API, covered by tests.</li>
               <li>Covered the project with 74 tests (JUnit 5 and AssertJ), including Testcontainers integration tests on GitHub Actions.</li>
               <li>Next steps: Outbox pattern with Kafka, Docker Compose and Spring Cloud Gateway.</li>
             </ul>
@@ -513,11 +517,11 @@ p:last-child { margin-bottom: 0; }
       <h2 class="sh" id="h-form">Education and languages</h2>
       <ol class="items">
         <li class="item">
-          <div class="when">2022</div>
+          <div class="when">2016 — 2023</div>
           <div class="what"><h3>Degree in Mathematics (Licentiate)<small>Federal University of Paraná (UFPR), Brazil</small></h3></div>
         </li>
         <li class="item">
-          <div class="when">2016</div>
+          <div class="when">2013 — 2015</div>
           <div class="what"><h3>Technical Diploma in Computing, focused on Java and SQL<small>Federal Institute of Paraná (IFPR), Brazil</small></h3></div>
         </li>
         <li class="item">
